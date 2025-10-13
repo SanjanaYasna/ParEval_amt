@@ -56,11 +56,6 @@ cmake -B builddir \
 cmake --build builddir
 #set install prefix for kokkos to build under tpl/kokkos, as that's where pareval make files check
 cmake --install builddir /work/pi_mrobson_smith_edu/ParEval_amt/tpl/kokkos/build
-
-
-# depending on your system you may need to pass your c++ compiler to CMAKE_CXX_COMPILER
-cmake .. -DCMAKE_INSTALL_PREFIX=. -DKokkos_ENABLE_THREADS=ON
-make install -j4
 ```
 
 You will need to build the main C++ drivers before running ParEval. The included
@@ -73,7 +68,7 @@ cd drivers/cpp
 module load uri/main
 module load gcc/9.4.0
 module load mpich/4.2.1
-make #you only care about having MPI (by default), Kokkos, and HPX available
+make #you only care about having MPI (by default), Kokkos, and HPX drivers available under models/
 ```
 
 Finally, you need to install the Python dependencies. `requirements.txt` has
