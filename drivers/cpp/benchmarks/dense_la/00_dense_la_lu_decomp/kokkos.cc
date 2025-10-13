@@ -12,7 +12,7 @@
 // */
 // void luFactorize(Kokkos::View<double**> &A, size_t N) {
 
-#include <algorithm>
+#include <algorithm> 
 #include <numeric>
 #include <random>
 #include <vector>

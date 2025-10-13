@@ -1,7 +1,7 @@
 CXX = g++
 MPICXX = mpicxx
 CXX_FLAGS = -std=c++17 -O3
-Kokkos_PATH ?= ../../tpl/kokkos/build
+Kokkos_PATH = ../../tpl/kokkos/build
 
 HAS_NVCC := $(shell command -v nvcc 2> /dev/null)
 HAS_HIPCC := $(shell command -v hipcc 2> /dev/null)

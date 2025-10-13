@@ -38,12 +38,25 @@ git clone --recurse-submodules https://github.com/parallelcodefoundry/ParEval.gi
 ```
 
 Next, you need to build Kokkos (if you want to include it in testing).
-
+Kokkos source code was installed under directory ParEval_amt/tpl/kokkos/kokkos, set to version 4.5.01
 ```sh
-cd tpl/kokkos
+cd amt/tpl/kokkos/kokkos
+git checkout {stable version of choice}
+module load gcc/9.4.0
+module load mpich/4.2.1
+#configure again at your own preferences, with build set to builddir below 
+#my config...
+cmake -B builddir \
+    -DCMAKE_CXX_COMPILER=g++ \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKokkos_ENABLE_OPENMP=ON \
+    -DKokkos_ENABLE_THREADS=ON \
+    -DKokkos_ARCH_NATIVE=ON \
+    -DKokkos_ENABLE_DEPRECATED_CODE_4=OFF
+cmake --build builddir
+#set install prefix for kokkos to build under tpl/kokkos, as that's where pareval make files check
+cmake --install builddir /work/pi_mrobson_smith_edu/ParEval_amt/tpl/kokkos/build
 
-mkdir build
-cd build
 
 # depending on your system you may need to pass your c++ compiler to CMAKE_CXX_COMPILER
 cmake .. -DCMAKE_INSTALL_PREFIX=. -DKokkos_ENABLE_THREADS=ON
@@ -57,7 +70,10 @@ be found.
 ```sh
 # from the repository root, step into the cpp drivers directory and run make
 cd drivers/cpp
-make
+module load uri/main
+module load gcc/9.4.0
+module load mpich/4.2.1
+make #you only care about having MPI (by default), Kokkos, and HPX available
 ```
 
 Finally, you need to install the Python dependencies. `requirements.txt` has
