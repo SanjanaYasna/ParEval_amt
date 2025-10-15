@@ -1,5 +1,5 @@
 // Driver for 00_dense_la_lu_decomp for Kokkos
-// #include <Kokkos_Core.hpp>
+//#include <Kokkos_Core.hpp>
 // 
 // /* Factorize the matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.
 //    Store the results for L and U into the original matrix A. 

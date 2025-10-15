@@ -1,0 +1,14 @@
+[{
+    "problem_type": "dense_la",
+    "language": "cpp",
+    "name": "00_dense_la_lu_decomp",
+    "parallelism_model": "hpx",
+    "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Factorize the matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.\n   Store the results for L and U into the original matrix A. \n   A is an NxN matrix stored in row-major.\n   Use HPX to compute in parallel. Assume HPX has already been initialized.\n   Example:\n\n   input: [[4, 3], [6, 3]]\n   output: [[4, 3], [1.5, -1.5]]\n*/\nvoid luFactorize(std::vector<double> &A, std::size_t N) {"
+},
+{
+    "problem_type": "dense_la",
+    "language": "cpp",
+    "name": "01_dense_la_solve",
+    "parallelism_model": "omp",
+    "prompt": "#include <omp.h>\n\n/* Solve the linear system Ax=b for x.\n   A is an NxN matrix in row-major. x and b have N elements.\n   Use OpenMP to compute in parallel.\n   Example:\n   \n   input: A=[[1,4,2], [1,2,3], [2,1,3]] b=[11, 11, 13]\n   output: x=[3, 1, 2]\n*/\nvoid solveLinearSystem(std::vector<double> const& A, std::vector<double> const& b, std::vector<double> &x, size_t N) {"
+}]

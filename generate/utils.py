@@ -175,6 +175,36 @@ class StarCoderConfig(InferenceConfig):
     def clean_output(self, output: str, prompt: str) -> str:
         return clean_output(output, prompt)
 
+class Gpt2Config(InferenceConfig):
+
+    def __init__(self, prompted : bool = False):
+        super().__init__(prompted=prompted)
+
+    def get_dtype(self):
+        return torch.float16
+
+    def init_padding(self, tokenizer):
+        tokenizer.pad_token_id = tokenizer.eos_token_id  # for batching
+        tokenizer.padding_side = "left"   # for decoder-only models
+        pass
+
+    def get_pad_token_id(self, tokenizer) -> int:
+        return tokenizer.pad_token_id
+
+    def get_eos_token_id(self, tokenizer) -> int:
+        return tokenizer.eos_token_id
+    
+    def trust_remote_code(self) -> bool:
+        return False
+
+    def format_prompt(self, prompt : str) -> str:
+        if self.prompted:
+            return f"// filename: solutions/solution_1.cpp\n// here is the correct implementation of the coding exercise\n\n{prompt}"
+        return prompt.strip()
+
+    def clean_output(self, output: str, prompt: str) -> str:
+        return clean_output(output, prompt)
+    
 class CodeLlamaConfig(InferenceConfig):
 
     def __init__(self, prompted : bool = False):
@@ -484,6 +514,8 @@ def get_inference_config(model_name : str, **kwargs) -> InferenceConfig:
         return ChatMLConfig(**kwargs)
     elif model_name.startswith('Qwen/Qwen2.5'):
         return QwenConfig(**kwargs)
+    elif model_name.startswith('gpt2'):
+        return Gpt2Config(**kwargs)
     else:
         raise ValueError(f"Unknown model name: {model_name}")
 
