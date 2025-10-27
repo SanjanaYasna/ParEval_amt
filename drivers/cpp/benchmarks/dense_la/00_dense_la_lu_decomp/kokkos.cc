@@ -11,6 +11,7 @@
 //    output: [[4, 3], [1.5, -1.5]]
 // */
 // void luFactorize(Kokkos::View<double**> &A, size_t N) {
+    // void luFactorize()
 
 #include <algorithm> 
 #include <numeric>

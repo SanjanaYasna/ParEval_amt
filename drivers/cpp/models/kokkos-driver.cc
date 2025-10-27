@@ -15,7 +15,6 @@
 #include <cstdio>
 #include <cfloat>
 #include <string>
-
 #include <Kokkos_Core.hpp>
 
 class Context;
