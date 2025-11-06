@@ -9,4 +9,6 @@
 //    input: A=[[1, -1, 2], [0, -3, 1]] x=[2, 1, 0]
 //    output: y=[1, -3]
 // */
+// void axpy(double alpha, std::vector<double> const& x, std::vector<double> const& y, std::vector<double> &z) {
+    //other option: 
 // void gemv(std::vector<double> const& A, std::vector<double> const& x, std::vector<double> &y, size_t M, size_t N) {

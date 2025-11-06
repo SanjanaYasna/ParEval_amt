@@ -1,4 +1,4 @@
-// Driver for 00_dense_la_lu_decomp for Kokkos
+// Driver for 00_dense_la_lu_decomp for HPX
 //#include <hpx/hpx_main.hpp>
 // 
 // /* Factorize the matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.
@@ -10,6 +10,8 @@
 //    input: [[4, 3], [6, 3]]
 //    output: [[4, 3], [1.5, -1.5]]
 // */
+// void luFactorize(std::vector<double> &A, size_t N) {
+    //other possibility:
 // void luFactorize(std::vector<hpx::shared_future<std::vector<double>>> &A, std::size_t N) {
 
 // FROM REFERENCE: https://github.com/jgurhem/HPX_LA/blob/master/lu_tiled.cpp#L123 
