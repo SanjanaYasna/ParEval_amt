@@ -113,16 +113,16 @@ def profile_generation(model, tokenizer, device, prompt):
     if device == 'cuda' and tokenizer != -1:
         gpu_monitor = GPUCPUMonitor(monitor_interval=2, gpu=True)
         gpu_monitor.start()
-    elif device == 'cpu' and tokenizer != -1:
+    if device == 'cpu' and tokenizer != -1:
         cpu_monitor = GPUCPUMonitor(monitor_interval=2, gpu=False)
         cpu_monitor.start()
-        
     #if pipeline is needed
     if type(tokenizer) == type(True):
         generated_code= generate_code_with_generator(model, prompt['prompt'])
     elif tokenizer != -1: #regular generation
         generated_code = generate_code(model, tokenizer, prompt['prompt'])
     else: #api-based, indicated by -1 value of tokenizer 
+        api_time_start = time.time()
         if model == 'gpt5': #no temperature nor sampling support 
             response = client.responses.create( 
             model ="gpt-5"    
@@ -132,9 +132,11 @@ def profile_generation(model, tokenizer, device, prompt):
         generated_code = response.output_text
 
     #end profilers  and collect metrics
-    if torch.cuda.is_available() and device == 'cuda':
+    if  device == 'cuda':
         if tokenizer == -1:
-            return generated_code, 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+            api_time_end = time.time()
+            time_total = api_time_end - api_time_start
+            return generated_code, 'N/A', 'N/A', 'N/A', 'N/A', time_total, 'N/A'
         gpu_monitor.stop()
         max_gpu_memory_usage = gpu_monitor.get_max_gpu_memory_usage()
         max_gpu_utilization = gpu_monitor.get_max_gpu_utilization() 
@@ -145,7 +147,9 @@ def profile_generation(model, tokenizer, device, prompt):
         return generated_code, max_gpu_memory_usage, max_gpu_utilization, average_gpu_memory_usage, average_gpu_utilization, gen_time, vram
     else:
         if tokenizer == -1:
-            return generated_code, 'N/A', 'N/A', 'N/A'
+            api_time_end = time.time()
+            time_total = api_time_end - api_time_start
+            return generated_code, 'N/A', time_total, 'N/A' 
         cpu_monitor.stop()
         cpu_percent = cpu_monitor._cpu_percent
         gen_time = cpu_monitor._time
@@ -168,7 +172,6 @@ def generate_code_with_generator(generator, prompt):
                         top_p = args.top_p,
                         do_sample = args.do_sample
                         )
-    end_time = time.time()
     generated_code = result[0]['generated_text']
 
     return generated_code

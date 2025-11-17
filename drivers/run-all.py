@@ -133,7 +133,7 @@ def main():
     logging.info(f"Using driver root: {DRIVER_ROOT}")
 
     # gather the list of parallelism models to test
-    models_to_test = args.include_models if args.include_models else ["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip"]
+    models_to_test = args.include_models if args.include_models else ["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip", "hpx"]
     if args.exclude_models:
         models_to_test = [m for m in models_to_test if m not in args.exclude_models]
 
