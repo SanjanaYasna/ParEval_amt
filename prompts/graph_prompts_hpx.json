@@ -1,18 +1,38 @@
 [
     {
-
         "problem_type": "graph",
         "language": "cpp",
         "name": "15_edge_graph_count",
         "parallelism_model": "hpx",
-        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Factorize the matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.\n   Store the results for L and U into the original matrix A. \n   A is an NxN matrix stored in row-major.\n   Use HPX to compute in parallel. Assume main() and hpx_main() functions have already been initialized and simply complete the function below.\n   Example:\n\n   input: [[4, 3], [6, 3]]\n   output: [[4, 3], [1.5, -1.5]]\n*/\nvoid luFactorize(std::vector<double> &A, size_t N) {"
-
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Count the number of edges in the directed graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A represents a directed graph.\n   Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [1, 1, 1, 0]]\n   output: 6\n*/\nint edgeCount(std::vector<int> const& A, size_t N) {"
+    
     },
     {
         "problem_type": "graph",
         "language": "cpp",
         "name": "16_graph_largest_component",
         "parallelism_model": "hpx",
-        "prompt": "#include <omp.h>\n\n/* Return the number of vertices in the largest component of the undirected graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n   Use OpenMP to compute in parallel.\n   Example:\n\n\t input: [[0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]\n   output: 2\n*/\nint largestComponent(std::vector<int> const& A, size_t N) {"
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return the number of vertices in the largest component of the undirected graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n   Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]\n   output: 2\n*/\nint largestComponent(std::vector<int> const& A, size_t N) {"
+    },
+    {
+        "problem_type": "graph",
+        "language": "cpp",
+        "name": "17_graph_highest_degree",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute the highest node degree in the undirected graph. The graph is defined in the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n   Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 0, 0, 1], [0, 0, 0, 1], [0, 0, 0, 1], [1, 1, 1, 0]]\n   output: 3\n*/\nint maxDegree(std::vector<int> const& A, size_t N) {"
+    }, 
+    {
+        "problem_type": "graph",
+        "language": "cpp",
+        "name": "18_graph_count_components",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Count the number of connected components in the undirected graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n\t Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]\n   output: 2\n*/\nint componentCount(std::vector<int> const& A, size_t N) {"
+    }
+    {
+        "problem_type": "graph",
+        "language": "cpp",
+        "name": "19_graph_shortest_path",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return the length of the shortest path from source to dest in the undirected graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n   Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 1, 1, 0], [1, 0, 0, 1], [1, 0, 0, 1], [0, 1, 1, 0]], source=0, dest=3\n   output: 2\n*/\nint shortestPathLength(std::vector<int> const& A, size_t N, int source, int dest) {"
     }
 ]
