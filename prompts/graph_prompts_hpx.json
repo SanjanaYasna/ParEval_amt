@@ -27,7 +27,7 @@
         "name": "18_graph_count_components",
         "parallelism_model": "hpx",
         "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Count the number of connected components in the undirected graph defined by the adjacency matrix A.\n   A is an NxN adjacency matrix stored in row-major. A is an undirected graph.\n\t Use HPX to compute in parallel.\n   Example:\n\n\t input: [[0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]\n   output: 2\n*/\nint componentCount(std::vector<int> const& A, size_t N) {"
-    }
+    },
     {
         "problem_type": "graph",
         "language": "cpp",
