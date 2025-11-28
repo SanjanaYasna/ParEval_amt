@@ -63,4 +63,17 @@ class EmptyValidator(Validator):
     """ Always returns true. """
     def validate(self, source: str) -> bool:
         return True
+    
+class HPXValidator(Validator):
+    def __init__(self):
+        super().__init__("empty")
+
+    """ Always returns true. """
+    def validate(self, source: str) -> bool:
+        #seems to detect properly
+        # if not self.must_contain(source, "hpx::"):
+        #     print("HPX NAMESPACE NOT FOUND")
+        # else:
+        #     print("HPX NAMESPACE FOUND")
+        return self.must_contain(source, "hpx::") 
 

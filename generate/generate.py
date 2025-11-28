@@ -41,7 +41,7 @@ with open(args.prompts, 'r') as json_file:
     prompts = json.load(json_file)
 
 """ Load existing responses if they exist """
-if not args.restart and os.path.exists(args.cache):
+if not args.restart and  args.cache is not None and os.path.exists(args.cache):
     with open(args.cache, 'r') as jsonl_file:
         responses = [json.loads(line) for line in jsonl_file]
     

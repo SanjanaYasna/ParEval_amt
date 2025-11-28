@@ -1,0 +1,650 @@
+(T00000000/0000000044007420.----/----------------) P--------/----------------.---- 03:28.35.583 [0000000000000001]  <always> [ERR] default_errorsink: unhandled exception: 
+{config}:
+Core library:
+  HPX_WITH_LOGGING=ON
+  HPX_WITH_DYNAMIC_HPX_MAIN=ON
+  HPX_WITH_DISTRIBUTED_RUNTIME=ON
+  HPX_WITH_IO_COUNTERS=ON
+  HPX_WITH_NATIVE_TLS=ON
+  HPX_WITH_AUTOMATIC_SERIALIZATION_REGISTRATION=ON
+  HPX_WITH_MORE_THAN_64_THREADS=OFF
+  HPX_WITH_THREAD_STACK_MMAP=ON
+  HPX_WITH_THREAD_MANAGER_IDLE_BACKOFF=ON
+  HPX_WITH_STACKTRACES=ON
+  HPX_WITH_THREAD_BACKTRACE_ON_SUSPENSION=OFF
+  HPX_WITH_STACKTRACES_STATIC_SYMBOLS=OFF
+  HPX_WITH_STACKTRACES_DEMANGLE_SYMBOLS=ON
+  HPX_WITH_THREAD_TARGET_ADDRESS=OFF
+  HPX_WITH_THREAD_QUEUE_WAITTIME=OFF
+  HPX_WITH_THREAD_IDLE_RATES=OFF
+  HPX_WITH_THREAD_CREATION_AND_CLEANUP_RATES=OFF
+  HPX_WITH_THREAD_CUMULATIVE_COUNTS=ON
+  HPX_WITH_THREAD_STEALING_COUNTS=OFF
+  HPX_WITH_COROUTINE_COUNTERS=OFF
+  HPX_WITH_THREAD_LOCAL_STORAGE=OFF
+  HPX_WITH_SCHEDULER_LOCAL_STORAGE=OFF
+  HPX_WITH_SWAP_CONTEXT_EMULATION=OFF
+  HPX_WITH_SPINLOCK_DEADLOCK_DETECTION=OFF
+  HPX_WITH_APEX=OFF
+  HPX_WITH_PAPI=OFF
+  HPX_WITH_GOOGLE_PERFTOOLS=OFF
+  HPX_WITH_ITTNOTIFY=OFF
+  HPX_WITH_HPXMP=OFF
+  HPX_WITH_IO_POOL=ON
+  HPX_WITH_TIMER_POOL=ON
+  HPX_WITH_AGAS_DUMP_REFCNT_ENTRIES=OFF
+  HPX_WITH_NETWORKING=ON
+  HPX_WITH_PARCEL_PROFILING=OFF
+  HPX_WITH_PARCELPORT_LIBFABRIC=OFF
+  HPX_WITH_PARCELPORT_VERBS=OFF
+  HPX_WITH_PARCELPORT_MPI=OFF
+  HPX_WITH_ASYNC_MPI=OFF
+  HPX_WITH_PARCELPORT_TCP=ON
+  HPX_WITH_PARCELPORT_ACTION_COUNTERS=OFF
+  HPX_WITH_VALGRIND=OFF
+  HPX_WITH_SANITIZERS=OFF
+  HPX_WITH_VERIFY_LOCKS=OFF
+  HPX_WITH_VERIFY_LOCKS_GLOBALLY=OFF
+  HPX_WITH_VERIFY_LOCKS_BACKTRACE=OFF
+  HPX_WITH_THREAD_DEBUG_INFO=OFF
+  HPX_WITH_THREAD_GUARD_PAGE=ON
+  HPX_WITH_THREAD_DESCRIPTION_FULL=OFF
+  HPX_WITH_ATTACH_DEBUGGER_ON_TEST_FAILURE=OFF
+  HPX_WITH_TESTS_DEBUG_LOG=OFF
+  HPX_WITH_PARALLEL_TESTS_BIND_NONE=OFF
+  HPX_WITH_PARCEL_COALESCING=ON
+  HPX_WITH_TUPLE_RVALUE_SWAP=ON
+  HPX_WITH_ACTION_BASE_COMPATIBILITY=ON
+  HPX_WITH_REGISTER_THREAD_COMPATIBILITY=ON
+  HPX_WITH_REGISTER_THREAD_OVERLOADS_COMPATIBILITY=ON
+  HPX_WITH_INIT_START_OVERLOADS_COMPATIBILITY=ON
+  HPX_WITH_PROMISE_ALIAS_COMPATIBILITY=ON
+  HPX_WITH_UNSCOPED_ENUM_COMPATIBILITY=ON
+  HPX_WITH_EMBEDDED_THREAD_POOLS_COMPATIBILITY=ON
+  HPX_WITH_THREAD_POOL_OS_EXECUTOR_COMPATIBILITY=ON
+  HPX_WITH_THREAD_EXECUTORS_COMPATIBILITY=ON
+  HPX_WITH_THREAD_AWARE_TIMER_COMPATIBILITY=ON
+  HPX_WITH_POOL_EXECUTOR_COMPATIBILITY=ON
+
+  HPX_PARCEL_MAX_CONNECTIONS=512
+  HPX_PARCEL_MAX_CONNECTIONS_PER_LOCALITY=4
+  HPX_AGAS_LOCAL_CACHE_SIZE=4096
+  HPX_HAVE_MALLOC=system
+  HPX_PREFIX (configured)=
+  HPX_PREFIX=/work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install
+
+Module actions:
+  HPX_ACTIONS_WITH_TESTS=OFF
+  HPX_ACTIONS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ACTIONS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module actions_base:
+  HPX_ACTIONS_BASE_WITH_TESTS=OFF
+  HPX_ACTIONS_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ACTIONS_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module affinity:
+  HPX_AFFINITY_WITH_TESTS=OFF
+  HPX_AFFINITY_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_AFFINITY_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module algorithms:
+  HPX_ALGORITHMS_WITH_TESTS=OFF
+  HPX_ALGORITHMS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ALGORITHMS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module allocator_support:
+  HPX_ALLOCATOR_SUPPORT_WITH_TESTS=OFF
+  HPX_ALLOCATOR_SUPPORT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ALLOCATOR_SUPPORT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module asio:
+  HPX_ASIO_WITH_TESTS=OFF
+  HPX_ASIO_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ASIO_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module assertion:
+  HPX_ASSERTION_WITH_TESTS=OFF
+  HPX_ASSERTION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ASSERTION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module async_base:
+  HPX_ASYNC_BASE_WITH_TESTS=OFF
+  HPX_ASYNC_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ASYNC_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module async_combinators:
+  HPX_ASYNC_COMBINATORS_WITH_TESTS=OFF
+  HPX_ASYNC_COMBINATORS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ASYNC_COMBINATORS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module async_distributed:
+  HPX_ASYNC_DISTRIBUTED_WITH_TESTS=OFF
+  HPX_ASYNC_DISTRIBUTED_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ASYNC_DISTRIBUTED_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module async_local:
+  HPX_ASYNC_LOCAL_WITH_TESTS=OFF
+  HPX_ASYNC_LOCAL_WITH_DEPRECATION_WARNINGS=OFF
+
+Module batch_environments:
+  HPX_BATCH_ENVIRONMENTS_WITH_TESTS=OFF
+  HPX_BATCH_ENVIRONMENTS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_BATCH_ENVIRONMENTS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module cache:
+  HPX_CACHE_WITH_TESTS=OFF
+  HPX_CACHE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CACHE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module checkpoint:
+  HPX_CHECKPOINT_WITH_TESTS=OFF
+  HPX_CHECKPOINT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CHECKPOINT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module checkpoint_base:
+  HPX_CHECKPOINT_BASE_WITH_TESTS=OFF
+  HPX_CHECKPOINT_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CHECKPOINT_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module collectives:
+  HPX_COLLECTIVES_WITH_TESTS=OFF
+  HPX_COLLECTIVES_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_COLLECTIVES_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module command_line_handling:
+  HPX_COMMAND_LINE_HANDLING_WITH_TESTS=OFF
+  HPX_COMMAND_LINE_HANDLING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_COMMAND_LINE_HANDLING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module components_base:
+  HPX_COMPONENTS_BASE_WITH_TESTS=OFF
+  HPX_COMPONENTS_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_COMPONENTS_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module compute:
+  HPX_COMPUTE_WITH_TESTS=OFF
+  HPX_COMPUTE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_COMPUTE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module concepts:
+  HPX_CONCEPTS_WITH_TESTS=OFF
+  HPX_CONCEPTS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CONCEPTS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module concurrency:
+  HPX_CONCURRENCY_WITH_TESTS=OFF
+  HPX_CONCURRENCY_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CONCURRENCY_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module config:
+  HPX_CONFIG_WITH_TESTS=OFF
+  HPX_CONFIG_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_CONFIG_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module config_registry:
+  HPX_CONFIG_REGISTRY_WITH_TESTS=OFF
+  HPX_CONFIG_REGISTRY_WITH_DEPRECATION_WARNINGS=OFF
+
+Module coroutines:
+  HPX_COROUTINES_WITH_TESTS=OFF
+  HPX_COROUTINES_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_COROUTINES_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module datastructures:
+  HPX_DATASTRUCTURES_WITH_ADAPT_STD_TUPLE=ON
+  HPX_DATASTRUCTURES_WITH_TESTS=OFF
+  HPX_DATASTRUCTURES_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_DATASTRUCTURES_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module debugging:
+  HPX_DEBUGGING_WITH_TESTS=OFF
+  HPX_DEBUGGING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_DEBUGGING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module errors:
+  HPX_ERRORS_WITH_TESTS=OFF
+  HPX_ERRORS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ERRORS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module execution:
+  HPX_EXECUTION_WITH_TESTS=OFF
+  HPX_EXECUTION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_EXECUTION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module execution_base:
+  HPX_EXECUTION_BASE_WITH_TESTS=OFF
+  HPX_EXECUTION_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_EXECUTION_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module executors:
+  HPX_EXECUTORS_WITH_TESTS=OFF
+  HPX_EXECUTORS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_EXECUTORS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module executors_distributed:
+  HPX_EXECUTORS_DISTRIBUTED_WITH_TESTS=OFF
+  HPX_EXECUTORS_DISTRIBUTED_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_EXECUTORS_DISTRIBUTED_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module filesystem:
+  HPX_FILESYSTEM_WITH_TESTS=OFF
+  HPX_FILESYSTEM_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_FILESYSTEM_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module format:
+  HPX_FORMAT_WITH_TESTS=OFF
+  HPX_FORMAT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_FORMAT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module functional:
+  HPX_FUNCTIONAL_WITH_TESTS=OFF
+  HPX_FUNCTIONAL_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_FUNCTIONAL_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module futures:
+  HPX_FUTURES_WITH_TESTS=OFF
+  HPX_FUTURES_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_FUTURES_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module hardware:
+  HPX_HARDWARE_WITH_TESTS=OFF
+  HPX_HARDWARE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_HARDWARE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module hashing:
+  HPX_HASHING_WITH_TESTS=OFF
+  HPX_HASHING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_HASHING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module include:
+  HPX_INCLUDE_WITH_TESTS=OFF
+  HPX_INCLUDE_WITH_DEPRECATION_WARNINGS=OFF
+
+Module init_runtime:
+  HPX_INIT_RUNTIME_WITH_TESTS=OFF
+  HPX_INIT_RUNTIME_WITH_DEPRECATION_WARNINGS=OFF
+
+Module io_service:
+  HPX_IO_SERVICE_WITH_TESTS=OFF
+  HPX_IO_SERVICE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_IO_SERVICE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module iterator_support:
+  HPX_ITERATOR_SUPPORT_WITH_TESTS=OFF
+  HPX_ITERATOR_SUPPORT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ITERATOR_SUPPORT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module itt_notify:
+  HPX_ITT_NOTIFY_WITH_TESTS=OFF
+  HPX_ITT_NOTIFY_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_ITT_NOTIFY_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module lcos_distributed:
+  HPX_LCOS_DISTRIBUTED_WITH_TESTS=OFF
+  HPX_LCOS_DISTRIBUTED_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_LCOS_DISTRIBUTED_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module lcos_local:
+  HPX_LCOS_LOCAL_WITH_TESTS=OFF
+  HPX_LCOS_LOCAL_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_LCOS_LOCAL_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module logging:
+  HPX_LOGGING_WITH_TESTS=OFF
+  HPX_LOGGING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_LOGGING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module memory:
+  HPX_MEMORY_WITH_TESTS=OFF
+  HPX_MEMORY_WITH_DEPRECATION_WARNINGS=OFF
+
+Module naming_base:
+  HPX_NAMING_BASE_WITH_TESTS=OFF
+  HPX_NAMING_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_NAMING_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module pack_traversal:
+  HPX_PACK_TRAVERSAL_WITH_TESTS=OFF
+  HPX_PACK_TRAVERSAL_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_PACK_TRAVERSAL_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module performance_counters:
+  HPX_PERFORMANCE_COUNTERS_WITH_TESTS=OFF
+  HPX_PERFORMANCE_COUNTERS_WITH_DEPRECATION_WARNINGS=OFF
+
+Module plugin:
+  HPX_PLUGIN_WITH_TESTS=OFF
+  HPX_PLUGIN_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_PLUGIN_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module prefix:
+  HPX_PREFIX_WITH_TESTS=OFF
+  HPX_PREFIX_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_PREFIX_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module preprocessor:
+  HPX_PREPROCESSOR_WITH_TESTS=OFF
+  HPX_PREPROCESSOR_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_PREPROCESSOR_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module program_options:
+  HPX_PROGRAM_OPTIONS_WITH_TESTS=OFF
+  HPX_PROGRAM_OPTIONS_WITH_DEPRECATION_WARNINGS=OFF
+
+Module resiliency:
+  HPX_RESILIENCY_WITH_TESTS=OFF
+  HPX_RESILIENCY_WITH_DEPRECATION_WARNINGS=OFF
+
+Module resource_partitioner:
+  HPX_RESOURCE_PARTITIONER_WITH_TESTS=OFF
+  HPX_RESOURCE_PARTITIONER_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_RESOURCE_PARTITIONER_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module runtime_configuration:
+  HPX_RUNTIME_CONFIGURATION_WITH_TESTS=OFF
+  HPX_RUNTIME_CONFIGURATION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_RUNTIME_CONFIGURATION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module runtime_local:
+  HPX_RUNTIME_LOCAL_WITH_TESTS=OFF
+  HPX_RUNTIME_LOCAL_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_RUNTIME_LOCAL_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module schedulers:
+  HPX_SCHEDULERS_WITH_TESTS=OFF
+  HPX_SCHEDULERS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_SCHEDULERS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module segmented_algorithms:
+  HPX_SEGMENTED_ALGORITHMS_WITH_TESTS=OFF
+  HPX_SEGMENTED_ALGORITHMS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_SEGMENTED_ALGORITHMS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module serialization:
+  HPX_SERIALIZATION_WITH_BOOST_TYPES=ON
+  HPX_SERIALIZATION_WITH_TESTS=OFF
+  HPX_SERIALIZATION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_SERIALIZATION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module static_reinit:
+  HPX_STATIC_REINIT_WITH_TESTS=OFF
+  HPX_STATIC_REINIT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_STATIC_REINIT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module statistics:
+  HPX_STATISTICS_WITH_TESTS=OFF
+  HPX_STATISTICS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_STATISTICS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module string_util:
+  HPX_STRING_UTIL_WITH_TESTS=OFF
+  HPX_STRING_UTIL_WITH_DEPRECATION_WARNINGS=OFF
+
+Module synchronization:
+  HPX_SYNCHRONIZATION_WITH_TESTS=OFF
+  HPX_SYNCHRONIZATION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_SYNCHRONIZATION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module testing:
+  HPX_TESTING_WITH_TESTS=OFF
+  HPX_TESTING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_TESTING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module thread_executors:
+  HPX_THREAD_EXECUTORS_WITH_TESTS=OFF
+  HPX_THREAD_EXECUTORS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREAD_EXECUTORS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module thread_pools:
+  HPX_THREAD_POOLS_WITH_TESTS=OFF
+  HPX_THREAD_POOLS_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREAD_POOLS_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module thread_support:
+  HPX_THREAD_SUPPORT_WITH_TESTS=OFF
+  HPX_THREAD_SUPPORT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREAD_SUPPORT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module threading:
+  HPX_THREADING_WITH_TESTS=OFF
+  HPX_THREADING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREADING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module threading_base:
+  HPX_THREADING_BASE_WITH_TESTS=OFF
+  HPX_THREADING_BASE_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREADING_BASE_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module threadmanager:
+  HPX_THREADMANAGER_WITH_TESTS=OFF
+  HPX_THREADMANAGER_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_THREADMANAGER_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module timed_execution:
+  HPX_TIMED_EXECUTION_WITH_TESTS=OFF
+  HPX_TIMED_EXECUTION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_TIMED_EXECUTION_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module timing:
+  HPX_TIMING_WITH_TESTS=OFF
+  HPX_TIMING_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_TIMING_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module topology:
+  HPX_TOPOLOGY_WITH_TESTS=OFF
+  HPX_TOPOLOGY_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_TOPOLOGY_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module type_support:
+  HPX_TYPE_SUPPORT_WITH_TESTS=OFF
+  HPX_TYPE_SUPPORT_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_TYPE_SUPPORT_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module util:
+  HPX_UTIL_WITH_TESTS=OFF
+  HPX_UTIL_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_UTIL_WITH_COMPATIBILITY_HEADERS=OFF
+
+Module version:
+  HPX_VERSION_WITH_TESTS=OFF
+  HPX_VERSION_WITH_DEPRECATION_WARNINGS=OFF
+  HPX_VERSION_WITH_COMPATIBILITY_HEADERS=OFF
+
+{version}: V1.5.1 (AGAS: V3.0), Git: 137d94b75e
+{boost}: V1.64.0
+{build-type}: release
+{date}: Nov 15 2025 16:39:26
+{platform}: linux
+{compiler}: GNU C++ version 13.3.0
+{stdlib}: GNU libstdc++ version 20240904
+{env}: 130 entries:
+  ADDR2LINE=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-addr2line
+  ANACONDA3ROOT=/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1
+  AR=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ar
+  AS=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-as
+  BASH_ENV=/usr/share/lmod/lmod/init/bash
+  BASH_FUNC_ml%%=() {  eval "$($LMOD_DIR/ml_cmd "$@")"
+}
+  BASH_FUNC_module%%=() {  if [ -z "${LMOD_SH_DBG_ON+x}" ]; then
+ case "$-" in 
+ *v*x*)
+ __lmod_sh_dbg='vx'
+ ;;
+ *v*)
+ __lmod_sh_dbg='v'
+ ;;
+ *x*)
+ __lmod_sh_dbg='x'
+ ;;
+ esac;
+ fi;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ set +$__lmod_sh_dbg;
+ echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output" 1>&2;
+ fi;
+ eval "$($LMOD_CMD shell "$@")" && eval "$(${LMOD_SETTARG_CMD:-:} -s sh)";
+ __lmod_my_status=$?;
+ if [ -n "${__lmod_sh_dbg:-}" ]; then
+ echo "Shell debugging restarted" 1>&2;
+ set -$__lmod_sh_dbg;
+ fi;
+ unset __lmod_sh_dbg;
+ return $__lmod_my_status
+}
+  BOOST_ROOT=/work/pi_mrobson_smith_edu/hpx_practice/boost_1_64_0/install
+  BUILD=x86_64-conda-linux-gnu
+  CC=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-cc
+  CC_FOR_BUILD=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-cc
+  CFLAGS=-march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include  -I/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/include  -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib/stubs
+  CMAKE_ARGS=-DCMAKE_AR=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ar -DCMAKE_CXX_COMPILER_AR=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ar -DCMAKE_C_COMPILER_AR=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ar -DCMAKE_RANLIB=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ranlib -DCMAKE_CXX_COMPILER_RANLIB=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ranlib -DCMAKE_C_COMPILER_RANLIB=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ranlib -DCMAKE_LINKER=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ld -DCMAKE_STRIP=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-strip -DCMAKE_BUILD_TYPE=Release
+  CMAKE_PREFIX_PATH=/home/syasna_smith_edu/.conda/envs/hpc_llm:/home/syasna_smith_edu/.conda/envs/hpc_llm/x86_64-conda-linux-gnu/sysroot/usr
+  CONDA_BUILD_SYSROOT=/home/syasna_smith_edu/.conda/envs/hpc_llm/x86_64-conda-linux-gnu/sysroot
+  CONDA_DEFAULT_ENV=hpc_llm
+  CONDA_ENVS_PATH=/work/pi_jcrouser_smith_edu/.conda/envs:/home/syasna_smith_edu/.conda/envs:/modules/apps/conda-environments
+  CONDA_EXE=/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1/bin/conda
+  CONDA_PKGS_DIRS=/home/syasna_smith_edu/.conda/pkgs
+  CONDA_PREFIX=/home/syasna_smith_edu/.conda/envs/hpc_llm
+  CONDA_PROMPT_MODIFIER=(hpc_llm) 
+  CONDA_PYTHON_EXE=/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1/bin/python
+  CONDA_SHLVL=1
+  CONDA_TOOLCHAIN_BUILD=x86_64-conda-linux-gnu
+  CONDA_TOOLCHAIN_HOST=x86_64-conda-linux-gnu
+  CPP=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-cpp
+  CPPFLAGS=-DNDEBUG -D_FORTIFY_SOURCE=2 -O2 -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include  -I/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/include  -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib/stubs
+  CXX=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-c++
+  CXXFILT=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-c++filt
+  CXXFLAGS=-fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include  -I/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/include  -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib/stubs
+  CXX_FOR_BUILD=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-c++
+  DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/2903/bus
+  DEBUGINFOD_URLS=https://debuginfod.ubuntu.com 
+  DEBUG_CFLAGS=-march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-all -fno-plt -Og -g -Wall -Wextra -fvar-tracking-assignments -ffunction-sections -pipe -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include
+  DEBUG_CPPFLAGS=-D_DEBUG -D_FORTIFY_SOURCE=2 -Og -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include
+  DEBUG_CXXFLAGS=-fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-all -fno-plt -Og -g -Wall -Wextra -fvar-tracking-assignments -ffunction-sections -pipe -isystem /home/syasna_smith_edu/.conda/envs/hpc_llm/include
+  DWP=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-dwp
+  ELFEDIT=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-elfedit
+  FPATH=/usr/share/lmod/lmod/init/ksh_funcs
+  GCC=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc
+  GCC_AR=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ar
+  GCC_NM=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-nm
+  GCC_RANLIB=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gcc-ranlib
+  GPROF=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-gprof
+  GSETTINGS_SCHEMA_DIR=/home/syasna_smith_edu/.conda/envs/hpc_llm/share/glib-2.0/schemas
+  GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
+  GXX=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-g++
+  HOME=/home/syasna_smith_edu
+  HOST=x86_64-conda-linux-gnu
+  HPX_LOCATION=/work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/
+  LANG=en_US.UTF-8
+  LD=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ld
+  LDFLAGS=-Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/home/syasna_smith_edu/.conda/envs/hpc_llm/lib -Wl,-rpath-link,/home/syasna_smith_edu/.conda/envs/hpc_llm/lib -L/home/syasna_smith_edu/.conda/envs/hpc_llm/lib  -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib -L/home/syasna_smith_edu/.conda/envs/hpc_llm/targets/x86_64-linux/lib/stubs
+  LD_GOLD=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ld.gold
+  LD_LIBRARY_PATH=/work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib:/work/pi_mrobson_smith_edu/hpx_practice/boost_1_64_0/install/lib:
+  LESSCLOSE=/usr/bin/lesspipe %s %s
+  LESSOPEN=| /usr/bin/lesspipe %s
+  LMOD_ADMIN_FILE=/modules/lmod/module-messages.txt
+  LMOD_CACHED_LOADS=yes
+  LMOD_CMD=/usr/share/lmod/lmod/libexec/lmod
+  LMOD_DIR=/usr/share/lmod/lmod/libexec
+  LMOD_DISABLE_SAME_NAME_AUTOSWAP=yes
+  LMOD_EXACT_MATCH=yes
+  LMOD_PACKAGE_PATH=/modules/lmod/package-dir
+  LMOD_PAGER=less
+  LMOD_PKG=/usr/share/lmod/lmod
+  LMOD_RC=/modules/lmod/lmodrc.lua
+  LMOD_ROOT=/usr/share/lmod
+  LMOD_SETTARG_FULL_SUPPORT=no
+  LMOD_SITE_MSG_FILE=/modules/lmod/message-file.lua
+  LMOD_VERSION=8.7.60
+  LMOD_sys=Linux
+  LOADEDMODULES=conda/latest
+  LOGNAME=syasna_smith_edu
+  LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:
+  MANPATH=/usr/share/lmod/lmod/share/man:
+  MESON_ARGS=-Dbuildtype=release
+  MODULEPATH=/modules/modulefiles/spack/latest/linux-ubuntu24.04-x86_64/Core:/modules/modulefiles/linux-ubuntu24.04-x86_64:/modules/modulefiles/noarch
+  MODULEPATH_ROOT=/usr/share/modulefiles
+  MODULESHOME=/usr/share/lmod/lmod
+  NM=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-nm
+  NVCC_PREPEND_FLAGS= -ccbin=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-c++
+  OBJCOPY=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-objcopy
+  OBJDUMP=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-objdump
+  OLDPWD=/work/pi_mrobson_smith_edu/scratch
+  PATH=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin:/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1/condabin:/home/syasna_smith_edu/bin:/modules/user-resources/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  PKG_CONFIG_PATH=:/work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install//lib/pkgconfig
+  PWD=/work/pi_mrobson_smith_edu/ParEval_amt/drivers
+  PYTHONROOT=/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1
+  RANLIB=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-ranlib
+  READELF=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-readelf
+  SHELL=/bin/bash
+  SHLVL=1
+  SIZE=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-size
+  SSH_CLIENT=10.100.1.0 45794 22
+  SSH_CONNECTION=10.100.1.0 45794 10.100.1.2 22
+  SSH_TTY=/dev/pts/254
+  STRINGS=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-strings
+  STRIP=/home/syasna_smith_edu/.conda/envs/hpc_llm/bin/x86_64-conda-linux-gnu-strip
+  TEMP=/scratch/login
+  TEMPDIR=/scratch/login
+  TERM=xterm-256color
+  TMP=/scratch/login
+  TMPDIR=/scratch/login
+  USER=syasna_smith_edu
+  XDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop
+  XDG_RUNTIME_DIR=/run/user/2903
+  XDG_SESSION_CLASS=user
+  XDG_SESSION_ID=294913
+  XDG_SESSION_TYPE=tty
+  _=./hpx-driver.o
+  _CE_CONDA=
+  _CE_M=
+  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu
+  _LMFILES_=/modules/modulefiles/linux-ubuntu24.04-x86_64/conda/latest.lua
+  _ModuleTable001_=X01vZHVsZVRhYmxlXyA9IHsKTVR2ZXJzaW9uID0gMywKY19yZWJ1aWxkVGltZSA9IDcyMDAuMCwKY19zaG9ydFRpbWUgPSAwLjA4Njc3NzkyNTQ5MTMzMywKZGVwdGhUID0ge30sCmZhbWlseSA9IHt9LAptVCA9IHsKY29uZGEgPSB7CmZuID0gIi9tb2R1bGVzL21vZHVsZWZpbGVzL2xpbnV4LXVidW50dTI0LjA0LXg4Nl82NC9jb25kYS9sYXRlc3QubHVhIiwKZnVsbE5hbWUgPSAiY29uZGEvbGF0ZXN0IiwKbG9hZE9yZGVyID0gMSwKbWNtZFRfNjQgPSB7CkwyMXZaSFZzWlhNdmIzQjBMMnhwYm5WNExYVmlkVzUwZFRJMExqQTBMWGc0Tmw4Mk5DOXRhVzVwWm05eVoyVXpMekkwTGpjdU1TOWxkR012Y0hKdlptbHNaUzVrTDJOdmJtUmhMbk5vID0gewoiYzJWMFpXNTJLQ0pEVDA1
+  _ModuleTable002_=RVFWOUZXRVVpTENJdmJXOWtkV3hsY3k5dmNIUXZiR2x1ZFhndGRXSjFiblIxTWpRdU1EUXRlRGcyWHpZMEwyMXBibWxtYjNKblpUTXZNalF1Tnk0eEwySnBiaTlqYjI1a1lTSXAiCiwgImMyVjBaVzUyS0NKRFQwNUVRVjlRV1ZSSVQwNWZSVmhGSWl3aUwyMXZaSFZzWlhNdmIzQjBMMnhwYm5WNExYVmlkVzUwZFRJMExqQTBMWGc0Tmw4Mk5DOXRhVzVwWm05eVoyVXpMekkwTGpjdU1TOWlhVzR2Y0hsMGFHOXVJaWs9IgosICJjMlYwWlc1MktDSkRUMDVFUVY5VFNFeFdUQ0lzSWpBaUtRPT0iLCAiY0hKbGNHVnVaRjl3WVhSb0tDSlFRVlJJSWl3aUwyMXZaSFZzWlhNdmIzQjBMMnhwYm5WNExYVmlkVzUwZFRJMExqQTBMWGc0Tmw4Mk5DOXRhVzVwWm05eVoyVXpMekkwTGpjdU1TOWpi
+  _ModuleTable003_=MjVrWVdKcGJpSXAiCiwgImMyVjBaVzUyS0NKZlEwVmZRMDlPUkVFaUxDSWlLUT09IiwgImMyVjBaVzUyS0NKZlEwVmZUU0lzSWlJcCIKLCAiYzJWMFgzTm9aV3hzWDJaMWJtTjBhVzl1S0NKZlgyTnZibVJoWDJGamRHbDJZWFJsSWl3aUlGd0tJQ0FnSUdsbUlGc2dMVzRnWENJa2UwTlBUa1JCWDFCVE1WOUNRVU5MVlZBNkszaDlYQ0lnWFRzZ2RHaGxibHdLSUNBZ0lDQWdJQ0JRVXpFOVhDSWtRMDlPUkVGZlVGTXhYMEpCUTB0VlVGd2lPMXdLSUNBZ0lDQWdJQ0JjWEhWdWMyVjBJRU5QVGtSQlgxQlRNVjlDUVVOTFZWQTdYQW9nSUNBZ1ptazdYQW9nSUNBZ1hGeHNiMk5oYkNCaGMydGZZMjl1WkdFN1hBb2dJQ0FnWVhOclgyTnZibVJoUFZ3aUpDaFFVekU5WENJa2UxQlRNVG90ZlZ3
+  _ModuleTable004_=aUlGOWZZMjl1WkdGZlpYaGxJSE5vWld4c0xuQnZjMmw0SUZ3aUpFQmNJaWxjSWlCOGZDQmNYSEpsZEhWeWJqdGNDaUFnSUNCY1hHVjJZV3dnWENJa1lYTnJYMk52Ym1SaFhDSTdYQW9nSUNBZ1gxOWpiMjVrWVY5b1lYTm9jbHdLSWl3aUlpaz0iCiwgImMyVjBYM05vWld4c1gyWjFibU4wYVc5dUtDSmZYMk52Ym1SaFgyVjRaU0lzSWlCY0NpQWdJQ0FvSUZ3aUpFTlBUa1JCWDBWWVJWd2lJQ1JmUTBWZlRTQWtYME5GWDBOUFRrUkJJRndpSkVCY0lpQXBYQW9pTENJaUtRPT0iCiwgImMyVjBYM05vWld4c1gyWjFibU4wYVc5dUtDSmZYMk52Ym1SaFgyaGhjMmh5SWl3aUlGd0tJQ0FnSUdsbUlGc2dMVzRnWENJa2UxcFRTRjlXUlZKVFNVOU9PaXQ0ZlZ3aUlGMDdJSFJvWlc1Y0NpQWdJ
+  _ModuleTable005_=Q0FnSUNBZ1hGeHlaV2hoYzJnN1hBb2dJQ0FnWld4elpWd0tJQ0FnSUNBZ0lDQnBaaUJiSUMxdUlGd2lKSHRRVDFOSVgxWkZVbE5KVDA0NkszaDlYQ0lnWFRzZ2RHaGxibHdLSUNBZ0lDQWdJQ0FnSUNBZ09qdGNDaUFnSUNBZ0lDQWdaV3h6WlZ3S0lDQWdJQ0FnSUNBZ0lDQWdYRnhvWVhOb0lDMXlPMXdLSUNBZ0lDQWdJQ0JtYVR0Y0NpQWdJQ0JtYVZ3S0lpd2lJaWs9IgosICJjMlYwWDNOb1pXeHNYMloxYm1OMGFXOXVLQ0pmWDJOdmJtUmhYM0psWVdOMGFYWmhkR1VpTENJZ1hBb2dJQ0FnWEZ4c2IyTmhiQ0JoYzJ0ZlkyOXVaR0U3WEFvZ0lDQWdZWE5yWDJOdmJtUmhQVndpSkNoUVV6RTlYQ0lrZTFCVE1Ub3RmVndpSUY5ZlkyOXVaR0ZmWlhobElITm9aV3hzTG5CdmMybDRJSEps
+  _ModuleTable006_=WVdOMGFYWmhkR1VwWENJZ2ZId2dYRnh5WlhSMWNtNDdYQW9nSUNBZ1hGeGxkbUZzSUZ3aUpHRnphMTlqYjI1a1lWd2lPMXdLSUNBZ0lGOWZZMjl1WkdGZmFHRnphSEpjQ2lJc0lpSXAiLCAiYzJWMFgzTm9aV3hzWDJaMWJtTjBhVzl1S0NKamIyNWtZU0lzSWlCY0NpQWdJQ0JjWEd4dlkyRnNJR050WkQxY0lpUjdNUzFmWDIxcGMzTnBibWRmWDMxY0lqdGNDaUFnSUNCallYTmxJRndpSkdOdFpGd2lJR2x1SUZ3S0lDQWdJQ0FnSUNCaFkzUnBkbUYwWlNCOElHUmxZV04wYVhaaGRHVXBYQW9nSUNBZ0lDQWdJQ0FnSUNCZlgyTnZibVJoWDJGamRHbDJZWFJsSUZ3aUpFQmNJbHdLSUNBZ0lDQWdJQ0E3TzF3S0lDQWdJQ0FnSUNCcGJuTjBZV3hzSUh3Z2RYQmtZWFJsSUh3Z2RYQm5jbUZr
+  _ModuleTable007_=WlNCOElISmxiVzkyWlNCOElIVnVhVzV6ZEdGc2JDbGNDaUFnSUNBZ0lDQWdJQ0FnSUY5ZlkyOXVaR0ZmWlhobElGd2lKRUJjSWlCOGZDQmNYSEpsZEhWeWJqdGNDaUFnSUNBZ0lDQWdJQ0FnSUY5ZlkyOXVaR0ZmY21WaFkzUnBkbUYwWlZ3S0lDQWdJQ0FnSUNBN08xd0tJQ0FnSUNBZ0lDQXFLVndLSUNBZ0lDQWdJQ0FnSUNBZ1gxOWpiMjVrWVY5bGVHVWdYQ0lrUUZ3aVhBb2dJQ0FnSUNBZ0lEczdYQW9nSUNBZ1pYTmhZMXdLSWl3aUlpaz0iLAp9LAp9LApwcm9wVCA9IHt9LApzdGFja0RlcHRoID0gMCwKc3RhdHVzID0gImFjdGl2ZSIsCnVzZXJOYW1lID0gImNvbmRhL2xhdGVzdCIsCndWID0gIipsYXRlc3QuKnpmaW5hbCIsCn0sCn0sCm1wYXRoQSA9IHsKIi9tb2R1bGVzL21v
+  _ModuleTable008_=ZHVsZWZpbGVzL3NwYWNrL2xhdGVzdC9saW51eC11YnVudHUyNC4wNC14ODZfNjQvQ29yZSIsICIvbW9kdWxlcy9tb2R1bGVmaWxlcy9saW51eC11YnVudHUyNC4wNC14ODZfNjQiLCAiL21vZHVsZXMvbW9kdWxlZmlsZXMvbm9hcmNoIiwKfSwKc3lzdGVtQmFzZU1QQVRIID0gIi91c3Ivc2hhcmUvbW9kdWxlZmlsZXMvTGludXg6L3Vzci9zaGFyZS9tb2R1bGVmaWxlcy9Db3JlOi91c3Ivc2hhcmUvbG1vZC9sbW9kL21vZHVsZWZpbGVzL0NvcmUiLAp9Cg==
+  _ModuleTable_Sz_=8
+  __LMOD_REF_COUNT_CONDA_ENVS_PATH=/work/pi_jcrouser_smith_edu/.conda/envs:1;/home/syasna_smith_edu/.conda/envs:1;/modules/apps/conda-environments:1
+  __LMOD_REF_COUNT_CONDA_PKGS_DIRS=/home/syasna_smith_edu/.conda/pkgs:1
+  __LMOD_REF_COUNT_MODULEPATH=/modules/modulefiles/spack/latest/linux-ubuntu24.04-x86_64/Core:1;/modules/modulefiles/linux-ubuntu24.04-x86_64:1;/modules/modulefiles/noarch:1
+  __LMOD_REF_COUNT_PATH=/modules/opt/linux-ubuntu24.04-x86_64/miniforge3/24.7.1/condabin:1;/home/syasna_smith_edu/bin:1;/modules/user-resources/bin:1;/usr/local/sbin:1;/usr/local/bin:1;/usr/sbin:1;/usr/bin:1;/sbin:1;/bin:1;/usr/games:1;/usr/local/games:1;/snap/bin:1
+  build_alias=x86_64-conda-linux-gnu
+  host_alias=x86_64-conda-linux-gnu
+{stack-trace}: 20 frames:
+0x76305c3d919b  : /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1(+0x6f919b) [0x76305c3d919b] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c3c4de9  : std::__exception_ptr::exception_ptr hpx::detail::get_exception<hpx::exception>(hpx::exception const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [0xa9] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c3c4f05  : void hpx::detail::throw_exception<hpx::exception>(hpx::exception const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, long) [0x75] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c3ca64d  : hpx::detail::throw_exception(hpx::error, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, long) [0xad] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c4e03c8  : hpx::new_handler() [0x178] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305b8bb91f  : operator new(unsigned long) [0x3f] in /lib/x86_64-linux-gnu/libstdc++.so.6
+0x6122b63192e2  : ./hpx-driver.o(+0x172e2) [0x6122b63192e2] in ./hpx-driver.o
+0x6122b6317e8f  : ./hpx-driver.o(+0x15e8f) [0x6122b6317e8f] in ./hpx-driver.o
+0x6122b6316fce  : ./hpx-driver.o(+0x14fce) [0x6122b6316fce] in ./hpx-driver.o
+0x6122b6315715  : ./hpx-driver.o(+0x13715) [0x6122b6315715] in ./hpx-driver.o
+0x6122b630dbf3  : ./hpx-driver.o(+0xbbf3) [0x6122b630dbf3] in ./hpx-driver.o
+0x6122b630b40c  : ./hpx-driver.o(+0x940c) [0x6122b630b40c] in ./hpx-driver.o
+0x6122b63213fa  : ./hpx-driver.o(+0x1f3fa) [0x6122b63213fa] in ./hpx-driver.o
+0x76305c3d3101  : hpx::detail::init_helper(boost::program_options::variables_map&, hpx::util::function<int (int, char**), false> const&) [0x231] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c4ea642  : hpx::runtime::run_helper(hpx::util::function<int (), false> const&, int&, bool) [0x92] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c2c9fc8  : hpx::runtime_distributed::run_helper(hpx::util::function<int (), false> const&, int&) [0x338] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c2cc4ad  : /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1(+0x5ec4ad) [0x76305c2cc4ad] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c3b943e  : hpx::threads::coroutines::detail::coroutine_impl::operator()() [0xee] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+0x76305c3b8c3f  : /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1(+0x6d8c3f) [0x76305c3b8c3f] in /work/pi_mrobson_smith_edu/hpx_practice/hpx/1_5_1_install/lib/libhpx.so.1
+{locality-id}: 0
+{hostname}: [ ]
+{process-id}: 3097515
+{os-thread}: 0, worker-thread#0
+{thread-id}: 0000000044007420
+{thread-description}: <unknown>
+{state}: state_running
+{auxinfo}: 
+{file}: /work/pi_mrobson_smith_edu/hpx_practice/hpx/libs/runtime_local/src/runtime_local.cpp
+{line}: 180
+{function}: new_handler
+{what}: new allocator failed to allocate memory: HPX(out_of_memory)
+

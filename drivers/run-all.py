@@ -11,6 +11,8 @@ import logging
 import os
 from typing import Optional
 
+import sys 
+
 # tpl imports
 from tqdm import tqdm
 
@@ -43,20 +45,22 @@ def get_args():
         then overwrite them. Default behavior is to skip existing results.")
     parser.add_argument("--hide-progress", action="store_true", help="If provided, do not show progress bar.")
     model_group = parser.add_mutually_exclusive_group()
-    model_group.add_argument("--exclude-models", nargs="+", type=str, choices=["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip"], 
+    model_group.add_argument("--exclude-models", nargs="+", type=str, choices=["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip", "hpx"], 
         help="Exclude the given parallelism models from testing.")
-    model_group.add_argument("--include-models", nargs="+", type=str, choices=["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip"],
+    model_group.add_argument("--include-models", nargs="+", type=str, choices=["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip", "hpx"],
         help="Only test the given parallelism models.")
     model_group = parser.add_mutually_exclusive_group()
     model_group.add_argument("--problem", type=str, help="Only test this probem if provided.")
     model_group.add_argument("--problem-type", type=str, help="Only test problems of this type if provided.")
     parser.add_argument("--early-exit-runs", action="store_true", help="If provided, stop evaluating a model output after the first run configuration fails.")
-    parser.add_argument("--build-timeout", type=int, default=30, help="Timeout in seconds for building a program.")
-    parser.add_argument("--run-timeout", type=int, default=120, help="Timeout in seconds for running a program.")
+    parser.add_argument("--build-timeout", type=int, default=60, help="Timeout in seconds for building a program.")
+    parser.add_argument("--run-timeout", type=int, default=240, help="Timeout in seconds for running a program.")
     parser.add_argument("--log", choices=["INFO", "DEBUG", "WARNING", "ERROR", "CRITICAL"], default="INFO",
         type=str.upper, help="logging level")
     parser.add_argument("--log-build-errors", action="store_true", help="On build error, display the stderr of the build process.")
     parser.add_argument("--log-runs", action="store_true", help="Display the stderr and stdout of runs.")
+    parser.add_argument("--cache-file", type=str,
+        help="Optional JSON cache file. Re-used results for identical prompts are read from this file and appended to it as new prompts are evaluated.")
     return parser.parse_args()
 
 def get_driver(
@@ -79,6 +83,7 @@ def already_has_results(prompt: dict) -> bool:
         raise ValueError(f"Prompt {prompt.get('name', 'unknown')} does not have any outputs.")
     
     outputs = prompt["outputs"]
+  
     if len(outputs) == 0 or all(isinstance(o, str) for o in outputs):
         return False
 
@@ -87,6 +92,15 @@ def already_has_results(prompt: dict) -> bool:
 
     raise ValueError(f"Prompt {prompt.get('name', 'unknown')} has invalid outputs.")
 
+def write_cache(cache_file: Optional[str], cache: dict):
+    if not cache_file:
+        return
+    try:
+        with open(cache_file, "w") as fp:
+            json.dump(cache, fp, indent=4)
+    except Exception as exc:
+        logging.error("Failed to write cache file %s: %s", cache_file, exc)
+        
 def main():
     args = get_args()
 
@@ -132,14 +146,16 @@ def main():
         DRIVER_ROOT = os.path.dirname(os.path.abspath(__file__))
     logging.info(f"Using driver root: {DRIVER_ROOT}")
 
+
     # gather the list of parallelism models to test
-    models_to_test = args.include_models if args.include_models else ["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip"]
+    models_to_test = args.include_models if args.include_models else ["serial", "omp", "mpi", "mpi+omp", "kokkos", "cuda", "hip", "hpx"]
     if args.exclude_models:
         models_to_test = [m for m in models_to_test if m not in args.exclude_models]
 
     # run each prompt
     all_prompts = data if args.hide_progress else tqdm(data, desc="Testing prompts")
     for prompt in all_prompts:
+        #print("Prompt is", prompt)
         if prompt["parallelism_model"] not in models_to_test:
             logging.debug(f"Skipping prompt {prompt['name']} because it uses {prompt['parallelism_model']}.")
             continue
@@ -174,10 +190,14 @@ def main():
             build_timeout=args.build_timeout,
             run_timeout=args.run_timeout,
         )
-
+        
+       
+    
         with contextlib.chdir(DRIVER_ROOT):
-            driver.test_all_outputs_in_prompt(prompt)
-
+            driver.test_all_outputs_in_prompt(prompt) 
+            
+   
+        
         # go ahead and write out outputs now
         if args.output and args.output != '-':
             with open(args.output, "w") as fp:

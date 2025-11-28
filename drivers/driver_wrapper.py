@@ -8,11 +8,10 @@ import logging
 import os
 from os import PathLike
 from typing import List, Optional, Tuple
-
+import sys
 # local imports
 from util import all_equal, mean
-from cpp.parallel_validation import Validator, OMPValidator, MPIValidator, MPIandOMPValidator, EmptyValidator
-
+from cpp.parallel_validation import Validator, OMPValidator, MPIValidator, MPIandOMPValidator, EmptyValidator, HPXValidator
 
 class BuildOutput:
     """ Represents the output of a single build. """
@@ -41,7 +40,10 @@ class RunOutput:
         self.stdout = stdout
         self.stderr = stderr
         self.config = config
+        if stderr:
+            print("RUN HAS STDERR ", stderr)
         self.is_valid, self.runtime, self.best_sequential_runtime = self._parse_output(stdout)
+        #print("RUN",self.is_valid, self.runtime, self.best_sequential_runtime)
         if self.is_valid and self.runtime == 0:
             logging.warning(f"Runtime is 0 for run with config {self.config}. Try increasing the problem size.")
         if self.is_valid and self.best_sequential_runtime == 0:
@@ -134,7 +136,8 @@ DRIVER_MAP = {
     "mpi+omp": "cpu",
     "kokkos": "kokkos",
     "cuda": "gpu",
-    "hip": "gpu"
+    "hip": "gpu",
+    "hpx" : "hpx"
 }
 
 """ Validators """
@@ -145,7 +148,8 @@ VALIDATORS = {
     "mpi+omp": MPIandOMPValidator(),
     "kokkos": EmptyValidator(),
     "cuda": EmptyValidator(),
-    "hip": EmptyValidator()
+    "hip": EmptyValidator(),
+    "hpx" : HPXValidator()
 }
 
 class DriverWrapper(ABC):
@@ -221,16 +225,17 @@ class DriverWrapper(ABC):
         ext = LANGUAGE_EXTENSIONS[prompt["language"]]
         if lang == "cpp" and self.parallelism_model in ["cuda", "hip"]:
             ext = ".cu"
+        elif lang == "hpx":
+            ext = ".cpp"
         driver_dirname = f"{name}"
         driver_base = DRIVER_MAP[self.parallelism_model]
         test_driver_file = os.path.join(lang, "benchmarks", type, driver_dirname, driver_base + ext)
         problem_size = self.problem_sizes.get(name, {}).get(self.parallelism_model, "(1<<18)")
-
         outputs = []
         logging.info(f"Testing prompt {name} with {self}...")
         for generated_output in prompt["outputs"]:
             results = self.test_single_output(prompt["prompt"], generated_output, test_driver_file, problem_size)
-
+            #TODO : RUN DRIVER SO RUN_OUTPUTS ISN"T NONE
             outputs.append({
                 "generated_output": generated_output,
                 "source_write_success": results.source_write_success,
@@ -241,6 +246,7 @@ class DriverWrapper(ABC):
                 "are_any_valid": results.are_any_valid(),
                 "are_all_valid": results.are_all_valid(),
                 "best_sequential_runtime": results.best_sequential_runtime(),
+                
                 "runs": [
                     {
                         "did_run": r.exit_code == 0,
@@ -251,7 +257,7 @@ class DriverWrapper(ABC):
                 ] if results.run_outputs is not None else None
             })
         prompt["outputs"] = outputs
-
+        print("FINAL OUTPUTS", outputs)
         # log some stats
         num_outputs = len(outputs)
         num_successful_writes = sum(1 for o in outputs if o["source_write_success"])
@@ -266,5 +272,6 @@ class DriverWrapper(ABC):
         logging.info(f"  {num_successful_runs} successful runs (all tests)")
         logging.info(f"  {num_valid_outputs} valid outputs (all tests)")
         #logging.info(f"  {mean_runtime} mean runtime")
-
+        prompt["num_outputs"] = num_outputs
+        prompt["num_valid_outputs"] = num_valid_outputs
         return prompt

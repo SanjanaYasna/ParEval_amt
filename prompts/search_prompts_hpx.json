@@ -1,0 +1,37 @@
+[
+    {
+        "problem_type": "search",
+        "language": "cpp",
+        "name": "35_search_search_for_last_struct_by_key",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\nstruct Book {\n   std::string title;\n   int pages;\n};\n\n/* Return the index of the last Book item in the vector books where Book.pages is less than 100.\n   Use HPX to search in parallel.\n\t Example:\n\n   input: [{title=\"Green Eggs and Ham\", pages=72}, {title=\"gulliver's travels\", pages=362}, {title=\"Stories of Your Life\", pages=54}, {title=\"Hamilton\", pages=818}]\n   output: 2\n*/\nsize_t findLastShortBook(std::vector<Book> const& books) {"
+    }, 
+    {
+        "problem_type": "search",
+        "language": "cpp",
+        "name": "36_search_check_if_array_contains_value",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return true if the vector x contains the value `target`. Return false otherwise.\n   Use HPX to search in parallel.\n   Examples:\n\n   input: x=[1, 8, 2, 6, 4, 6], target=3\n   output: false\n   \n   input: x=[1, 8, 2, 6, 4, 6], target=8\n   output: true\n*/\nbool contains(std::vector<int> const& x, int target) {"
+    }, 
+    {
+        "problem_type": "search",
+        "language": "cpp",
+        "name": "37_search_find_the_closest_number_to_pi",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return the index of the value in the vector x that is closest to the math constant PI.\n   Use M_PI for the value of PI.\n   Use HPX to search in parallel.\n   Example:\n\n   input: [9.18, 3.05, 7.24, 11.3, -166.49, 2.1]\n   output: 1\n*/\nsize_t findClosestToPi(std::vector<double> const& x) {"
+    },
+    {
+        "problem_type": "search",
+        "language": "cpp",
+        "name": "38_search_find_the_first_even_number",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return the index of the first even number in the vector x.\n   Use HPX to parallelize the search.\n   Examples:\n\n   input: [7, 3, 9, 5, 5, 7, 2, 9, 12, 11]\n   output: 6\n\n   input: [3, 8, 9, 9, 3, 4, 8, 6]\n   output: 1\n*/\nsize_t findFirstEven(std::vector<int> const& x) {"
+    },
+    {
+        "problem_type": "search",
+        "language": "cpp",
+        "name": "39_search_xor_contains",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return true if `val` is only in one of vectors x or y.\n   Return false if it is in both or neither.\n   Use HPX to search in parallel.\n   Examples:\n\n   input: x=[1,8,4,3,2], y=[3,4,4,1,1,7], val=7\n   output: true\n\n   input: x=[1,8,4,3,2], y=[3,4,4,1,1,7], val=1\n   output: false\n*/\nbool xorContains(std::vector<int> const& x, std::vector<int> const& y, int val) {"
+    }
+]

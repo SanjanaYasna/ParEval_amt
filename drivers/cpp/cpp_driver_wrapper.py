@@ -25,6 +25,7 @@ DRIVER_MAP = {
     "kokkos": "kokkos-driver.o",
     "cuda": "cuda-driver.o",
     "hip": "hip-driver.o",
+    "hpx" : "hpx-driver.cc"
 }
 
 """ Compiler settings """
@@ -35,7 +36,8 @@ COMPILER_SETTINGS = {
     "mpi+omp": {"CXX": "mpicxx", "CXXFLAGS": "-std=c++17 -O3 -fopenmp"},
     "kokkos": {"CXX": "g++", "CXXFLAGS": "-std=c++17 -O3 -fopenmp -I../tpl/kokkos/build/include ../tpl/kokkos/build/lib64/libkokkoscore.a ../tpl/kokkos/build/lib64/libkokkoscontainers.a ../tpl/kokkos/build/lib64/libkokkossimd.a"},
     "cuda": {"CXX": "nvcc", "CXXFLAGS": "-std=c++17 --generate-code arch=compute_80,code=sm_80 -O3 -Xcompiler \"-std=c++17 -O3\""},
-    "hip": {"CXX": "hipcc", "CXXFLAGS": "-std=c++17 -O3 -Xcompiler \"-std=c++17\" -Xcompiler \"-O3\" -Wno-unused-result"}
+    "hip": {"CXX": "hipcc", "CXXFLAGS": "-std=c++17 -O3 -Xcompiler \"-std=c++17\" -Xcompiler \"-O3\" -Wno-unused-result"},
+    "hpx": {"CXX": "c++", "CXXFLAGS": "-O3  `pkg-config --cflags --libs hpx_application` -lhpx_iostreams  -w"}
 }
 
 def build_kokkos(driver_src: PathLike, output_root: PathLike, problem_size: str = "(1<<20)"):
@@ -60,7 +62,7 @@ class CppDriverWrapper(DriverWrapper):
 
         self.build_configs = self.build_configs or COMPILER_SETTINGS
         self.model_driver_file = os.path.join("cpp", "models", DRIVER_MAP[self.parallelism_model])
-
+        
     def write_source(self, content: str, fpath: PathLike) -> bool:
         """ Write the given c++ source to the given file. """
         with open(fpath, "w") as fp:
@@ -92,11 +94,19 @@ class CppDriverWrapper(DriverWrapper):
             binaries_str = ' '.join(binaries)
             if self.parallelism_model == "mpi+omp":
                 macro = "-DUSE_MPI_OMP"
+            elif self.parallelism_model == "hpx":
+                macro = "-DUSE_HPX"
+                #TODO ADD CMD  
             else:
                 macro = f"-DUSE_{self.parallelism_model.upper()}"
-            cmd = f"{CXX} {CXXFLAGS} -Icpp -Icpp/models {macro} {binaries_str} -o {output_path}"
+            if self.parallelism_model == "hpx":
+                cmd = f"{CXX} -o {output_path} {binaries_str} {macro} {CXXFLAGS}"
+            else:
+                cmd = f"{CXX}  -o {output_path} {binaries_str} -Icpp -Icpp/models {macro} {CXXFLAGS}"
+      
             try:
                 compile_process = run_command(cmd, timeout=self.build_timeout, dry=self.dry)
+                #print("STD OUT",compile_process.stdout, compile_process.returncode, compile_process.stderr)
             except subprocess.TimeoutExpired as e:
                 return BuildOutput(-1, str(e.stdout), f"[Timeout] {str(e.stderr)}")
         return BuildOutput(compile_process.returncode, compile_process.stdout, compile_process.stderr)
@@ -105,8 +115,10 @@ class CppDriverWrapper(DriverWrapper):
         """ Run the given executable. """
         launch_format = self.launch_configs["format"]
         launch_cmd = launch_format.format(exec_path=executable, args="", **run_config).strip()
+        #print("LAUNCH CMD", launch_cmd)
         try:
             run_process = run_command(launch_cmd, timeout=self.run_timeout, dry=self.dry)
+            #print("RUN PROCESS RESULTS",run_process.returncode, run_process.stdout, run_process.stderr)
         except subprocess.TimeoutExpired as e:
             return RunOutput(-1, str(e.stdout), f"[Timeout] {str(e.stderr)}", config=run_config)
         except UnicodeDecodeError as e:
@@ -121,8 +133,9 @@ class CppDriverWrapper(DriverWrapper):
             # write out the prompt + output
             src_ext = "cuh" if self.parallelism_model in ["cuda", "hip"] else "hpp"
             src_path = os.path.join(tmpdir, f"generated-code.{src_ext}")
+            
             prompt = self.patch_prompt(prompt)
-            write_success = self.write_source(prompt+"\n"+output, src_path)
+            write_success = self.write_source(output, src_path)
             logging.debug(f"Wrote source to {src_path}.")
 
             # compile and run the output
@@ -134,6 +147,7 @@ class CppDriverWrapper(DriverWrapper):
             logging.debug(f"Build result: {build_result}")
             if self.display_build_errors and build_result.stderr and not build_result.did_build:
                 logging.debug(build_result.stderr)
+                print("DID NOT BUILD")
 
             # run the code
             configs = self.launch_configs["params"]
@@ -149,6 +163,7 @@ class CppDriverWrapper(DriverWrapper):
                         break
             else:
                 run_results = None
+            #print("RUN RESULTS", run_results)
             logging.debug(f"Run result: {run_results}")
             if run_results:
                 for run_result in run_results:

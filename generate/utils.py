@@ -6,7 +6,77 @@ import re
 import torch
 from torch.utils.data import Dataset
 from transformers import StoppingCriteria
+import GPUtil
+import psutil 
+import threading
+import  time
+import torch
 
+
+class GPUCPUMonitor:
+    def __init__(self, monitor_interval = 2, gpu = True):
+        self.monitor_interval = monitor_interval
+        self.gpu_flag = gpu
+        #for GPU
+        self._gpu_memory_usage = [] 
+        self.gpu_utilization = [] 
+        self.stop_flag = []
+        self._monitoring_thread = None
+        #for both
+        self._time = None
+        self._start_time = None
+        self._end_time = None
+        self._start_memory = None
+        self._end_memory = None
+        self._memory = None
+        #for cpu
+        self._cpu_percent_start = None
+        self._cpu_percent_end  = None
+        self._cpu_percent = None
+        
+    def start(self):
+        self.stop_flag = False
+        self.gpu_memory_usage = [] 
+        self.gpu_utilization = []
+        #both cpu and gpu have time and vram metrics
+        self._start_time = time.time()
+        self._start_memory = psutil.virtual_memory().used
+        def monitor():
+            while not self.stop_flag:
+                gpus = GPUtil.getGPUs()
+                gpu = gpus[0]
+                self.gpu_memory_usage.append(gpu.memoryUsed)
+                self.gpu_utilization.append(gpu.load)
+                time.sleep(self.monitor_interval)
+        if self.gpu_flag:
+            self._monitoring_thread = threading.Thread(target=monitor)
+            self._monitoring_thread.start()
+        else: #if cpu
+            #just get cpu percentages 
+            self._cpu_percent_start = psutil.cpu_percent(interval=None) 
+    def get_max_gpu_memory_usage(self):
+        return max(self.gpu_memory_usage) if self.gpu_memory_usage else -1
+    def get_max_gpu_utilization(self):
+        return max(self.gpu_utilization) if self.gpu_utilization else -1    
+    def get_average_gpu_utilization(self): 
+        return sum(self.gpu_utilization) / len(self.gpu_utilization) if self.gpu_utilization else -1
+    def get_average_gpu_memory_usage(self):
+        return sum(self.gpu_memory_usage) / len(self.gpu_memory_usage) if self.gpu_memory_usage else -1
+    def get_num_logical_cpus():
+        return psutil.cpu_count()
+    def stop(self):
+        self.stop_flag = True
+        if self.gpu_flag:
+            if self._monitoring_thread:
+                self._monitoring_thread.join()
+        else:
+            self._cpu_percent_end = psutil.cpu_percent(interval=None)
+            self._cpu_percent = self._cpu_percent_start - self._cpu_percent_end
+        #compute vram and time for both
+        self._end_memory = psutil.virtual_memory().used
+        self._memory = self._end_memory - self._start_memory
+        self._end_time = time.time()
+        self._time = self._end_time - self._start_time
 
 def clean_output(output : str, prompt : str) -> str:
     """ Remove `prompt` from the begging of `output`.
@@ -175,6 +245,36 @@ class StarCoderConfig(InferenceConfig):
     def clean_output(self, output: str, prompt: str) -> str:
         return clean_output(output, prompt)
 
+class Gpt2Config(InferenceConfig):
+
+    def __init__(self, prompted : bool = False):
+        super().__init__(prompted=prompted)
+
+    def get_dtype(self):
+        return torch.float16
+
+    def init_padding(self, tokenizer):
+        tokenizer.pad_token_id = tokenizer.eos_token_id  # for batching
+        tokenizer.padding_side = "left"   # for decoder-only models
+        pass
+
+    def get_pad_token_id(self, tokenizer) -> int:
+        return tokenizer.pad_token_id
+
+    def get_eos_token_id(self, tokenizer) -> int:
+        return tokenizer.eos_token_id
+    
+    def trust_remote_code(self) -> bool:
+        return False
+
+    def format_prompt(self, prompt : str) -> str:
+        if self.prompted:
+            return f"// filename: solutions/solution_1.cpp\n// here is the correct implementation of the coding exercise\n\n{prompt}"
+        return prompt.strip()
+
+    def clean_output(self, output: str, prompt: str) -> str:
+        return clean_output(output, prompt)
+    
 class CodeLlamaConfig(InferenceConfig):
 
     def __init__(self, prompted : bool = False):
@@ -484,6 +584,8 @@ def get_inference_config(model_name : str, **kwargs) -> InferenceConfig:
         return ChatMLConfig(**kwargs)
     elif model_name.startswith('Qwen/Qwen2.5'):
         return QwenConfig(**kwargs)
+    elif model_name.startswith('gpt2'):
+        return Gpt2Config(**kwargs)
     else:
         raise ValueError(f"Unknown model name: {model_name}")
 

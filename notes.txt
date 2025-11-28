@@ -1,0 +1,25 @@
+cd to drivers/
+c++ -o  hpx-driver.o  cpp/models/hpx-driver.cc cpp/benchmarks/dense_la/02_dense_la_gemm/hpx.cc  -DUSE_HPX -O3 `pkg-config --cflags --libs hpx_application`    -lhpx_iostreams -Icpp  -Icpp/models -DDRIVER_PROBLEM_SIZE="(1<<9)" -w 
+./hpx-driver.o 
+
+Works, for generated-code.hpp 
+#include <iostream>
+#include <hpx/hpx_init.hpp>
+#include <hpx/include/iostreams.hpp>
+#include <hpx/include/parallel_for_loop.hpp>
+#include <hpx/include/lcos.hpp>
+#include <hpx/include/parallel_for_each.hpp>
+#include <hpx/include/parallel_generate.hpp>
+#include <hpx/include/parallel_transform_reduce.hpp>
+
+void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vector<double> &C, size_t M, size_t K, size_t N) {
+    //1.10.0 : hpx::experimental::for_loop(hpx::execution::par, 0, M, [&](int i){
+    hpx::parallel::for_loop(hpx::parallel::execution::par, 0, M, [&](int i){
+        for (int k = 0; k < K; k++) {
+            int sum = 0;
+            for (int j = 0; j < N; j++) {
+                C[i*N + j] += A[i * K + k] * B[k * N + j];
+            }
+        }
+    });
+} 

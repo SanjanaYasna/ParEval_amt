@@ -5,7 +5,7 @@ import shlex
 import subprocess
 from subprocess import CompletedProcess
 from typing import Optional
-
+import re
 
 def all_equal(iterable) -> bool:
     """ Returns true if all values in iterable are equal """
@@ -29,11 +29,36 @@ def mean(iterable) -> float:
         iterable = list(iterable)
     return sum(iterable) / len(iterable) if len(iterable) > 0 else 0
 
+def _needs_shell(cmd: str) -> bool:
+    """
+    Decide whether `cmd` uses shell syntax that needs a shell for correct
+    execution (pipes, command substitution, wildcards, etc.).
+    """
+    return bool(re.search(r"[|&;<>(){}\[\]*?$`]", cmd))
+
 def run_command(cmd: str, timeout: Optional[int] = None, dry: bool = False) -> CompletedProcess:
     """ Run the given command on the system and return the result """
     logging.debug(f"Running command: {cmd}")
     if dry:
         return CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+    if isinstance(cmd, str):
+        if _needs_shell(cmd):
+            return subprocess.run(
+                cmd,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+        args = shlex.split(cmd)
     else:
-        cmd = shlex.split(cmd)
-        return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+
+        args = list(cmd)
+
+    return subprocess.run(
+        args,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+  
