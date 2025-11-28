@@ -4,7 +4,7 @@
 // /* Factorize the matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.
 //    Store the results for L and U into the original matrix A. 
 //    A is an NxN matrix.
-//    Use HPX to compute in parallel. Assume HPX as already been initialized.
+//    Use HPX to compute in parallel. Assume main() and hpx_main() functions have already been initialized and simply complete the function below.
 //    Example:
 // 
 //    input: [[4, 3], [6, 3]]
@@ -16,16 +16,16 @@
 
 // FROM REFERENCE: https://github.com/jgurhem/HPX_LA/blob/master/lu_tiled.cpp#L123 
 
-#include "hpx-includes.hpp"
-#include "utilities_old.hpp"
-
-#include <algorithm>
-#include <cmath>
+#include <algorithm> 
 #include <numeric>
 #include <random>
 #include <vector>
 
-#include "baseline.hpp"
+
+#include "hpx-includes.hpp"
+
+#include "utilities.hpp"
+#include "baseline.hpp" //contains correctLuFactorize 
 #include "generated-code.hpp"
 
 struct Context {
@@ -58,39 +58,22 @@ void NO_OPTIMIZE best(Context *ctx) {
 
 bool validate(Context *ctx) {
     const size_t TEST_SIZE = 512;
-
+    //vec of test case inputs for baseline
+    std::vector<double> A_correct(TEST_SIZE * TEST_SIZE), A_test(TEST_SIZE * TEST_SIZE);
+    //vec of test case inputs for generated code
     std::vector<double> A(TEST_SIZE * TEST_SIZE);
-    std::vector<double> A_correct(TEST_SIZE * TEST_SIZE);
-    std::vector<double> A_test(TEST_SIZE * TEST_SIZE);
-
-    int rank;
-    GET_RANK(rank);
-
+ 
     const size_t numTries = MAX_VALIDATION_ATTEMPTS;
-    for (int trialIter = 0; trialIter < numTries; trialIter += 1) {
-        // set up input
-        fillRand(A, -10.0, 10.0);
-        BCAST(A, DOUBLE);
-
-        // compute correct result
+    for (int trialIter = 0; trialIter < num_tries; trialIter++){
+        fillRand(A_host, -10.0, 10.0);
         A_correct = A;
-        correctLuFactorize(A_correct, TEST_SIZE);
-
-        // compute test result
+        correctLuFactorize(A_correct, TEST_SIZE)
         A_test = A;
         luFactorize(A_test, TEST_SIZE);
-        SYNC();
-        
-        bool isCorrect = true;
-        if (IS_ROOT(rank) && !fequal(A_correct, A_test, 1e-3)) {
-            isCorrect = false;
-        }
-        BCAST_PTR(&isCorrect, 1, CXX_BOOL);
-        if (!isCorrect) {
+        if (!fequal(A_host, A_test, 1e-3)) {
             return false;
         }
     }
-
     return true;
 }
 
