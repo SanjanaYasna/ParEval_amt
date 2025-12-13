@@ -28,6 +28,7 @@
 #include "baseline.hpp"
 #include "generated-code.hpp"
 
+
 struct Context {
     std::vector<size_t> A_rows, A_columns;
     std::vector<double> A_values;

@@ -35,6 +35,20 @@ def check(df: pd.DataFrame):
         print("The following (name, parallelism_model) pairs have zero successful builds:")
         print(agg)
 
+def metric_value(prompt: dict, key: str, idx: int):
+    """
+    Safely extract prompt[key][idx] if it exists; otherwise return None.
+    Works if the value is missing, None, or shorter than idx.
+    """
+    values = prompt.get(key)
+    if values is None:
+        return None
+    if isinstance(values, list):
+        if idx < len(values):
+            return values[idx]
+        return None
+    return values  # fall back to scalar if not a list
+
 def main():
     args = get_args()
 
@@ -45,11 +59,14 @@ def main():
     # filter out entries without outputs
     input_json = list(filter(lambda x: has_outputs(x), input_json))
 
+    # input_json = input_json[:2]
     # parse out rows; each run becomes a row
     rows = []
     for prompt in input_json:
         for output_idx, output in enumerate(prompt["outputs"]):
             if output["runs"] is None:
+                # print("vram used", prompt["virtual_memory_used"][output_idx])
+                # print("generation times", prompt["generation_times"][output_idx])
                 row = {
                     "prompt": prompt["prompt"],
                     "name": prompt["name"],
@@ -65,7 +82,15 @@ def main():
                     "did_build": output["did_build"],
                     "is_source_valid": output["is_source_valid"],
                     "best_sequential_runtime": output["best_sequential_runtime"],
-                    "output_idx": output_idx
+                    "output_idx": output_idx,
+                    #general prompt-specific generation statistics
+                    "virtual_memory_used": metric_value(prompt, "virtual_memory_used", output_idx),
+                "max_gpu_memory_usage": metric_value(prompt, "max_gpu_memory_usage", output_idx),
+                "max_gpu_utilization": metric_value(prompt, "max_gpu_utilization", output_idx),
+                "average_gpu_memory_usage": metric_value(prompt, "average_gpu_memory_usage", output_idx),
+                "average_gpu_utilization": metric_value(prompt, "average_gpu_utilization", output_idx),
+                "generation_times": metric_value(prompt, "generation_times", output_idx),
+                    
                 }
                 rows.append(row)
                 continue
@@ -88,12 +113,21 @@ def main():
                     "best_sequential_runtime": output["best_sequential_runtime"],
                     "output_idx": output_idx,
                     "run_idx": run_idx,
+                    #general prompt-specific generation statistics
+                    "virtual_memory_used": metric_value(prompt, "virtual_memory_used", output_idx),
+                "max_gpu_memory_usage": metric_value(prompt, "max_gpu_memory_usage", output_idx),
+                "max_gpu_utilization": metric_value(prompt, "max_gpu_utilization", output_idx),
+                "average_gpu_memory_usage": metric_value(prompt, "average_gpu_memory_usage", output_idx),
+                "average_gpu_utilization": metric_value(prompt, "average_gpu_utilization", output_idx),
+                "generation_times": metric_value(prompt, "generation_times", output_idx),
                     **run
                 }
                 rows.append(row)
-    
+            
+            #print(prompt["max_gpu_memory_usage"])
     # create dataframe
     df = pd.DataFrame(rows)
+    print(df.keys())
 
     # check for some possible data issues
     check(df)

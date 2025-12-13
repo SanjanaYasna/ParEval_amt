@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 
-// struct Element {
-//     size_t index;
-//     double value;
-// };
+struct Element {
+    size_t index;
+    double value;
+};
 
 /* Compute z = alpha*x+y where x and y are sparse vectors. Store the result in z.
    Example:

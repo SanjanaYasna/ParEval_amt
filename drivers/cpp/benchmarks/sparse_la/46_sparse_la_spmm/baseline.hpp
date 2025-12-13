@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 
-// struct COOElement {
-//    size_t row, column;
-//    double value;
-// };
+struct COOElement {
+   size_t row, column;
+   double value;
+};
 
 /* Compute the matrix multiplication Y=AX. A is a sparse MxK matrix in COO format.
    X is a sparse KxN matrix in COO format. Y is a dense MxN matrix in row-major.

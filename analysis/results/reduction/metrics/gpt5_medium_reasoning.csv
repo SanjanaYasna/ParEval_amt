@@ -1,0 +1,6 @@
+model,execution model,prompt,build@1,pass@1,strict_pass@1,speedup@1,speedup_max@1,efficiency@1,efficiency_max@1,build@5,pass@5,strict_pass@5,speedup@5,speedup_max@5,efficiency@5,efficiency_max@5,build@10,pass@10,strict_pass@10,speedup@10,speedup_max@10,efficiency@10,efficiency_max@10,build@20,pass@20,strict_pass@20,speedup@20,speedup_max@20,efficiency@20,efficiency_max@20,max_new_tokens,virtual_memory_used,max_gpu_memory_usage,max_gpu_utilization,average_gpu_memory_usage,average_gpu_utilization,generation_times
+gpt5_medium,hpx,25_reduce_xor,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,2048.0,,,,,,11.141079771518708
+gpt5_medium,hpx,26_reduce_product_of_inverses,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,2048.0,,,,,,14.179372272491456
+gpt5_medium,hpx,27_reduce_average,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,2048.0,,,,,,9.2178564119339
+gpt5_medium,hpx,28_reduce_smallest_odd_number,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,2048.0,,,,,,13.486479353904723
+gpt5_medium,hpx,29_reduce_sum_of_min_of_pairs,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0.0,0.0,0.0,0.0,2048.0,,,,,,11.363659462928773

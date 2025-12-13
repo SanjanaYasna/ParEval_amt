@@ -2,10 +2,10 @@
 #include <vector>
 
 // defined in prompt
-// struct COOElement {
-//    size_t row, column;
-//    double value;
-// };
+struct COOElement {
+   size_t row, column;
+   double value;
+};
 
 /* Factorize the sparse matrix A into A=LU where L is a lower triangular matrix and U is an upper triangular matrix.
    A is a sparse NxN matrix stored in COO format. L and U are NxN matrices in row-major.

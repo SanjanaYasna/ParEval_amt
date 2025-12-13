@@ -11,7 +11,6 @@
 // */
 // void solveLinearSystem(std::vector<double> const& A, std::vector<double> const& b, std::vector<double> &x, size_t N) {
     //other option:
-// void solveLinearSystem(std::vector<hpx::shared_future<std::vector<double>>> &A, std::vector<hpx::shared_future<std::vector<double>>> &b, std::vector<hpx::shared_future<std::vector<double>>> &x, size_t N) {
 
 #include "hpx-includes.hpp"
 #include "utilities_old.hpp"

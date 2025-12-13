@@ -74,7 +74,6 @@ class RunOutput:
 
         return validation, runtime, best_sequential_runtime
 
-
 class GeneratedTextResult:
     """ The result of running a single prompt """
     source_write_success: bool
@@ -226,7 +225,7 @@ class DriverWrapper(ABC):
         if lang == "cpp" and self.parallelism_model in ["cuda", "hip"]:
             ext = ".cu"
         elif lang == "hpx":
-            ext = ".cpp"
+            ext = ".cc"
         driver_dirname = f"{name}"
         driver_base = DRIVER_MAP[self.parallelism_model]
         test_driver_file = os.path.join(lang, "benchmarks", type, driver_dirname, driver_base + ext)

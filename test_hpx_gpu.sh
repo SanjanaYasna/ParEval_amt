@@ -20,7 +20,7 @@ cd /work/pi_mrobson_smith_edu/ParEval_amt/generate
 source ../../.hpc_src
 
 #TODO: DEBUG phind-v2 
-declare -a models=("starcoder2-15b")
+declare -a models=("gpt5")
 curr_model=${models[$SLURM_ARRAY_TASK_ID]}
 echo "Running model: $curr_model"
 

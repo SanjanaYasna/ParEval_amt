@@ -9,7 +9,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPTNeoForCausalLM, Auto
 # local imports
 from utils import BalancedBracketsCriteria, PromptDataset, clean_output, get_inference_config
 from utils import GPUCPUMonitor
-import google.generativeai as genai
+from google import genai
 from collections import defaultdict
 
 from openai import OpenAI
@@ -37,7 +37,7 @@ parser.add_argument('--hf_token', type=str, help='HuggingFace API token for load
 parser.add_argument('--quantize_starcoder', action="store_true")
 args = parser.parse_args()
 
-client = OpenAI()
+client = OpenAI(timeout=800.0)
 """ Load prompts """
 with open(args.prompts, 'r') as json_file:
     prompts = json.load(json_file)
@@ -151,6 +151,10 @@ def profile_generation(model, tokenizer, device, prompt):
             model ="gpt-5"    
             , input = f"{prompt['prompt']}"
             , max_output_tokens= 2048 
+          #  ,reasoning={ "effort": "low" }
+            ,reasoning={ "effort": "medium" }
+            ,text={ "verbosity": "low" }
+            , service_tier="flex"
         ) 
         generated_code = response.output_text
 

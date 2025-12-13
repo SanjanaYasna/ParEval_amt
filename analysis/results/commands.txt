@@ -1,0 +1,17 @@
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/la/magicoder_input.csv" -n 100 --model-name "magicoder" -o results/la/metrics/magicoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/la/hpc-coder_input.csv" -n 100 --model-name "hpc-coder" -o results/la/metrics/hpc-coder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/la/starcoder_input.csv" -n 100 --model-name "starcoder" -o results/la/metrics/starcoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/la/gpt5_low_reasoning.csv" -n 100 --model-name "gpt5_low" -o results/la/metrics/gpt5_low_reasoning.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/la/gpt5_medium_reasoning_input.csv" -n 100 --model-name "gpt5_medium" -o results/la/metrics/gpt5_medium_reasoning.csv
+
+
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/magicoder_input.csv" -n 100 --model-name "magicoder" -o results/graph/metrics/magicoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/magicoder.csv" -n 100 --model-name "magicoder" -o results/reduction/metrics/magicoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/hpc-coder_input.csv" -n 100 --model-name "hpc-coder" -o results/graph/metrics/hpc-coder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/hpc-coder.csv" -n 100 --model-name "hpc-coder" -o results/reduction/metrics/hpc-coder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/starcoder_input.csv" -n 100 --model-name "starcoder" -o results/graph/metrics/starcoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/starcoder.csv" -n 100 --model-name "starcoder" -o results/reduction/metrics/starcoder.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/gpt5_low_reasoning_input.csv" -n 100 --model-name "gpt5_low" -o results/graph/metrics/gpt5_low_reasoning.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/gpt5_low_reasoning.csv" -n 100 --model-name "gpt5_low" -o results/reduction/metrics/gpt5_low_reasoning.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/gpt5_medium_reasoning_input.csv" -n 100 --model-name "gpt5_medium" -o results/graph/metrics/gpt5_medium_reasoning.csv
+python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/gpt5_medium_reasoning.csv" -n 100 --model-name "gpt5_medium" -o results/reduction/metrics/gpt5_medium_reasoning.csv

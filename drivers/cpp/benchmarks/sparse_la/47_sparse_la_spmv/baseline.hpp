@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 
-// struct COOElement {
-//    size_t row, column;
-//    double value;
-// };
+struct COOElement {
+   size_t row, column;
+   double value;
+};
 
 /* Compute y = alpha*A*x + beta*y where alpha and beta are scalars, x and y are vectors,
    and A is a sparse matrix stored in COO format.

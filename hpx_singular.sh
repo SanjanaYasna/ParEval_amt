@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J st_reduce
+#SBATCH -J gpt_la
 #SBATCH --output=reduce.txt
 #SBATCH -p gpu
 #SBATCH --ntasks=1
@@ -7,8 +7,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem-per-gpu=80G #comfortable min for phind
 #SBATCH --constraint=a100
-#SBATCH -t 24:00:00 # Job time limit
-
+#SBATCH -t 72:00:00 # Job time limit
 
 #Needed for phindv2 to run at all
 #module load conda/latest
