@@ -1,6 +1,7 @@
 #include <iostream>
 #include <hpx/hpx_main.hpp>
 #include <algorithm>
+#include <cfloat>
 #include <cmath>
 #include <numeric>
 #include <random>

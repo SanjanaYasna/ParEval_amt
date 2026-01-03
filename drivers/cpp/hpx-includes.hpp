@@ -14,7 +14,6 @@
 #include <hpx/barrier.hpp>
 #include <hpx/channel.hpp>
 #include <hpx/chrono.hpp>
-#include <hpx/distributed/future.hpp>
 #include <hpx/distributed/runtime.hpp>
 #include <hpx/execution.hpp>
 #include <hpx/functional.hpp>

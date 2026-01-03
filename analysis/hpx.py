@@ -119,7 +119,7 @@ def _speedupk(runtimes: Union[pd.Series, np.ndarray], baseline_runtime: float, k
         total += num / den
     return total
 
-
+#get speedup for 16 threads (or whatever HPX_THREAD_TARGET is) vs best sequential 
 def speedupk(df: pd.DataFrame, k: int) -> pd.DataFrame:
     df = df[
         (df["parallelism_model"] == "hpx")
@@ -178,7 +178,8 @@ def _efficiencyk(
         total += num / den
     return total
 
-
+#PER THREAD speedup, so normalize by n_resources for all differenet thread counts
+#like speedup, computed relative to serial best runtime
 def efficiencyk(df: pd.DataFrame, k: int) -> pd.DataFrame:
     df = df[(df["parallelism_model"] == "hpx") & (df["is_valid"])]
     if df.empty:

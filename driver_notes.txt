@@ -21,5 +21,4 @@ void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vecto
                 C[i*N + j] += A[i * K + k] * B[k * N + j];
             }
         }
-    });
 } }
