@@ -167,7 +167,11 @@ def main():
         if args.problem_type and prompt["problem_type"] != args.problem_type:
             logging.debug(f"Skipping prompt {prompt['name']} because it is not {args.problem_type}.")
             continue
-
+        # if args.problem_type == "reduce" and prompt["parallelism_model"]=="hpx": 
+        #     #add to build_configs the flag -std=c++17 at the end for reduce
+        #     current_flags = build_configs["hpx"]["CXXFLAGS"]
+        #     build_configs["hpx"]["CXXFLAGS"] = f"{current_flags.rstrip()} -std=c++17" 
+        #     print("BUILD CONFIGS", build_configs)
         if already_has_results(prompt):
             if args.overwrite:
                 logging.debug(f"Prompt {prompt['name']} already has results. Overwriting.")

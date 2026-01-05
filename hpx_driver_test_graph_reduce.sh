@@ -5,7 +5,7 @@
 #SBATCH -c 20 # Number of Cores per Task
 #SBATCH -p cpu
 #SBATCH --mem=20G # Requested Memory
-#SBATCH -t 36:00:00 # Job time limit
+#SBATCH -t 30:00:00 # Job time limit
 #SBATCH -o slurm-%j.out # 
 #SBATCH -a 0-9
 

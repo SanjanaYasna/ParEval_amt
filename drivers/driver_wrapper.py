@@ -233,7 +233,7 @@ class DriverWrapper(ABC):
         outputs = []
         logging.info(f"Testing prompt {name} with {self}...")
         for generated_output in prompt["outputs"]:
-            results = self.test_single_output(prompt["prompt"], generated_output, test_driver_file, problem_size)
+            results = self.test_single_output(prompt["prompt"], generated_output, test_driver_file, problem_size, type)
             #TODO : RUN DRIVER SO RUN_OUTPUTS ISN"T NONE
             outputs.append({
                 "generated_output": generated_output,

@@ -22,3 +22,16 @@ void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vecto
             }
         }
 } }
+
+
+TODO: GET (4096 8192 16384) tokens for completions iwth high reasoning (4096 in progress) -> test with driver
+
+
+TODO: FINISHED
+For prompt 25, the following Works
+c++ -o try.o cpp/models/hpx-driver.cc /work/pi_mrobson_smith_edu/ParEval_amt/drivers/cpp/benchmarks/reduce/26_reduce_product_of_inverses/hpx.cc -DUSE_HPX -O3 `pkg-config --cflags --libs hpx_application`    -lhpx_iostreams -Icpp  -Icpp/models -DDRIVER_PROBLEM_SIZE="(1<<9)" -w -std=c++17 
+./try.o
+
+FIgure out why driver doesn't build, (may not be properly adding cxx flag at end)
+Command: (third one has working 25)
+python run-all.py "/work/pi_mrobson_smith_edu/scratch/generation_hpx/test/magi_cache.json" -o "/work/pi_mrobson_smith_edu/scratch/generation_hpx/test/magi_out_try.json" --yes-to-all --include-models "hpx" --build-timeout 60 --run-timeout 240     --log-build-errors --log-runs

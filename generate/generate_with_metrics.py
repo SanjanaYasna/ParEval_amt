@@ -11,7 +11,7 @@ from utils import BalancedBracketsCriteria, PromptDataset, clean_output, get_inf
 from utils import GPUCPUMonitor
 from google import genai
 from collections import defaultdict
-
+import sys
 from openai import OpenAI
 """ Parse command line arguments """
 parser = argparse.ArgumentParser(description='Generate code')
@@ -34,7 +34,9 @@ parser.add_argument('--do_sample', action='store_true',  help='Enable sampling (
 parser.add_argument('--batch_size', type=int, default=16, help='Batch size for generation (default: 8)')
 parser.add_argument('--prompted', action='store_true', help='Use prompted generation. See StarCoder paper (default: False)')
 parser.add_argument('--hf_token', type=str, help='HuggingFace API token for loading models')
+parser.add_argument('--gpt_reasoning_level', type=str, default='low', help='GPT* model reasoning level, low, medium, or high')
 parser.add_argument('--quantize_starcoder', action="store_true")
+parser.add_argument('--gpt_verbosity_level', type=str, default = "medium")
 args = parser.parse_args()
 
 client = OpenAI(timeout=800.0)
@@ -82,7 +84,11 @@ def load_model(model_name):
             )
             return generator, True
         #PROPRIETARY AND API BASED: GPT5 AND GEMINI PRO 2.5
-        elif model_name == "gpt5": 
+        elif model_name == "gpt-5": 
+            model, tokenizer = model_name, -1
+        elif model_name =="gpt-5.1-codex":
+            model, tokenizer = model_name, -1
+        elif model_name == "gpt-5-codex":
             model, tokenizer = model_name, -1
         elif model_name == "gemini-2.5_pro":
             gemini_client = genai.GenerativeModel("gemini-2.5-pro")
@@ -146,16 +152,24 @@ def profile_generation(model, tokenizer, device, prompt):
         generated_code = generate_code(model, tokenizer, prompt['prompt'])
     else: #api-based, indicated by -1 value of tokenizer 
         api_time_start = time.time()
-        if model == 'gpt5': #no temperature nor sampling support 
-            response = client.responses.create( 
-            model ="gpt-5"    
-            , input = f"{prompt['prompt']}"
-            , max_output_tokens= 2048 
-          #  ,reasoning={ "effort": "low" }
-            ,reasoning={ "effort": "medium" }
-            ,text={ "verbosity": "low" }
-            , service_tier="flex"
-        ) 
+        if model.startswith("gpt"): #no temperature nor sampling support 
+            if model == "gpt-5":
+                response = client.responses.create( 
+                model =model  
+                , input = f"{prompt['prompt']}"
+                , max_output_tokens= args.max_new_tokens 
+                ,reasoning={ "effort": args.gpt_reasoning_level }
+                ,text={ "verbosity": args.gpt_verbosity_level }
+                , service_tier="flex"
+            ) 
+            else: #codex doesn't support high/low verb., nor flex
+                response = client.responses.create( 
+                model =model   
+                , input = f"{prompt['prompt']}"
+                , max_output_tokens= args.max_new_tokens
+                ,reasoning={ "effort": args.gpt_reasoning_level }
+                ,text={ "verbosity": "medium" }
+            ) 
         generated_code = response.output_text
 
     #end profilers  and collect metrics
@@ -216,8 +230,6 @@ def generate_code(model, tokenizer, prompt):
                             , do_sample = args.do_sample) #increased from 200  to avoid incompletion due to restriction
     generated_code = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return generated_code
-
-
 cur_prompt = None
 for model_name in args.model_names:
     results = []
@@ -225,6 +237,7 @@ for model_name in args.model_names:
     #for pipeline, model is actually the encased generator, and tokenizer is True
     model, tokenizer = load_model(model_name)
     print("Loaded model", model_name)
+    
     #get whether model device is cpu or gpu
     if torch.cuda.is_available():
         device = 'cuda'

@@ -126,7 +126,7 @@ class CppDriverWrapper(DriverWrapper):
             return RunOutput(-1, "", f"UnicodeDecodeError: {str(e)}", config=run_config)
         return RunOutput(run_process.returncode, run_process.stdout, run_process.stderr, config=run_config)
 
-    def test_single_output(self, prompt: str, output: str, test_driver_file: PathLike, problem_size: str) -> GeneratedTextResult:
+    def test_single_output(self, prompt: str, output: str, test_driver_file: PathLike, problem_size: str,problem_type : str) -> GeneratedTextResult:
         """ Test a single generated output. """
         logging.debug(f"Testing output:\n{output}")
         with tempfile.TemporaryDirectory(dir=self.scratch_dir) as tmpdir:
@@ -140,9 +140,13 @@ class CppDriverWrapper(DriverWrapper):
 
             # compile and run the output
             exec_path = os.path.join(tmpdir, "a.out")
+            #print("Build configs input", self.build_configs[self.parallelism_model])
             compiler_kwargs = copy.deepcopy(self.build_configs[self.parallelism_model])
+            if self.parallelism_model == "hpx" and problem_type == "reduce":
+                compiler_kwargs["CXXFLAGS"] += " -std=c++17 "
             compiler_kwargs["problem_size"] = problem_size  # for kokkos
             compiler_kwargs["CXXFLAGS"] += f" -I{tmpdir} -DDRIVER_PROBLEM_SIZE=\"{problem_size}\""
+            #print("COMPILER ARGS", compiler_kwargs)
             build_result = self.compile(self.model_driver_file, test_driver_file, output_path=exec_path, **compiler_kwargs)
             logging.debug(f"Build result: {build_result}")
             if self.display_build_errors and build_result.stderr and not build_result.did_build:
