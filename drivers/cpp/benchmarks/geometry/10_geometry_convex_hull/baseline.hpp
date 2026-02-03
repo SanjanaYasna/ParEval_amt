@@ -8,6 +8,11 @@
    input: [{0, 3}, {1, 1}, {2, 2}, {4, 4}, {0, 0}, {1, 2}, {3, 1}, {3, 3}]
    output: [{0, 3}, {4, 4}, {3, 1}, {0, 0}]
 */
+
+struct Point {
+    double x, y;
+};
+
 void NO_INLINE correctConvexHull(std::vector<Point> const& points, std::vector<Point> &hull) {
     // The polygon needs to have at least three points
     if (points.size() < 3)   {

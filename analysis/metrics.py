@@ -99,7 +99,7 @@ def speedupk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
     df = df[(df["parallelism_model"] == "serial") |
             (df["parallelism_model"] == "cuda") |
             (df["parallelism_model"] == "hip") |
-            (df["parallelism_model"] == "hpx") | 
+            (df["parallelism_model"] == "hpx") &  (df["num_threads"] == 64) | 
             ((df["parallelism_model"] == "kokkos") & (df["num_threads"] == 32)) |
             ((df["parallelism_model"] == "omp") & (df["num_threads"] == 32)) ]
             # ((df["parallelism_model"] == "mpi") & (df["num_procs"] == 512)) |
@@ -176,7 +176,8 @@ def _efficiencyk(runtimes: Union[pd.Series, np.ndarray], baseline_runtime: float
         num = nCr(j-1, k-1) * baseline_runtime
         den = nCr(num_samples, k) * max(runtimes[j-1], 1e-8) * n_resources[j-1]
         sum += num / den
-    return sum
+    return pd.Series({col_name.format(k): sum})
+    #return sum
     #return pd.Series({col_name.format(k): sum})
 
 def efficiencyk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
@@ -326,7 +327,7 @@ def main():
         "problem_type": "problem type",
     }
     merged_df = merged_df.rename(columns=column_name_map)
-    sys.exit()
+
     # write to csv
     if args.output:
         merged_df.to_csv(args.output, index=False)

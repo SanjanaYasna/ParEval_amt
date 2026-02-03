@@ -1,0 +1,37 @@
+[
+    {
+        "problem_type": "scan",
+        "language": "cpp",
+        "name": "30_scan_prefix_sum",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute the prefix sum of the vector x into output.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n   \n   input: [1, 7, 4, 6, 6, 2]\n   output: [1, 8, 12, 18, 24, 26]\n*/\nvoid prefixSum(std::vector<double> const& x, std::vector<double> &output) {"
+    }, 
+    {
+        "problem_type": "scan",
+        "language": "cpp",
+        "name": "31_scan_scan_with_min_function",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Replace the i-th element of the vector x with the minimum value from indices 0 through i.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Examples:\n\n   input: [8, 6, -1, 7, 3, 4, 4]\n   output: [8, 6, -1, -1, -1, -1, -1]\n\n   input: [5, 4, 6, 4, 3, 6, 1, 1]\n   output: [5, 4, 4, 4, 3, 3, 1, 1]\n*/\nvoid partialMinimums(std::vector<float> &x) {"
+    }, 
+    {
+        "problem_type": "scan",
+        "language": "cpp",
+        "name": "32_scan_sum_of_prefix_sum_array",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute the prefix sum array of the vector x and return its sum.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [-7, 2, 1, 9, 4, 8]\n   output: 15\n*/\ndouble sumOfPrefixSum(std::vector<double> const& x) {"
+    },
+    {
+        "problem_type": "scan",
+        "language": "cpp",
+        "name": "33_scan_reverse_prefix_sum",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute the reverse prefix sum of the vector x into output.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Examples:\n   \n   input: [1, 7, 4, 6, 6, 2]\n   output: [2, 8, 14, 18, 25, 26]\n\n   input: [3, 3, 7, 1, -2]\n   output: [-2, -1, 6, 9, 12]\n*/\nvoid reversePrefixSum(std::vector<int> const& x, std::vector<int> &output) {"
+    },
+    {
+        "problem_type": "scan",
+        "language": "cpp",
+        "name": "34_scan_largest_contiguous_subarray_sum",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Return the largest sum of any contiguous subarray in the vector x.\n   i.e. if x=[\u22122, 1, \u22123, 4, \u22121, 2, 1, \u22125, 4] then [4, \u22121, 2, 1] is the contiguous\n   subarray with the largest sum of 6.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [\u22122, 1, \u22123, 4, \u22121, 2, 1, \u22125, 4]\n   output: 6\n*/\nint maximumSubarray(std::vector<int> const& x) {"
+    }
+]

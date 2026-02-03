@@ -70,13 +70,43 @@ class CppDriverWrapper(DriverWrapper):
         return True
 
     def patch_prompt(self, content: str) -> str:
-        """ Add NO_INLINE to the given source code. """
-        # the last line of content should be: return_type function_name(args) {
-        # we want to add NO_INLINE after the return_type
-        parts = content.split("\n")[-1].split(" ")
-        assert len(parts) > 1, f"Could not parse return type from {parts}"
-        parts.insert(1, "NO_INLINE")
-        return "\n".join(content.split("\n")[:-1] + [" ".join(parts)])
+        lines = content.splitlines()
+
+        # work from the end toward the beginning
+        for i in range(len(lines) - 1, -1, -1):
+            line = lines[i].rstrip()
+
+            # skip empty lines / braces only
+            if not line or line == "{":
+                continue
+
+            signature = line
+            suffix = ""
+            if line.endswith("{"):
+                signature = line[:-1].rstrip()
+                suffix = " {"
+
+            if "(" not in signature:   # not a function header
+                continue
+
+            parts = signature.split()
+            if len(parts) < 2:
+                continue
+
+            parts.insert(1, "NO_INLINE")
+            lines[i] = " ".join(parts) + suffix
+            return "\n".join(lines)
+
+        logging.warning("patch_prompt: no function signature found, leaving prompt unchanged.")
+        return content
+    # def patch_prompt(self, content: str) -> str:
+    #     """ Add NO_INLINE to the given source code. """
+    #     # the last line of content should be: return_type function_name(args) {
+    #     # we want to add NO_INLINE after the return_type
+    #     parts = content.split("\n")[-1].split(" ")
+    #     assert len(parts) > 1, f"Could not parse return type from {parts}"
+    #     parts.insert(1, "NO_INLINE")
+    #     return "\n".join(content.split("\n")[:-1] + [" ".join(parts)])
 
     def compile(
         self, 
@@ -106,7 +136,7 @@ class CppDriverWrapper(DriverWrapper):
       
             try:
                 compile_process = run_command(cmd, timeout=self.build_timeout, dry=self.dry)
-                #print("STD OUT",compile_process.stdout, compile_process.returncode, compile_process.stderr)
+                print("STD OUT",compile_process.stdout, compile_process.returncode, compile_process.stderr)
             except subprocess.TimeoutExpired as e:
                 return BuildOutput(-1, str(e.stdout), f"[Timeout] {str(e.stderr)}")
         return BuildOutput(compile_process.returncode, compile_process.stdout, compile_process.stderr)
@@ -115,7 +145,10 @@ class CppDriverWrapper(DriverWrapper):
         """ Run the given executable. """
         launch_format = self.launch_configs["format"]
         launch_cmd = launch_format.format(exec_path=executable, args="", **run_config).strip()
-        #print("LAUNCH CMD", launch_cmd)
+        if self.parallelism_model == "hpx":
+            num_threads = run_config.get("num_threads") 
+        #add a num_threads
+        print("LAUNCH CMD", launch_cmd)
         try:
             run_process = run_command(launch_cmd, timeout=self.run_timeout, dry=self.dry)
             #print("RUN PROCESS RESULTS",run_process.returncode, run_process.stdout, run_process.stderr)
@@ -128,11 +161,13 @@ class CppDriverWrapper(DriverWrapper):
 
     def test_single_output(self, prompt: str, output: str, test_driver_file: PathLike, problem_size: str,problem_type : str) -> GeneratedTextResult:
         """ Test a single generated output. """
+        print('FUNCTION REACHED')
         logging.debug(f"Testing output:\n{output}")
         with tempfile.TemporaryDirectory(dir=self.scratch_dir) as tmpdir:
             # write out the prompt + output
             src_ext = "cuh" if self.parallelism_model in ["cuda", "hip"] else "hpp"
             src_path = os.path.join(tmpdir, f"generated-code.{src_ext}")
+            #print("SRC PATH", src_path)
             
             prompt = self.patch_prompt(prompt)
             write_success = self.write_source(output, src_path)
@@ -142,31 +177,47 @@ class CppDriverWrapper(DriverWrapper):
             exec_path = os.path.join(tmpdir, "a.out")
             #print("Build configs input", self.build_configs[self.parallelism_model])
             compiler_kwargs = copy.deepcopy(self.build_configs[self.parallelism_model])
-            if self.parallelism_model == "hpx" and problem_type == "reduce":
+            if self.parallelism_model == "hpx":
                 compiler_kwargs["CXXFLAGS"] += " -std=c++17 "
             compiler_kwargs["problem_size"] = problem_size  # for kokkos
             compiler_kwargs["CXXFLAGS"] += f" -I{tmpdir} -DDRIVER_PROBLEM_SIZE=\"{problem_size}\""
-            #print("COMPILER ARGS", compiler_kwargs)
-            build_result = self.compile(self.model_driver_file, test_driver_file, output_path=exec_path, **compiler_kwargs)
-            logging.debug(f"Build result: {build_result}")
-            if self.display_build_errors and build_result.stderr and not build_result.did_build:
-                logging.debug(build_result.stderr)
-                print("DID NOT BUILD")
-
-            # run the code
-            configs = self.launch_configs["params"]
-            if build_result.did_build:
-                run_results = []
+            if self.parallelism_model == "hpx" and problem_type == "lock_contention":
+                #TODO: FILL OUT SO THAT WE CAN PASS THREADS AS AN ARGUMENT PARSED RUN-TIME 
+                configs = self.launch_configs["params"]
                 for c in configs:
-                    run_result = self.run(exec_path, **c)
-                    run_results.append(run_result)
-                    if self.display_runs:
-                        logging.debug(run_result.stderr)
-                        logging.debug(run_result.stdout)
-                    if self.early_exit_runs and (run_result.exit_code != 0 or not run_result.is_valid):
-                        break
+                    if self.parallelism_model == "hpx":
+                        #make DHPX_COMPILE_THREADS={NUM_THREADS} arg if HPX
+                        num_threads = c.get("num_threads")
+                        print("NUM THREADS", num_threads)
+                        compiler_kwargs["CXXFLAGS"] += f"-DHPX_COMPILED_THREADS={num_threads}"
+                        print("COMPILER ARGS", compiler_kwargs)
+                    # #see if ocmpiles first
+                    build_result = self.compile(self.model_driver_file, test_driver_file, output_path=exec_path, **compiler_kwargs)
+                    logging.debug(f"Build result: {build_result}")
+                    if self.display_build_errors and build_result.stderr and not build_result.did_build:
+                        logging.debug(build_result.stderr)
+                        print("DID NOT BUILD")
             else:
-                run_results = None
+                build_result = self.compile(self.model_driver_file, test_driver_file, output_path=exec_path, **compiler_kwargs)
+                logging.debug(f"Build result: {build_result}")
+                if self.display_build_errors and build_result.stderr and not build_result.did_build:
+                    logging.debug(build_result.stderr)
+                    print("DID NOT BUILD")
+
+                # run the code
+                configs = self.launch_configs["params"]
+                if build_result.did_build:
+                    run_results = []
+                    for c in configs:
+                        run_result = self.run(exec_path, **c)
+                        run_results.append(run_result)
+                        if self.display_runs:
+                            logging.debug(run_result.stderr)
+                            logging.debug(run_result.stdout)
+                        if self.early_exit_runs and (run_result.exit_code != 0 or not run_result.is_valid):
+                            break
+                else:
+                    run_results = None
             #print("RUN RESULTS", run_results)
             logging.debug(f"Run result: {run_results}")
             if run_results:

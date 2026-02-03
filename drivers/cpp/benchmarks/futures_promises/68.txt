@@ -1,0 +1,48 @@
+#include <hpx/hpx_main.hpp>
+struct integral_result
+{
+    double        accumulator = 0.0;
+    std::uint64_t samples     = 0;
+
+    double estimate(double a, double b) const
+    {
+        return (samples == 0)
+            ? 0.0
+            : (b - a) * (accumulator / static_cast<double>(samples));
+    }
+};
+
+std::uint64_t splitmix64(std::uint64_t x)
+{
+    x += 0x9E3779B97F4A7C15ull;
+    x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ull;
+    x = (x ^ (x >> 27)) * 0x94D049BB133111EBull;
+    x ^= (x >> 31);
+    return x;
+}
+
+double sample_unit_interval(std::uint64_t index, std::uint64_t seed)
+{
+    std::uint64_t value = splitmix64(index + seed);
+    return static_cast<double>(value >> 11) *
+        (1.0 / static_cast<double>(1ull << 53));
+}
+
+Approximate the definite integral of a user-supplied function f over the interval [a, b] using Monte Carlo sampling: draw total_samples uniformly distributed points in [a, b], evaluate f = e^{-x^2} at each point, 
+and accumulate the results to estimate the integral. Split the total number of samples into chunk_size blocks. 
+Return an integral_result that holds the sample count and accumulated function values for the entire run.
+Use HPX to compute in parallel.  Assume HPX has already been initialized.
+
+Example: 
+    input: total_samples: 5,000,000, chunk_size: 100,000, a: 0.0, b: 1.0, seed: 2024
+    output: Integral estimate returned: 0.74673
+
+template <typename F>
+integral_result monte_carlo_integral_parallel(
+    std::uint64_t total_samples,
+    std::uint64_t chunk_size,
+    double a,
+    double b,
+    std::uint64_t seed,
+    F&& f)
+{

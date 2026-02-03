@@ -310,24 +310,24 @@
     "hpx": "(1<<23)"
   },
   "31_scan_scan_with_min_function": {
-    "serial": "(1<<22)",
+    "serial": "(1<<20)",
     "omp": "(1<<20)",
     "mpi": "(1<<20)",
     "mpi+omp": "(1<<20)",
     "kokkos": "(1<<22)",
     "cuda": "(1<<22)",
     "hip": "(1<<22)",
-    "hpx": "(1<<22)"
+    "hpx": "(1<<20)"
   },
   "32_scan_sum_of_prefix_sum_array": {
-    "serial": "(1<<22)",
+    "serial": "(1<<21)",
     "omp": "(1<<22)",
     "mpi": "(1<<22)",
     "mpi+omp": "(1<<22)",
     "kokkos": "(1<<21)",
     "cuda": "(1<<22)",
     "hip": "(1<<22)",
-    "hpx": "(1<<22)"
+    "hpx": "(1<<21)"
   },
   "33_scan_reverse_prefix_sum": {
     "serial": "(1<<22)",
@@ -520,14 +520,14 @@
     "hpx": "(1<<12)"
   },
   "52_stencil_1d_jacobi_3-point_stencil": {
-    "serial": "(1<<24)",
+    "serial": "(1<<23)",
     "omp": "(1<<24)",
     "mpi": "(1<<24)",
     "mpi+omp": "(1<<24)",
     "kokkos": "(1<<23)",
     "cuda": "(1<<24)",
     "hip": "(1<<24)",
-    "hpx" : "(1<<24)"
+    "hpx" : "(1<<23)"
   },
   "53_stencil_2d_jacobi_5-point_stencil": {
     "serial": "(1<<12)",
@@ -550,24 +550,24 @@
     "hpx": "(1<<12)"
   },
   "55_transform_relu": {
-    "serial": "(1<<22)",
+    "serial": "(1<<21)",
     "omp": "(1<<22)",
     "mpi": "(1<<22)",
     "mpi+omp": "(1<<22)",
     "kokkos": "(1<<21)",
     "cuda": "(1<<22)",
     "hip": "(1<<22)",
-    "hpx": "(1<<22)"
+    "hpx": "(1<<21)"
   },
   "56_transform_negate_odds": {
-    "serial": "(1<<22)",
+    "serial": "(1<<21)",
     "omp": "(1<<22)",
     "mpi": "(1<<22)",
     "mpi+omp": "(1<<22)",
     "kokkos": "(1<<21)",
     "cuda": "(1<<22)",
     "hip": "(1<<22)",
-    "hpx": "(1<<22)"
+    "hpx": "(1<<21)"
   },
   "57_transform_inverse_offset": {
     "serial": "(1<<21)",

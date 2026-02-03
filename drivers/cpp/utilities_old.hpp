@@ -15,7 +15,7 @@
 
 
 #if !defined(DRIVER_PROBLEM_SIZE)
-#define DRIVER_PROBLEM_SIZE 20
+#define DRIVER_PROBLEM_SIZE 2048
 #endif
 
 #if !defined(MAX_VALIDATION_ATTEMPTS)

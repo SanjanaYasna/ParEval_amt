@@ -1,0 +1,147 @@
+[
+    {
+        "problem_type": "dense_la",
+        "language": "cpp",
+        "name": "02_dense_la_gemm",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute z = alphax+y where x and y are vectors. Store the result in z.\nUse HPX to compute in parallel. Assume HPX has already been initialized.\n   Example:\n   \n   input: x=[1, -5, 2, 9] y=[0, 4, 1, -1] alpha=2\n   output: z=[2, -6, 5, 17]\n/\nvoid axpy(double alpha, std::vector<double> const& x, std::vector<double> const& y, std::vector<double> &z) {",
+        "temperature": 0.2,
+        "top_p": 0.95,
+        "do_sample": true,
+        "max_new_tokens": 2048,
+        "prompted": false,
+        "outputs": [
+            {
+                "generated_output": "void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vector<double> &C, size_t M, size_t K, size_t N) {\n    //1.10.0 : hpx::experimental::for_loop(hpx::execution::par, 0, M, [&](int i){\n    hpx::parallel::for_loop(hpx::parallel::execution::par, 0, M, [&](int i){\n        for (int k = 0; k < K; k++) {\n            for (int j = 0; j < N; j++) {\n                C[i * N + j] += A[i * K + k] * B[k * N + j];\n            }\n        }\n    });\n}",
+                "source_write_success": true,
+                "did_build": true,
+                "is_source_valid": true,
+                "did_any_run": true,
+                "did_all_run": true,
+                "are_any_valid": true,
+                "are_all_valid": true,
+                "best_sequential_runtime": 0.0035738124,
+                "runs": [
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0053146554,
+                        "num_threads": 1
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0027548692,
+                        "num_threads": 2
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0014644736,
+                        "num_threads": 4
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0009309022,
+                        "num_threads": 8
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0009936856,
+                        "num_threads": 16
+                    }
+                ]
+            },
+            {
+                "generated_output": "void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vector<double> &C, size_t M, size_t K, size_t N) {\n }",
+                "source_write_success": true,
+                "did_build": true,
+                "is_source_valid": false,
+                "did_any_run": true,
+                "did_all_run": true,
+                "are_any_valid": true,
+                "are_all_valid": true,
+                "best_sequential_runtime": 0.0035577544,
+                "runs": [
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0053003322,
+                        "num_threads": 1
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.002766425,
+                        "num_threads": 2
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0014746754,
+                        "num_threads": 4
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0009021518,
+                        "num_threads": 8
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0010423882,
+                        "num_threads": 16
+                    }
+                ]
+            },
+            {
+                "generated_output": "None",
+                "source_write_success": true,
+                "did_build": true,
+                "is_source_valid": false,
+                "did_any_run": true,
+                "did_all_run": true,
+                "are_any_valid": true,
+                "are_all_valid": true,
+                "best_sequential_runtime": 0.0035704744,
+                "runs": [
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.005376269,
+                        "num_threads": 1
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0027436196,
+                        "num_threads": 2
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.0014753124,
+                        "num_threads": 4
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.000911261,
+                        "num_threads": 8
+                    },
+                    {
+                        "did_run": true,
+                        "is_valid": true,
+                        "runtime": 0.001184971,
+                        "num_threads": 16
+                    }
+                ]
+            }
+        ],
+        "num_outputs": 3,
+        "num_valid_outputs": 1
+    }
+]

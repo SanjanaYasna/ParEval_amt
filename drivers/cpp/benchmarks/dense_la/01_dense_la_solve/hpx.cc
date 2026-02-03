@@ -11,16 +11,14 @@
 // */
 // void solveLinearSystem(std::vector<double> const& A, std::vector<double> const& b, std::vector<double> &x, size_t N) {
     //other option:
+#include <hpx/config/version.hpp>
+#if HPX_VERSION_MAJOR > 1 || (HPX_VERSION_MAJOR == 1 && HPX_VERSION_MINOR >= 10)
+#  include "1_10_hpx.hpp"
+#else
+#  include "hpx-includes.hpp"
+#endif
 
-#include "hpx-includes.hpp"
 #include "utilities_old.hpp"
-
-#include <algorithm>
-#include <cmath>
-#include <numeric>
-#include <random>
-#include <vector>
-
 #include "baseline.hpp"
 #include "generated-code.hpp"
 //TODO: GENERATED CODE HEADER TO PULL FROM

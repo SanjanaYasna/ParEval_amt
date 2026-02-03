@@ -1,0 +1,109 @@
+// #include <hpx/hpx_main.hpp>
+// inline std::size_t idx(std::size_t i, int dir, std::size_t size)
+// {
+//     if (i == 0 && dir == -1)
+//         return size - 1;
+//     if (i == size - 1 && dir == +1)
+//         return 0;
+
+//     HPX_ASSERT((i + dir) < size);
+//     return i + dir;
+// }
+// struct partition
+// {
+//     using tile_type   = std::vector<double>;
+//     using future_type = hpx::shared_future<tile_type>;
+
+//     partition() = default;
+//     explicit partition(future_type f)
+//       : data_(std::move(f))
+//     {}
+
+//     partition& operator=(future_type f)
+//     {
+//         data_ = std::move(f);
+//         return *this;
+//     }
+
+//     future_type const& get_future() const
+//     {
+//         return data_;
+//     }
+// private:
+//     future_type data_;
+// };
+// inline auto make_default_step_factory(double k, double dt, double dx)
+// {
+//     using future_type = partition::future_type;
+
+//     return [coeff = k * dt / (dx * dx)](future_type const& left,
+//                                         future_type const& middle,
+//                                         future_type const& right) -> future_type
+//     {
+//         using hpx::dataflow;
+//         using hpx::launch;
+//         using hpx::util::unwrapping;
+
+//         auto kernel = unwrapping([coeff](partition::tile_type const& l,
+//                                          partition::tile_type const& m,
+//                                          partition::tile_type const& r)
+//                                         -> partition::tile_type
+//         {
+//             std::size_t const N = m.size();
+//             HPX_ASSERT(N >= 2);
+
+//             partition::tile_type next(N);
+
+//             for (std::size_t j = 1; j < N - 1; ++j)
+//                 next[j] = m[j] + coeff * (m[j - 1] - 2.0 * m[j] + m[j + 1]);
+
+//             next[0] = m[0] + coeff * (l.back() - 2.0 * m[0] + m[1]);
+//             next[N - 1] = m[N - 1] +
+//                 coeff * (m[N - 2] - 2.0 * m[N - 1] + r.front());
+
+//             return next;
+//         });
+
+//         return dataflow(launch::async, kernel, left, middle, right).share();
+//     };
+// }
+// The following inputs are defined as:
+// - np: number of partitions (tiles), arranged in a ring (periodic neighbors)
+// - nx: number of grid points per partition (nx >= 2)
+// - nt: number of time steps to advance
+// - k: thermal diffusivity coefficient
+// - dt: time step size
+// - dx: spatial grid spacing
+
+// Compute the 1D heat distribution equation, using the provided make_default_step_factory(k, dt, dx) to find the per-partition results after nt steps. 
+// The make_default_step_factory splits the computations into three sets of tiles and returns a per-tile update function for the 1D heat distribution equation.
+// Use HPX to compute in parallel.  Assume HPX has already been initialized.
+
+// Example
+//
+//   input:
+//     initial = [0, 1, 2,   3, 4, 5]
+//     np = 2, nx = 3, nt = 1
+//     k = 0.5, dt = 1.0, dx = 1.0
+//
+//   Explanation: layer 0 has tiles
+//       tile0 = [0,1,2], tile1 = [3,4,5]
+//     After one step (periodic boundaries):
+//       tile0'[0] = 0 + coeff*(2 - 0 + 1) = 3.0
+//       tile0'[1] = 1 + coeff*(0 - 2 + 2) = 1.0
+//       tile0'[2] = 2 + coeff*(1 - 4 + 3) = 2.0
+//       tile1'[0] = 3 + coeff*(1 - 6 + 4) = 3.0
+//       tile1'[1] = 4 + coeff*(3 - 8 + 5) = 4.0
+//       tile1'[2] = 5 + coeff*(4 -10 + 2) = 2.0
+//
+//   output:
+//     parallel_heat(...) should return [3.0, 1.0, 2.0, 3.0, 4.0, 2.0]
+
+// auto make_step = make_default_step_factory();
+// template <typename DataflowFactory>
+// std::vector<double> parallel_heat(
+//     std::vector<double> const& initial,
+//     std::size_t np, std::size_t nx, std::size_t nt,
+//     double k_in, double dt_in, double dx_in,
+//     DataflowFactory make_step)
+// {

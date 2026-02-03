@@ -1,0 +1,37 @@
+[
+    {
+        "problem_type": "stencil",
+        "language": "cpp",
+        "name": "50_stencil_xor_kernel",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Set every cell's value to 1 if it has exactly one neighbor that's a 1. Otherwise set it to 0.\n   Note that we only consider neighbors and not input_{i,j} when computing output_{i,j}.\n   input and output are NxN grids of ints in row-major.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [[0, 1, 1, 0],\n           [1, 0, 0, 0],\n           [0, 0, 0, 0],\n           [0, 1, 0, 0]\n   output: [[0, 0, 1, 1],\n            [1, 0, 0, 1],\n            [0, 0, 1, 0],\n            [1, 0, 1, 0]]\n*/\nvoid cellsXOR(std::vector<int> const& input, std::vector<int> &output, size_t N) {"
+    },
+    {
+        "problem_type": "stencil",
+        "language": "cpp",
+        "name": "51_stencil_edge_kernel",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\nconst int edgeKernel[3][3] = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};\n\n/* Convolve the edge kernel with a grayscale image. Each pixel will be replaced with\n   the dot product of itself and its neighbors with the edge kernel.\n   Use a value of 0 for pixels outside the image's boundaries and clip outputs between 0 and 255.\n   imageIn and imageOut are NxN grayscale images stored in row-major.\n   Store the output of the computation in imageOut.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [[112, 118, 141, 152],\n           [93, 101, 119, 203],\n           [45, 17, 16, 232],\n           [82, 31, 49, 101]]\n   output: [[255, 255, 255, 255],\n            [255, 147, 0, 255],\n            [36, 0, 0, 255],\n            [255, 39, 0, 255]]\n*/\nvoid convolveKernel(std::vector<int> const& imageIn, std::vector<int> &imageOut, size_t N) {"
+    },
+    {
+        "problem_type": "stencil",
+        "language": "cpp",
+        "name": "52_stencil_1d_jacobi_3-point_stencil",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute one iteration of a 3-point 1D jacobi stencil on `input`. Store the results in `output`.\n   Each element of `input` will be averaged with its two neighbors and stored in the corresponding element of `output`.\n   i.e. output[i] = (input[i-1]+input[i]+input[i+1])/3\n   Replace with 0 when reading past the boundaries of `input`.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [9, -6, -1, 2, 3]\n   output: [1, 2/3, -5/3, 4/3, 5/3]\n*/\nvoid jacobi1D(std::vector<double> const& input, std::vector<double> &output) {"
+    },
+    {
+        "problem_type": "stencil",
+        "language": "cpp",
+        "name": "53_stencil_2d_jacobi_5-point_stencil",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute one iteration of a 5-point 2D jacobi stencil on `input`. Store the results in `output`.\n   Each element of `input` will be averaged with its four neighbors and stored in the corresponding element of `output`.\n   i.e. output_{i,j} = (input_{i,j-1} + input_{i,j+1} + input_{i-1,j} + input_{i+1,j} + input_{i,j})/5\n   Replace with 0 when reading past the boundaries of `input`.\n   `input` and `output` are NxN grids stored in row-major.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [[3, 4, 1], [0, 1, 7], [5, 3, 2]]\n   output: [[1.4, 1.8, 2.4],[1.8, 3, 2.2], [1.6, 2.2, 2.4]]\n*/\nvoid jacobi2D(std::vector<double> const& input, std::vector<double> &output, size_t N) {"
+    },
+    {
+        "problem_type": "stencil",
+        "language": "cpp",
+        "name": "54_stencil_game_of_life",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Simulate one generation of Game of Life on `input`. Store the results in `output`.\n   A cell is 1 if it is alive and 0 if it is dead.\n   If a live cell has fewer than 2 live neighbors then it dies.\n   If a live cell has 2 or 3 live neighbors then it lives on.\n   If a live cell has more than 3 live neighbords then it dies.\n   If a cell is dead and has exactly 3 live neighbors then it becomes alive.\n   `input` and `output` are NxN grids stored in row-major.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input:  [[0, 0, 0, 0, 0],\n\t\t\t\t\t  [0, 1, 0, 0, 0],\n            [0, 1, 1, 0, 0],\n            [0, 0, 1, 1, 0],\n            [0, 1, 0, 0, 0]]\n   output: [[0, 0, 0, 0, 0],\n\t\t\t\t\t  [0, 1, 1, 0, 0],\n            [0, 1, 0, 1, 0],\n            [0, 0, 0, 1, 0],\n            [0, 0, 1, 0, 0]]\n*/\nvoid gameOfLife(std::vector<int> const& input, std::vector<int> &output, size_t N) {"
+    }
+]

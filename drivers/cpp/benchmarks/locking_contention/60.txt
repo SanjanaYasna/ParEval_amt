@@ -1,0 +1,46 @@
+// #include <hpx/hpx_main.hpp>
+// using histogram_t = std::array<std::uint64_t, 256>;
+// struct SharedHistogram
+// {
+//     histogram_t bins{};
+//     std::array<std::mutex, 256> locks;
+
+//     SharedHistogram()
+//     {
+//         bins.fill(0);
+//     }
+
+//     void reset()
+//     {
+//         for (std::size_t i = 0; i < bins.size(); ++i)
+//         {
+//             std::lock_guard<std::mutex> g(locks[i]);
+//             bins[i] = 0;
+//         }
+//     }
+
+//     void increment(unsigned char value)
+//     {
+//         std::lock_guard<std::mutex> g(locks[value]);
+//         ++bins[value];
+//     }
+
+//     histogram_t snapshot()
+//     {
+//         histogram_t copy;
+//         for (std::size_t i = 0; i < bins.size(); ++i)
+//         {
+//             std::lock_guard<std::mutex> g(locks[i]);
+//             copy[i] = bins[i];
+//         }
+//         return copy;
+//     }
+// };
+//    Build a 256-bin byte-frequency histogram from `data` (values in [0,255]) and return the resulting SharedHistogram object.
+//    Use HPX to compute in parallel.  Assume HPX has already been initialized.
+//    Example:
+//       data = [0x20, 0x41, 0x20, 0x0A]
+//       bins  = 256
+//    output histogram[0x20] == 2, histogram[0x41] == 1, histogram[0x0A] == 1
+// 
+// histogram_t parallel_histogram(std::vector<unsigned char> const& data, SharedHistogram& shared){

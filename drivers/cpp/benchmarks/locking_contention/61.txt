@@ -1,0 +1,15 @@
+// #include <hpx/hpx_main.hpp>
+//    Build a histogram with `bins` buckets from the sample values in `data`.
+//    Use HPX to compute in parallel.  Assume HPX has already been initialized.
+//    Example:
+//
+//    input:
+//       data = [0.12, 0.76, 0.54, 0.03, 0.33, 0.90, 0.61, 0.28]
+//       bins = 4
+//
+//    output:
+//       histogram = [2, 3, 1, 2]
+//
+// std::vector<std::uint64_t> parallel_histogram(
+//     std::vector<double> const& data,
+//     std::size_t bins);

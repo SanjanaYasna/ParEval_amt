@@ -1,0 +1,61 @@
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+Running model: hpc-coder.json -> hpc-coder_run_exclusive.json
+  input:  lhistogram/cache/cleaned/hpc-coder.json
+  output: /work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/1.10.0/hpc-coder_run_exclusive.json
+Traceback (most recent call last):
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 236, in <module>
+    main()
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 123, in main
+    data = load_json(args.input_json)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/util.py", line 23, in load_json
+    with open(fpath, "r") as fp:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'lhistogram/cache/cleaned/hpc-coder.json'
+Completed hpc-coder.json
+Running model: magicoder.json -> magicoder_run_exclusive.json
+  input:  lhistogram/cache/cleaned/magicoder.json
+  output: /work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/1.10.0/magicoder_run_exclusive.json
+Traceback (most recent call last):
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 236, in <module>
+    main()
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 123, in main
+    data = load_json(args.input_json)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/util.py", line 23, in load_json
+    with open(fpath, "r") as fp:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'lhistogram/cache/cleaned/magicoder.json'
+Completed magicoder.json
+Running model: gpt-5.json -> gpt5_run_exclusive.json
+  input:  lhistogram/cache/cleaned/gpt-5.json
+  output: /work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/1.10.0/gpt5_run_exclusive.json
+Traceback (most recent call last):
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 236, in <module>
+    main()
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 123, in main
+    data = load_json(args.input_json)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/util.py", line 23, in load_json
+    with open(fpath, "r") as fp:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'lhistogram/cache/cleaned/gpt-5.json'
+Completed gpt-5.json
+Running model: starcoder2-15b.json -> starcoder_run_exclusive.json
+  input:  lhistogram/cache/cleaned/starcoder2-15b.json
+  output: /work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/1.10.0/starcoder_run_exclusive.json
+Traceback (most recent call last):
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 236, in <module>
+    main()
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 123, in main
+    data = load_json(args.input_json)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/util.py", line 23, in load_json
+    with open(fpath, "r") as fp:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'lhistogram/cache/cleaned/starcoder2-15b.json'
+Completed starcoder2-15b.json
+All models completed.

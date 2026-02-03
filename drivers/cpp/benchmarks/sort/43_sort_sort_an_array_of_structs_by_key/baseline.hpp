@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 
-// struct Result {
-//    int startTime, duration;
-//    float value;
-// };
+struct Result {
+   int startTime, duration;
+   float value;
+};
 
 /* Sort vector of Result structs by start time in ascending order.
    Example:

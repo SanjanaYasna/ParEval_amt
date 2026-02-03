@@ -1,8 +1,5 @@
 #pragma once
 
-#include <numeric>
-#include <vector>
-
 /* Replace the i-th element of the vector x with the minimum value from indices 0 through i.
    Examples:
 

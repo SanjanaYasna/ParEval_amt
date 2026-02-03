@@ -4,8 +4,8 @@
 #SBATCH -N 1
 #SBATCH -c 16
 #SBATCH --mem=8G
-#SBATCH -t 10:00:00
-#SBATCH -a 0-5 
+#SBATCH -t 24:00:00
+#SBATCH -a 0-17
 
 module load conda/latest
 conda activate hpc_llm
@@ -23,7 +23,7 @@ PROMPT_FILES=(
   "/work/pi_mrobson_smith_edu/ParEval_amt/prompts/reduce_prompts_hpx.json"
 )
 PROMPT_NAMES=(la graph reduce)
-TOKENS_LIST=(4096) #(4096 8192 16384)
+TOKENS_LIST=(4096 8192 16384)
 COMBOS_PER_MODEL=$(( ${#PROMPT_FILES[@]} * ${#TOKENS_LIST[@]} ))
 
 #first 12 jobs are GPT-5 

@@ -9,6 +9,10 @@
    input: [{0, 3}, {1, 1}, {2, 2}, {4, 4}, {0, 0}, {1, 2}, {3, 1}, {3, 3}]
    output: 13.4477
 */
+
+struct Point {
+    double x, y;
+};
 double NO_INLINE correctConvexHullPerimeter(std::vector<Point> const& points) {
     // The polygon needs to have at least three points
     if (points.size() < 3)   {

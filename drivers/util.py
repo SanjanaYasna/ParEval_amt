@@ -39,6 +39,7 @@ def _needs_shell(cmd: str) -> bool:
 def run_command(cmd: str, timeout: Optional[int] = None, dry: bool = False) -> CompletedProcess:
     """ Run the given command on the system and return the result """
     logging.debug(f"Running command: {cmd}")
+    print(f"RUN COMMAND {cmd}")
     if dry:
         return CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
     if isinstance(cmd, str):

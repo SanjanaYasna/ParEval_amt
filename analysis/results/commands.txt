@@ -15,3 +15,21 @@ python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/gpt
 python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/gpt5_low_reasoning.csv" -n 100 --model-name "gpt5_low" -o results/reduction/metrics/gpt5_low_reasoning.csv
 python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/graph/gpt5_medium_reasoning_input.csv" -n 100 --model-name "gpt5_medium" -o results/graph/metrics/gpt5_medium_reasoning.csv
 python hpx.py "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/results/reduction/gpt5_medium_reasoning.csv" -n 100 --model-name "gpt5_medium" -o results/reduction/metrics/gpt5_medium_reasoning.csv
+
+
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/hpx.py /work/pi_mrobson_smith_edu/scratch/generation_hpx/high_reasoning/driver/reduce/csvs/gpt_5_8192.csv -n 100 --model-name "gpt-5" -o /work/pi_mrobson_smith_edu/scratch/generation_hpx/high_reasoning/driver/reduce/metrics/gpt_5_8192.csv
+
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_8192_run.json  -o csvs/gpt_5_8192.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_4096_run.json  -o csvs/gpt_5_4096.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_2048_run.json  -o csvs/gpt_5_2048.csv
+ python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_1_codex_8192_run.json  -o csvs/gpt_5_1_codex_8192.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_1_codex_4096_run.json  -o csvs/gpt_5_1_codex_4096.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_1_codex_2048_run.json  -o csvs/gpt_5_1_codex_2048.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_1_codex_16384_run.json  -o csvs/gpt_5_1_codex_16384.csv
+python /work/pi_mrobson_smith_edu/ParEval_amt/analysis/create-dataframe.py gpt_5_16384_run.json  -o csvs/gpt_5_16384.csv
+
+
+Getting outputs per prompt category: (stored in prompt result folder)
+python metrics.py /work/pi_mrobson_smith_edu/scratch/generation_hpx/high_reasoning/driver/graph/csvs/gpt_5_1_codex_2048.csv -n 100 --model-name "gpt5_codex_low" -o /work/pi_mrobson_smith_edu/scratch/generation_hpx/graph/result/codex_gpt_high.csv
+python metrics.py /work/pi_mrobson_smith_edu/scratch/generation_hpx/high_reasoning/driver/la/metrics/gpt_5_2048.csv -n 100 --model-name "gpt5_low" -o /work/pi_mrobson_smith_edu/scratch/generation_hpx/la_test/result/codex_gpt_high.csv
+

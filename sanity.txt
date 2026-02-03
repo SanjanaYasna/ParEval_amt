@@ -1,0 +1,6 @@
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s]Testing prompts: 100%|██████████| 5/5 [00:00<00:00, 47662.55it/s]

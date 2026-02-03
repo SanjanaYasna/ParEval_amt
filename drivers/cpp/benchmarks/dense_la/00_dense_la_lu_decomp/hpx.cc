@@ -15,16 +15,14 @@
 // void luFactorize(std::vector<hpx::shared_future<std::vector<double>>> &A, std::size_t N) {
 
 // FROM REFERENCE: https://github.com/jgurhem/HPX_LA/blob/master/lu_tiled.cpp#L123 
+#include <hpx/config/version.hpp>
+#if HPX_VERSION_MAJOR > 1 || (HPX_VERSION_MAJOR == 1 && HPX_VERSION_MINOR >= 10)
+#  include "1_10_hpx.hpp"
+#else
+#  include "hpx-includes.hpp"
+#endif
 
-#include <algorithm> 
-#include <numeric>
-#include <random>
-#include <vector>
-
-
-#include "hpx-includes.hpp"
-
-#include "utilities.hpp"
+#include "utilities_old.hpp"
 #include "baseline.hpp" //contains correctLuFactorize 
 #include "generated-code.hpp"
 
@@ -58,22 +56,39 @@ void NO_OPTIMIZE best(Context *ctx) {
 
 bool validate(Context *ctx) {
     const size_t TEST_SIZE = 512;
-    //vec of test case inputs for baseline
-    std::vector<double> A_correct(TEST_SIZE * TEST_SIZE), A_test(TEST_SIZE * TEST_SIZE);
-    //vec of test case inputs for generated code
+
     std::vector<double> A(TEST_SIZE * TEST_SIZE);
- 
+    std::vector<double> A_correct(TEST_SIZE * TEST_SIZE);
+    std::vector<double> A_test(TEST_SIZE * TEST_SIZE);
+
+    int rank;
+    GET_RANK(rank);
+
     const size_t numTries = MAX_VALIDATION_ATTEMPTS;
-    for (int trialIter = 0; trialIter < num_tries; trialIter++){
-        fillRand(A_host, -10.0, 10.0);
+    for (int trialIter = 0; trialIter < numTries; trialIter += 1) {
+        // set up input
+        fillRand(A, -10.0, 10.0);
+        BCAST(A, DOUBLE);
+
+        // compute correct result
         A_correct = A;
-        correctLuFactorize(A_correct, TEST_SIZE)
+        correctLuFactorize(A_correct, TEST_SIZE);
+
+        // compute test result
         A_test = A;
         luFactorize(A_test, TEST_SIZE);
-        if (!fequal(A_host, A_test, 1e-3)) {
+        SYNC();
+        
+        bool isCorrect = true;
+        if (IS_ROOT(rank) && !fequal(A_correct, A_test, 1e-3)) {
+            isCorrect = false;
+        }
+        BCAST_PTR(&isCorrect, 1, CXX_BOOL);
+        if (!isCorrect) {
             return false;
         }
     }
+
     return true;
 }
 

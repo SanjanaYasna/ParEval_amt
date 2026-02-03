@@ -1,9 +1,13 @@
-Requirement already satisfied: transformers in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.14/site-packages (4.57.1)
+python /work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/replace_entry.py /work/pi_mrobson_smith_edu/scratch/generation_hpx/reduce/driver/tcmalloc/archive_28_wrong/gpt5_combined.json /work/pi_mrobson_smith_edu/scratch/generation_hpx/to_merge/pass1_combined/28_gpt5_combined.json gpt5_combined.json
+
+
+
+Requirement already satisfied: transformers in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.28/site-packages (4.57.1)
 Collecting huggingface-hub==0.13.4
   Using cached huggingface_hub-0.13.4-py3-none-any.whl.metadata (7.5 kB)
 Collecting accelerate==0.18.0
   Using cached accelerate-0.18.0-py3-none-any.whl.metadata (16 kB)
-Requirement already satisfied: filelock in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.14/site-packages (from huggingface-hub==0.13.4) (3.19.1)
+Requirement already satisfied: filelock in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.28/site-packages (from huggingface-hub==0.13.4) (3.19.1)
 Requirement already satisfied: requests in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.14/site-packages (from huggingface-hub==0.13.4) (2.32.5)
 Requirement already satisfied: tqdm>=4.42.1 in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.14/site-packages (from huggingface-hub==0.13.4) (4.67.1)
 Requirement already satisfied: pyyaml>=5.1 in /home/syasna_smith_edu/.conda/envs/cuda_12_6/lib/python3.14/site-packages (from huggingface-hub==0.13.4) (6.0.3)

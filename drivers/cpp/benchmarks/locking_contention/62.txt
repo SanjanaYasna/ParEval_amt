@@ -1,0 +1,36 @@
+// #include <hpx/hpx_main.hpp>
+// struct Graph
+// {
+//     std::vector<std::vector<int>> adjacency;
+
+//     explicit Graph(std::size_t n = 0)
+//       : adjacency(n)
+//     {}
+
+//     void add_edge(int u, int v)
+//     {
+//         adjacency[u].push_back(v);
+//         adjacency[v].push_back(u);
+//     }
+
+//     std::size_t size() const noexcept
+//     {
+//         return adjacency.size();
+//     }
+// };
+//    Perform a level-synchronous breadth-first search starting from `source`
+//    and return a vector whose ith entry is the number of vertices in level i.
+//    The graph is represented as an adjacency list (`Graph`) of undirected edges.
+//    Use HPX to compute in parallel.  Assume HPX has already been initialized.
+//
+//    Example:
+//
+//    input:
+//       Graph: 0--1--2
+//              |  |  |
+//              3--4--5
+//       source = 0
+//
+//    output:
+//       level counts = [1, 2, 3]
+// std::vector<std::size_t> bfs_next_level_counts(Graph const& g, int source){

@@ -8,6 +8,10 @@
    input: [{0, 10}, {5, 5}, {1,0}, {-1, 1}, {-10, 0}]
    output: 5.5
 */
+
+struct Point {
+    double x, y;
+};
 double NO_INLINE correctSmallestArea(std::vector<Point> const& points) {
     // The polygon needs to have at least three points
     if (points.size() < 3)   {

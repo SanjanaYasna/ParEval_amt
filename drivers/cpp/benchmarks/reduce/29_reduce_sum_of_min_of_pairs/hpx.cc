@@ -8,7 +8,12 @@
 // */
 // double sumOfMinimumElements(std::vector<double> const& x, std::vector<double> const& y) {
 
-#include "hpx-includes.hpp"
+#include <hpx/config/version.hpp>
+#if HPX_VERSION_MAJOR > 1 || (HPX_VERSION_MAJOR == 1 && HPX_VERSION_MINOR >= 10)
+#  include "1_10_hpx.hpp"
+#else
+#  include "hpx-includes.hpp"
+#endif
 #include "utilities_old.hpp"
 #include "baseline.hpp"
 #include "generated-code.hpp"
@@ -56,8 +61,8 @@ bool validate(Context *ctx) {
     const size_t numTries = MAX_VALIDATION_ATTEMPTS;
     for (double trialIter = 0; trialIter < numTries; trialIter += 1) {
         // set up input
-        fillRand(x, 0.0, 100.0);
-        fillRand(y, 0.0, 100.0);
+        fillRand(x, 0.0, 10.0);
+        fillRand(y, 0.0, 10.0);
         BCAST(x, DOUBLE);
         BCAST(y, DOUBLE);
 

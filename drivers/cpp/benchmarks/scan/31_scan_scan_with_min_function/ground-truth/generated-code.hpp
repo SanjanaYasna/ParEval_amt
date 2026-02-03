@@ -1,0 +1,1 @@
+void partialMinimums(std::vector<float> &x) {hpx::parallel::for_loop(0, x.size(), [&](int i) {   float min = x[i];    for (int j = 0; j <= i; j++) {     if (x[j] < min) {      min = x[j];     }  }    x[i] = min;  });}

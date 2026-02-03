@@ -1,0 +1,22 @@
+Removing conda version miniforge3-24.7.1
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+Loading uri version main
+NOTE: The modules under this branch will not run on the login node. Use
+--constraint=avx512 for sbatch or srun sessions. 
+Loading gmp version 6.2.1
+Loading mpfr version 3.1.6
+Loading mpc version 1.1.0
+Loading zlib-ng version 2.1.6
+Loading gcc version 9.4.0
+Loading libpciaccess version 0.17
+Loading libiconv version 1.17
+Loading xz version 5.4.6
+Loading libxml2 version 2.10.3
+Loading ncurses version 6.5
+Loading hwloc version 2.9.1
+Loading yaksa version 0.3
+Loading mpich version 4.2.1
+Loaded model gpt-5

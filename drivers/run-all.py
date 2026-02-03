@@ -55,7 +55,7 @@ def get_args():
     parser.add_argument("--early-exit-runs", action="store_true", help="If provided, stop evaluating a model output after the first run configuration fails.")
     parser.add_argument("--build-timeout", type=int, default=60, help="Timeout in seconds for building a program.")
     parser.add_argument("--run-timeout", type=int, default=240, help="Timeout in seconds for running a program.")
-    parser.add_argument("--log", choices=["INFO", "DEBUG", "WARNING", "ERROR", "CRITICAL"], default="INFO",
+    parser.add_argument("--log", choices=["INFO", "DEBUG", "WARNING", "ERROR", "CRITICAL"], default="ERROR",
         type=str.upper, help="logging level")
     parser.add_argument("--log-build-errors", action="store_true", help="On build error, display the stderr of the build process.")
     parser.add_argument("--log-runs", action="store_true", help="Display the stderr and stdout of runs.")
@@ -103,7 +103,7 @@ def write_cache(cache_file: Optional[str], cache: dict):
         
 def main():
     args = get_args()
-
+    
     # setup logging
     numeric_level = getattr(logging, args.log.upper(), None)
     if not isinstance(numeric_level, int):
@@ -135,6 +135,15 @@ def main():
     problem_sizes = load_json(args.problem_sizes)
     logging.info(f"Loaded problem sizes from {args.problem_sizes}.")
 
+    combined_results = []
+    existing_prompt_keys = set()
+    if args.output and os.path.exists(args.output):
+        existing_results = load_json(args.output)
+        for entry in existing_results:
+            existing_prompt_keys.add(entry['name'])
+            print("ADDED")
+            
+    
     # set driver root; If provided, use user argument. If it's not provided, then check if the PAREVAL_ROOT environment
     # variable is set, then use "${PAREVAL_ROOT}/drivers" as the root. If neither is set, then use the location of 
     # this script as the root.
@@ -152,9 +161,15 @@ def main():
     if args.exclude_models:
         models_to_test = [m for m in models_to_test if m not in args.exclude_models]
 
+    print("PROMPT KEYS", existing_prompt_keys)
     # run each prompt
     all_prompts = data if args.hide_progress else tqdm(data, desc="Testing prompts")
     for prompt in all_prompts:
+        prompt_key = prompt.get("name")
+        if prompt_key in existing_prompt_keys:
+            logging.debug(f"Skipping prompt {prompt['name']} because it already has results. Skipping.")
+            print(f"Skipping prompt {prompt['name']} because it already has results. Skipping.")
+            continue
         #print("Prompt is", prompt)
         if prompt["parallelism_model"] not in models_to_test:
             logging.debug(f"Skipping prompt {prompt['name']} because it uses {prompt['parallelism_model']}.")
@@ -194,12 +209,13 @@ def main():
             build_timeout=args.build_timeout,
             run_timeout=args.run_timeout,
         )
-        
        
-    
         with contextlib.chdir(DRIVER_ROOT):
             driver.test_all_outputs_in_prompt(prompt) 
             
+        combined_results.append(prompt)
+        existing_prompt_keys.add(prompt_key)
+        
    
         
         # go ahead and write out outputs now

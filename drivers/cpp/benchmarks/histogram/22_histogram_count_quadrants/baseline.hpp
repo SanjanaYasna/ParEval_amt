@@ -1,10 +1,7 @@
 #pragma once
-#include <array>
-#include <vector>
-
-//struct Point {
-//   double x, y;
-//};
+struct Point {
+  double x, y;
+};
 
 /* Count the number of cartesian points in each quadrant. The vector points contains a list of `Point` objects.
    Store the counts in `bins`.

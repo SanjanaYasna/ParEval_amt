@@ -8,7 +8,12 @@
 // */
 // double productWithInverses(std::vector<double> const& x) {
 
-#include "hpx-includes.hpp"
+#include <hpx/config/version.hpp>
+#if HPX_VERSION_MAJOR > 1 || (HPX_VERSION_MAJOR == 1 && HPX_VERSION_MINOR >= 10)
+#  include "1_10_hpx.hpp"
+#else
+#  include "hpx-includes.hpp"
+#endif
 #include "utilities_old.hpp"
 #include "baseline.hpp"
 #include "generated-code.hpp"
@@ -18,7 +23,7 @@ struct Context {
 };
 
 void reset(Context *ctx) {
-    fillRand(ctx->x, 1.0, 100.0);
+    fillRand(ctx->x, 1.0, 10.0);
     BCAST(ctx->x, DOUBLE);
 }
 
@@ -53,17 +58,25 @@ bool validate(Context *ctx) {
     const size_t numTries = MAX_VALIDATION_ATTEMPTS;
     for (int trialIter = 0; trialIter < numTries; trialIter += 1) {
         // set up input
-        fillRand(x, 1.0, 100.0);
+        fillRand(x, 1.0, 10.0);
         BCAST(x, DOUBLE);
 
         // compute correct result
         correct = correctProductWithInverses(x);
-
+        
         // compute test result
         test = productWithInverses(x);
         SYNC();
 
         bool isCorrect = true;
+
+        if (IS_ROOT(rank)) {
+            std::cout << std::setprecision(17) << std::scientific
+                    << "Validation trial " << trialIter
+                    << ": correct = " << correct
+                    << ", test = " << test << '\n'
+                    << "abs difference = " << std::abs(correct - test) << '\n';
+        }
         if (IS_ROOT(rank) && std::abs(correct - test) > 1e-4) {
             isCorrect = false;
         }

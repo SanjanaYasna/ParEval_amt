@@ -8,6 +8,11 @@
    input: [7, 3, 9, 12, 31, 1]
    output: 2
 */
+
+double distance(double x1, double x2) {
+    return std::abs(x1 - x2);
+}
+
 double NO_INLINE correctClosestPair(std::vector<double> const& x) {
     // The vector needs to have at least two elements
     if (x.size() < 2)   {

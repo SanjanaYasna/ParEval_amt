@@ -1,0 +1,66 @@
+#include <hpx/hpx_main.hpp>
+struct wave_tile
+{
+    using buffer = std::vector<double>;
+
+    wave_tile* left_neighbor  = nullptr;
+    wave_tile* right_neighbor = nullptr;
+
+    buffer prev;
+    buffer curr;
+    buffer next;   // reusable scratch buffer
+
+    hpx::shared_future<double> left_in_;
+    hpx::shared_future<double> right_in_;
+
+    hpx::lcos::local::promise<double> left_out_;
+    hpx::lcos::local::promise<double> right_out_;
+
+    hpx::shared_future<double> left_future_;
+    hpx::shared_future<double> right_future_;
+
+    wave_tile() = default;
+
+    explicit wave_tile(std::size_t n)
+      : prev(n, 0.0)
+      , curr(n, 0.0)
+      , next(n, 0.0)
+    {}
+
+    void set_initial_halos(double left_value, double right_value)
+    {
+        left_in_  = hpx::make_ready_future(left_value).share();
+        right_in_ = hpx::make_ready_future(right_value).share();
+    }
+
+    void reset_promises()
+    {
+        left_out_  = hpx::lcos::local::promise<double>();
+        right_out_ = hpx::lcos::local::promise<double>();
+
+        left_future_  = left_out_.get_future().share();
+        right_future_ = right_out_.get_future().share();
+    }
+};
+
+Stimulaate a 1-D wave equation given the domain is partitioned into tiles arranged on a periodic ring.
+The update u_i^{n+1} = 2u_i^n -u_i^{n-1}+ lambda(u_{i-1}^n -2u_i^n+ u_{i+1}^n), where lambda = (c * t / dx)
+Use HPX to compute in parallel.  Assume HPX has already been initialized.
+
+Example: 
+    input: np=3, nx=4, nt=3, c=1.0, dt =0.1, dx = 0.25, 
+    intital condition is 
+    for (std::size_t i = 0; i < total; ++i)
+    {
+        double x = static_cast<double>(i) * dx;
+        initial[i] = std::sin(2.0 * M_PI * x);
+    }
+    That means lambda = (c * t / dx) = 0.4^2 =0.16
+    Output: [0.000000, -0.440768, -0.000000, 0.440768, 0.000000, -0.440768, -0.000000, 0.440768, 0.000000, -0.440768, -0.000000, 0.440768]
+
+
+std::vector<double> wave_parallel(
+    std::vector<double> const& initial,
+    std::size_t np, std::size_t nx, std::size_t nt,
+    double c, double dt, double dx)
+{

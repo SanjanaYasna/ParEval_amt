@@ -1,0 +1,51 @@
+// #include <hpx/hpx_main.hpp>
+// struct Edge
+// {
+//     std::size_t target;
+//     double cost;
+// };
+// using Graph = std::vector<std::vector<Edge>>;
+// struct AStarResult
+// {
+//     std::vector<std::size_t> path;
+//     double total_cost = std::numeric_limits<double>::infinity();
+//     bool found = false;
+// };
+//    Run an A* search on `graph` from `start` to `goal` using `heuristic`.
+//    Return an AStarResult containing the path (sequence of vertex ids),
+//    its total cost, and a flag indicating success.
+//    The graph is represented as an adjacency list (`Graph`) of undirected edges.
+// Use HPX to compute in parallel.  Assume HPX has already been initialized. 
+//
+//    Example:
+    // Graph graph = {
+    //     /* 0 */ { Edge{1, 1.0}, Edge{3, 2.5} },
+    //     /* 1 */ { Edge{0, 1.0}, Edge{2, 1.0} },
+    //     /* 2 */ { Edge{1, 1.0}, Edge{5, 1.2} },
+    //     /* 3 */ { Edge{0, 2.5}, Edge{4, 0.8} },
+    //     /* 4 */ { Edge{3, 0.8}, Edge{5, 0.4} },
+    //     /* 5 */ { Edge{2, 1.2}, Edge{4, 0.4} }
+    // };
+
+    // std::size_t const start = 0;
+    // std::size_t const goal  = 5;
+
+    // std::vector<double> heuristic = {
+    //     /* 0 */ 3.2,  // straight-line estimate from vertex i to goal
+    //     /* 1 */ 2.2,
+    //     /* 2 */ 1.2,
+    //     /* 3 */ 1.5,
+    //     /* 4 */ 0.4,
+    //     /* 5 */ 0.0   // goal
+    // };
+//
+//    output:
+//       path       = [0, 1, 2, 5]
+//       total_cost = 3.2
+//       found      = true
+// 
+// AStarResult parallel_astar(
+//     Graph const& graph,
+//     std::size_t start,
+//     std::size_t goal,
+//     std::vector<double> const& heuristic){

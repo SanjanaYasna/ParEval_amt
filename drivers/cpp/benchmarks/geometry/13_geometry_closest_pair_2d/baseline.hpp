@@ -8,6 +8,11 @@
    input: [{2, 3}, {12, 30}, {40, 50}, {5, 1}, {12, 10}, {3, 4}]
    output: 1.41421
 */
+
+struct Point {
+    double x, y;
+};
+
 double NO_INLINE correctClosestPair(std::vector<Point> const& points) {
     // The polygon needs to have at least two points
     if (points.size() < 2)   {

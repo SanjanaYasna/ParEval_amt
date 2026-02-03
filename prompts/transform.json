@@ -1,0 +1,37 @@
+[
+    {
+        "problem_type": "transform",
+        "language": "cpp",
+        "name": "55_transform_relu",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Compute the ReLU function on every element of x. Elements less than zero become zero,\n   while elements greater than zero stay the same.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [-1.8, 24.0, 1.2, 0.0, -5.1, -0.2, 4.5]\n   output: [0, 24.0, 1.2, 0, 0, 0, 4.5]\n*/\nvoid relu(std::vector<double> &x) {"
+    },
+    {
+        "problem_type": "transform",
+        "language": "cpp",
+        "name": "56_transform_negate_odds",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* In the vector x negate the odd values and divide the even values by 2.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [16, 11, 12, 14, 1, 0, 5]\n   output: [8, -11, 6, 7, -1, 0, -5]\n*/\nvoid negateOddsAndHalveEvens(std::vector<int> &x) {"
+    },
+    {
+        "problem_type": "transform",
+        "language": "cpp",
+        "name": "57_transform_inverse_offset",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Replace every element of the vector x with 1-1/x.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [2, 4, 1, 12, -2]\n   output: [0.5, 0.75, 0, 0.91666666, 1.5]\n*/\nvoid oneMinusInverse(std::vector<double> &x) {"
+    },
+    {
+        "problem_type": "transform",
+        "language": "cpp",
+        "name": "58_transform_squaring",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* Replace every element of x with the square of its value.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [5, 1, 2, -4, 8]\n   output: [25, 1, 4, 16, 64]\n*/\nvoid squareEach(std::vector<int> &x) {"
+    },
+    {
+        "problem_type": "transform",
+        "language": "cpp",
+        "name": "59_transform_map_function",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\nbool isPowerOfTwo(int x) {\n\treturn (x > 0) && !(x & (x - 1));\n}\n\n/* Apply the isPowerOfTwo function to every value in x and store the results in mask.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [8, 0, 9, 7, 15, 64, 3]\n   output: [true, false, false, false, false, true, false]\n*/\nvoid mapPowersOfTwo(std::vector<int> const& x, std::vector<bool> &mask) {"
+    }
+]

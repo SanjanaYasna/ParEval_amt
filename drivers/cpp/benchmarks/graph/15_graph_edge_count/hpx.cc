@@ -9,7 +9,12 @@
 */
 //int edgeCount(std::vector<int> const& A, size_t N) {
 
-#include "hpx-includes.hpp"
+#include <hpx/config/version.hpp>
+#if HPX_VERSION_MAJOR > 1 || (HPX_VERSION_MAJOR == 1 && HPX_VERSION_MINOR >= 10)
+#  include "1_10_hpx.hpp"
+#else
+#  include "hpx-includes.hpp"
+#endif
 #include "utilities_old.hpp"
 #include "baseline.hpp"
 #include "generated-code.hpp"

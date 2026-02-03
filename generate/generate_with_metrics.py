@@ -11,8 +11,10 @@ from utils import BalancedBracketsCriteria, PromptDataset, clean_output, get_inf
 from utils import GPUCPUMonitor
 from google import genai
 from collections import defaultdict
-import sys
+from google.genai.errors import ClientError
+import os
 from openai import OpenAI
+from google.genai import types
 """ Parse command line arguments """
 parser = argparse.ArgumentParser(description='Generate code')
 parser.add_argument('--prompts', required=True, help='Path to the prompt JSON file')
@@ -40,17 +42,30 @@ parser.add_argument('--gpt_verbosity_level', type=str, default = "medium")
 args = parser.parse_args()
 
 client = OpenAI(timeout=800.0)
+gemini_client = genai.Client()
 """ Load prompts """
 with open(args.prompts, 'r') as json_file:
     prompts = json.load(json_file)
 
+
+cached_names = set()
+
+if not args.restart and args.cache is not None and os.path.exists(args.cache):
+    #get prompt "name" already in
+    data = [json.loads(line) for line in open(args.cache, 'r')]
+    if isinstance(data, list):
+        for entry in data:
+            if isinstance(entry, dict):
+                name = entry.get("name")
+                if name:
+                    cached_names.add(name)
 #if pipeline argument is used for generation
 #use_pipeline = False
 def load_model(model_name):
     """
     Loads the model and tokenizer, if applicable  
     
-    Input: Model name (str
+    Input: Model name (str)
     """
     #device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
     try:
@@ -83,7 +98,12 @@ def load_model(model_name):
                 device = 0
             )
             return generator, True
+        
         #PROPRIETARY AND API BASED: GPT5 AND GEMINI PRO 2.5
+        elif model_name == "gemini-3-pro":
+            model = "gemini-3-pro"
+            tokenizer = -1
+            model, tokenizer = model_name, -1
         elif model_name == "gpt-5": 
             model, tokenizer = model_name, -1
         elif model_name =="gpt-5.1-codex":
@@ -94,9 +114,6 @@ def load_model(model_name):
             gemini_client = genai.GenerativeModel("gemini-2.5-pro")
             model = {"name": "gemini-2.5-pro", "client": gemini_client}
             tokenizer = -1
-        elif model_name == "gemini-3_pro":
-            gemini_client = genai.GenerativeModel("gemini-3-pro")
-            model = {"name": "gemini-3-pro", "client": gemini_client}
         #----lower performance expected
         elif model_name == 'gpt-neo':
             model = GPTNeoForCausalLM.from_pretrained('EleutherAI/gpt-neo-2.7B')
@@ -136,7 +153,7 @@ def enforce_rate_limit(model_name: str):
         api_request_counts[model_name] += 1
         if api_request_counts[model_name] % cfg["requests"] == 0:
             time.sleep(cfg["sleep"])
-    
+     
 def profile_generation(model, tokenizer, device, prompt):
     #determine profiler from device and start
     if device == 'cuda' and tokenizer != -1:
@@ -145,11 +162,13 @@ def profile_generation(model, tokenizer, device, prompt):
     if device == 'cpu' and tokenizer != -1:
         cpu_monitor = GPUCPUMonitor(monitor_interval=2, gpu=False)
         cpu_monitor.start()
+        
     #if pipeline is needed
     if type(tokenizer) == type(True):
         generated_code= generate_code_with_generator(model, prompt['prompt'])
     elif tokenizer != -1: #regular generation
         generated_code = generate_code(model, tokenizer, prompt['prompt'])
+        
     else: #api-based, indicated by -1 value of tokenizer 
         api_time_start = time.time()
         if model.startswith("gpt"): #no temperature nor sampling support 
@@ -170,7 +189,38 @@ def profile_generation(model, tokenizer, device, prompt):
                 ,reasoning={ "effort": args.gpt_reasoning_level }
                 ,text={ "verbosity": "medium" }
             ) 
-        generated_code = response.output_text
+            generated_code = response.output_text
+        elif model.startswith("gemini"):
+            while True:
+                try:
+                    response = gemini_client.models.generate_content(
+                    model="gemini-3-pro-preview"
+                        ,contents=f"{prompt['prompt']}"
+                        ,config=types.GenerateContentConfig(
+                            thinking_config=types.ThinkingConfig(thinking_level="low")
+                            , max_output_tokens=args.max_new_tokens
+                            , temperature = args.temperature
+                            , topP = args.top_p
+                        ),
+                    )
+                    generated_code = response.text 
+                    break
+                except ClientError as e:
+                    if e.code == 429:
+                        time.sleep(60)
+                        continue
+                    raise
+            # response = gemini_client.models.generate_content(
+            #     model="gemini-3-pro-preview"
+            #     ,contents=f"{prompt['prompt']}"
+            #     ,config=types.GenerateContentConfig(
+            #         thinking_config=types.ThinkingConfig(thinking_level="low")
+            #         , max_output_tokens=args.max_new_tokens
+            #         , temperature = args.temperature
+            #         , topP = args.top_p
+            #     ),
+            # )
+            # generated_code = response.text 
 
     #end profilers  and collect metrics
     if  device == 'cuda':
@@ -230,6 +280,7 @@ def generate_code(model, tokenizer, prompt):
                             , do_sample = args.do_sample) #increased from 200  to avoid incompletion due to restriction
     generated_code = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return generated_code
+
 cur_prompt = None
 for model_name in args.model_names:
     results = []
@@ -244,6 +295,10 @@ for model_name in args.model_names:
     else:
         device = 'cpu'  
     for idx, prompt in enumerate(prompts):
+        prompt_name = prompt.get("name")
+        if (not args.restart) and args.cache is not None and prompt_name in cached_names:
+            print(f"Skipping prompt idx={idx} name={prompt_name} for model {model_name} — already in cache.")
+            continue
         for i in range(args.num_samples_per_prompt):
             #get return metrics by device type
             if device == 'cuda':
