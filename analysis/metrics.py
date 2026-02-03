@@ -119,8 +119,6 @@ def speedupk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
 
     return df
 
-
-
 def speedupk_max(df: pd.DataFrame, k: int) -> pd.DataFrame:
     """ Compute the speedup_max@k. Same as speedup_n@k, but instead of a fixed n
         we use the n that gives the max speedup
@@ -193,7 +191,7 @@ def efficiencyk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
             (df["parallelism_model"] == "hip") |
             ((df["parallelism_model"] == "kokkos") & (df["num_threads"] == 32)) |
             ((df["parallelism_model"] == "omp") & (df["num_threads"] == 32)) |
-             ((df["parallelism_model"] == "hpx") & (df["num_threads"] == 16)) ]
+             ((df["parallelism_model"] == "hpx") & (df["num_threads"] == 64)) ]
             # ((df["parallelism_model"] == "mpi") & (df["num_procs"] == 512)) |
             # ((df["parallelism_model"] == "mpi+omp") & (df["num_procs"] == 4) & (df["num_threads"] == 64))]
 
@@ -202,7 +200,7 @@ def efficiencyk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
     df["n_resources"] = 1
     df.loc[df["parallelism_model"] == "cuda", "n_resources"] = df["problem_size"]
     df.loc[df["parallelism_model"] == "hip", "n_resources"] = df["problem_size"]
-    df.loc[df["parallelism_model"] == "hpx", "n_resources"] = 16
+    df.loc[df["parallelism_model"] == "hpx", "n_resources"] = 64
     df.loc[df["parallelism_model"] == "kokkos", "n_resources"] = 32
     df.loc[df["parallelism_model"] == "omp", "n_resources"] = 8
     df.loc[df["parallelism_model"] == "mpi", "n_resources"] = 512
@@ -336,7 +334,5 @@ def main():
         pd.set_option('display.max_rows', merged_df.shape[0]+1)
         print(merged_df)
         
-
-
 if __name__ == "__main__":
     main()

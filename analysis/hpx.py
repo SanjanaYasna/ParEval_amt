@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 
-HPX_THREAD_TARGET = 16
+HPX_THREAD_TARGET = 64
 
 
 def get_args():
