@@ -1,7 +1,0 @@
-Removing conda version miniforge3-24.7.1
-No conda package cache directories found outside your home directory. To
-prevent conda from filling up your home directory, you can create a new
-directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
-Loading conda version miniforge3-24.7.1
-PROMPT KEYS set()
-Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s]Testing prompts:  20%|██        | 1/5 [05:25<21:43, 325.85s/it]Testing prompts:  40%|████      | 2/5 [30:05<50:13, 1004.34s/it]Testing prompts:  60%|██████    | 3/5 [55:23<41:17, 1238.95s/it]Testing prompts:  80%|████████  | 4/5 [1:20:02<22:13, 1333.98s/it][2026-01-09T03:19:03.805] error: *** JOB 51062105 ON cpu063 CANCELLED AT 2026-01-09T03:19:03 DUE to SIGNAL Terminated ***
