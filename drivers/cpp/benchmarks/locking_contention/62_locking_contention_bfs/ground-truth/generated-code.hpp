@@ -42,4 +42,4 @@ std::vector<std::size_t> bfs_next_level_counts(Graph const& g, int source)
     }
 
     return level_sizes;
-}
+} 
