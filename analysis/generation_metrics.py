@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Aggregate model-level telemetry metrics from multiple generation HPX CSV exports.
+Aggregate model-level telemetry metrics from multiple generation HPX CSV exports.it is AVERAGE AMONG PROMTPS (NOT NECESSARILYK NORMALIZED BY NUMBER OF OUTPUTS) But since metrics have 100 outputs per propmt, i would say it evens out
 
 Produces two CSV reports:
 
@@ -34,7 +34,7 @@ CSV_PATHS = [
 ]
 
 OUTPUT_ROOT = "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/visuals_specific"
-METRIC_COLS = ["avg_generation_time", "avg_gpu_utilization", "avg_memory_utilization"]
+METRIC_COLS = ["avg_generation_time",  "avg_gpu_memory_utilization", "avg_gpu_utilization", "avg_virtual_memory_used"]
 
 
 def get_category_from_path(path: str) -> str:

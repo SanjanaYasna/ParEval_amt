@@ -77,27 +77,24 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 # --------------------------------------------------------------------------- #
 # Metric configurations
 # --------------------------------------------------------------------------- #
-# METRICS = [
-#     {
-#         "column": "speedup@1",
-#         "ylabel": "speedup@1",
-#         "title": "speedup@1 by Prompt Category and Model",
-#         "filename": "speedup1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     },
-#     {
-#         "column": "efficiency@1",
-#         "ylabel": "efficiency@1",
-#         "title": "efficiency@1 by Prompt Category and Model",
-#         "filename": "efficiency1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     }
-# ]
-
 METRICS = [
     {
+        "column": "speedup@1",
+        "ylabel": "speedup@1",
+        "title": "speedup@1 by Prompt Category and Model",
+        "filename": "speedup1.png",
+        "formatter": lambda v: f"{v:.2f}",
+        "broken_axis": True,
+    },
+    {
+        "column": "efficiency@1",
+        "ylabel": "efficiency@1",
+        "title": "efficiency@1 by Prompt Category and Model",
+        "filename": "efficiency1.png",
+        "formatter": lambda v: f"{v:.2f}",
+        "broken_axis": True,
+    },
+     {
         "column": "strict_pass@1",
         "ylabel": "strict_pass@1",
         "title": "strict_pass@1 by Prompt Category and Model",
@@ -106,32 +103,7 @@ METRICS = [
         "broken_axis": False,
     }
 ]
-# METRICS = [
-#     {
-#         "column": "strict_pass@1",
-#         "ylabel": "strict_pass@1",
-#         "title": "strict_pass@1 by Prompt Category and Model",
-#         "filename": "strict_pass1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": False,
-#     },
-#     {
-#         "column": "speedup@1",
-#         "ylabel": "speedup@1",
-#         "title": "speedup@1 by Prompt Category and Model",
-#         "filename": "speedup1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     },
-#     {
-#         "column": "efficiency@1",
-#         "ylabel": "efficiency@1",
-#         "title": "efficiency@1 by Prompt Category and Model",
-#         "filename": "efficiency1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     },
-# ]
+
 
 # --------------------------------------------------------------------------- #
 # Helpers

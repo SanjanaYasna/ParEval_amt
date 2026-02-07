@@ -24,22 +24,21 @@ import pandas as pd
 # --------------------------------------------------------------------------- #
 # Input locations
 # --------------------------------------------------------------------------- #
-# CSV_PATHS = [
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/fft/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/graph/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/transform/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/scan/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/search/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/sort/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/stencil/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/locking_contention/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/la/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/reduce/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/geometry/driver/tcmalloc/data.csv",
-#      "/work/pi_mrobson_smith_edu/scratch/generation_hpx/futures_promises/driver/tcmalloc/data.csv"
-# ]
-
+CSV_PATHS = [
+     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/fft/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/futures_promises/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/geometry/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/graph/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/histogram/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/la/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/locking_contention/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/reduce/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/scan/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/search/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/sort/driver/tcmalloc/data.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/stencil/driver/tcmalloc/data.csv",
+     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/transform/driver/tcmalloc/data.csv"
+]
 
 
 OUTDIR = Path("summaries")
