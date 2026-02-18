@@ -6,7 +6,7 @@
 This repo contains the Parallel Code Evaluation (ParEval) Benchmark for
 evaluating the ability of Large Language Models to write parallel code. See the
 [ParEval Leaderboard](https://pssg.cs.umd.edu/blog/2024/pareval/) for
-up-to-date results on different LLMs.
+up-to-date results on different LLMs. We have extended this to include testing for HPX and Legion generation, and in addition translation from HPX -> Legion 
 
 
 ## Overview
@@ -17,12 +17,18 @@ The organization of the repo is as follows.
 - `generate/` -- scripts for generating LLM outputs
 - `drivers/` -- scripts to evaluate LLM outputs
 - `analysis/` -- scripts to analyze driver results and compute metrics
+    - `@k/` -- summary csvs of HPX generation performance 
+    - `visuals/` -- per-prompt category net runtime graphs 
+    - `visuals_specific/` -- individual prompt runtime graphs
 - `tpl/` -- git submodule dependencies
+- `prompts/` -- all prompt file jsons that are to be used as inputs for the generation phase
+- `run_driver` -- miscellaneous driver running scripts 
+- `srun_generate/` -- miscellaneous code generation scripts
 
 Each subdirectory has further documentation on its contents. The general
 workflow is to use `generate/generate.py` to generate LLM outputs, run
 `drivers/run-all.py` to evaluate outputs, and `analysis/metrics.py` to
-post-process the results.
+post-process the results summaries.
 
 ## Setup and Installation
 
@@ -34,7 +40,7 @@ and AMD GPUs alongside their respective software stacks.
 First, clone the repo.
 
 ```sh
-git clone --recurse-submodules https://github.com/parallelcodefoundry/ParEval.git
+git clone https://github.com/SanjanaYasna/ParEval_amt.git 
 ```
 
 Next, you need to build Kokkos (if you want to include it in testing).
@@ -58,30 +64,30 @@ cmake --build builddir
 cmake --install builddir /work/pi_mrobson_smith_edu/ParEval_amt/tpl/kokkos/build
 ```
 
-You will need to build the main C++ drivers before running ParEval. The included
-makefile will skip CUDA, HIP, and/or Kokkos if their respective libraries cannot
-be found.
-
-```sh
-# from the repository root, step into the cpp drivers directory and run make
-cd drivers/cpp
-module load uri/main
-module load gcc/9.4.0
-module load mpich/4.2.1
-make #you only care about having MPI (by default), Kokkos, and HPX drivers available under models/
+You will need to be able to use HPX for this project. There are two versions of HPX being tested: 1.5.1, and 1.10.0
+There are setup scripts on the Unity cluster to get the respective version of HPX running:
+```sh 
+#HPX 1.5.1 
+source /work/pi_mrobson_smith_edu/.hpx_tcmalloc_1.5.1
+#OR 
+#HPX 1.10.0 
+source /work/pi_mrobson_smith_edu/.hpx_1_10_0
 ```
 
-Finally, you need to install the Python dependencies. `requirements.txt` has
-the set of dependencies pinned at the version they were tested with. Other
-versions may also work. Note that some of these are only required for parts of
-the pipeline i.e. PyTorch and Transformers are only needed for generating LLM
-outputs.
+Finally, you need to install the Python dependencies. `requirements_AMT.txt` has
+the set of dependencies. Use UV for the easiest time installing these.
 
 ```sh
-pip install -r requirements.txt
+#get uv in whatever environment you have
+pip install uv
+#if you're on unity cluster, there is a uv environment you can activate
+source /work/pi_mrobson_smith_edu/pareval/.venv/bin/activate
+
+#otherwise, take from the .txt environment file and make a uv environment from these packages 
+uv add -r requirements_AMT.txt
 ```
 
-## Citing ParEval
+## Citing ParEval original repo contents
 
 ```
 @misc{nichols2024large,

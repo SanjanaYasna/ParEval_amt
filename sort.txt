@@ -1,10 +1,0 @@
-Removing conda version miniforge3-24.7.1
-No conda package cache directories found outside your home directory. To
-prevent conda from filling up your home directory, you can create a new
-directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
-Loading conda version miniforge3-24.7.1
-Running model: hpc-coder.json -> hpc-coder_run_exclusive.json
-  input:  /work/pi_mrobson_smith_edu/scratch/generation_hpx/sort/cache/cleaned/hpc-coder.json
-  output: /work/pi_mrobson_smith_edu/scratch/generation_hpx/sort/driver/tcmalloc/1.5.1/hpc-coder_run_exclusive.json
-PROMPT KEYS set()
-Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s][2026-01-13T12:48:24.254] error: *** JOB 51152251 ON cpu067 CANCELLED AT 2026-01-13T12:48:24 DUE to SIGNAL Terminated ***

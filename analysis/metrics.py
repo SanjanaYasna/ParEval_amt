@@ -269,7 +269,13 @@ def main():
     args = get_args()
 
     # read in input
-    df = pd.read_csv(args.input_csv)
+    df = pd.read_csv(
+            args.input_csv,
+            quoting=1,  # csv.QUOTE_ALL or csv.QUOTE_MINIMAL
+            escapechar='\\',
+            encoding='utf-8',
+            on_bad_lines='warn',  # or 'skip' to ignore bad lines
+        )
 
     # read in problem sizes
     with open(args.problem_sizes, "r") as f:
