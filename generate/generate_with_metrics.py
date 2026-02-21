@@ -95,6 +95,14 @@ def load_model(model_name):
             tokenizer = AutoTokenizer.from_pretrained( 'zai-org/GLM-4.7-Flash'   )
             # Mark this as a chat model
             tokenizer.is_chat_model = True
+        elif model_name == 'nemotron': 
+            generator = pipeline(
+                model = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+                task="text-generation",
+                torch_dtype=torch.bfloat16,
+                device = 0
+            )
+            return generator, True 
             
         #comparable to phind-v2 in paralell pass@1
         elif model_name == 'magicoder': #can run in <32MB 
@@ -256,14 +264,14 @@ def profile_generation(model, tokenizer, device, prompt):
 
         
 def generate_code_with_generator(generator, prompt):
-    MAGICODER_PROMPT = """You are an exceptionally intelligent coding assistant that generates high-performance computing code for the problem below.
+    PROMPT = """You are an exceptionally intelligent coding assistant that generates high-performance computing code. Generate efficient code for the requested function, without helper functions.
         
         @@ Instruction
         {instruction}
 
         @@ Response
         """
-    prompt = MAGICODER_PROMPT.format(instruction = prompt)
+    prompt = PROMPT.format(instruction = prompt)
     result = generator(prompt,
                         max_new_tokens=args.max_new_tokens,
                         temperature=args.temperature,
@@ -280,7 +288,7 @@ def generate_code_chat(model, tokenizer, prompt):
     #     {"role": "user", "content": prompt},
     # ]
     #more fancy
-    HPC_SYSTEM_PROMPT = "You are an expert in high-performance computing and parallel programming. Generate efficient, production-ready code with proper error handling and comments. Focus on performance optimization and correctness."
+    HPC_SYSTEM_PROMPT = "You are an expert in high-performance computing and parallel programming. Generate efficient code for the requested function, without helper functions. Focus on performance optimization and correctness."
 
     messages = [
         {"role": "system", "content": HPC_SYSTEM_PROMPT},
