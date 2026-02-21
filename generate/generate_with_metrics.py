@@ -89,6 +89,13 @@ def load_model(model_name):
         elif model_name == 'hpc-coder':
             model = AutoModelForCausalLM.from_pretrained('hpcgroup/hpc-coder-v2-6.7b', device_map="auto")
             tokenizer = AutoTokenizer.from_pretrained('hpcgroup/hpc-coder-v2-6.7b')
+            
+        elif model_name == 'glm-4.7-flash':
+            model = AutoModelForCausalLM.from_pretrained('zai-org/GLM-4.7-Flash', device_map="auto" )
+            tokenizer = AutoTokenizer.from_pretrained( 'zai-org/GLM-4.7-Flash'   )
+            # Mark this as a chat model
+            tokenizer.is_chat_model = True
+            
         #comparable to phind-v2 in paralell pass@1
         elif model_name == 'magicoder': #can run in <32MB 
             generator = pipeline(
@@ -267,8 +274,50 @@ def generate_code_with_generator(generator, prompt):
 
     return generated_code
 
+def generate_code_chat(model, tokenizer, prompt):
+    """Generate code using chat template (for GLM-4.7-Flash and similar models)"""
+    # messages = [
+    #     {"role": "user", "content": prompt},
+    # ]
+    #more fancy
+    HPC_SYSTEM_PROMPT = "You are an expert in high-performance computing and parallel programming. Generate efficient, production-ready code with proper error handling and comments. Focus on performance optimization and correctness."
+
+    messages = [
+        {"role": "system", "content": HPC_SYSTEM_PROMPT},
+        {"role": "user", "content": prompt},
+    ]
+    inputs = tokenizer.apply_chat_template(
+        messages,
+        add_generation_prompt=True,
+        tokenize=True,
+        return_dict=True,
+        return_tensors="pt",
+    )
+    
+    if torch.cuda.is_available():
+        inputs = {key: value.to('cuda') for key, value in inputs.items()}
+    
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=args.max_new_tokens,
+        temperature=args.temperature,
+        top_p=args.top_p,
+        do_sample=args.do_sample,
+        pad_token_id=tokenizer.eos_token_id
+    )
+    
+    # Decode only the generated tokens (skip the input)
+    generated_code = tokenizer.decode(
+        outputs[0][inputs["input_ids"].shape[-1]:],
+        skip_special_tokens=True
+    )
+    return generated_code
 
 def generate_code(model, tokenizer, prompt):
+    #glm flash
+    if hasattr(tokenizer, 'is_chat_model') and tokenizer.is_chat_model:
+        return generate_code_chat(model, tokenizer, prompt)
+    
     inputs = tokenizer(prompt, return_tensors='pt')
     if torch.cuda.is_available():
         inputs = {key: value.to('cuda') for key, value in inputs.items()}
