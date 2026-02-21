@@ -1,6 +1,6 @@
 #!/bin/bash -l
-#SBATCH --job-name=GLM
-#SBATCH --output=GLM_%A_%a.txt
+#SBATCH --job-name=nemotron
+#SBATCH --output=nemotron_%A_%a.txt
 #SBATCH -p gpu
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -27,7 +27,7 @@ PROMPT_DIR="/work/pi_mrobson_smith_edu/ParEval_amt/prompts"
 
 OUT_DIR="/work/pi_mrobson_smith_edu/scratch/generation_hpx/"
 
-MODEL_NAME="glm-4.7-flash"
+MODEL_NAME="nemotron"
 
 # Construct paths
 PROMPT_FILE="${PROMPT_DIR}/${TASK}.json"
