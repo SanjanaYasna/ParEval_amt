@@ -3,6 +3,8 @@ torch>=2.0
 transformers>=4.30
 safetensors
 accelerate 
+causal_conv1d 
+mamba_ssm
 
 # APIs
 openai>=1.0
