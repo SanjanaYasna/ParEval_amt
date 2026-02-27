@@ -15,6 +15,7 @@ from google.genai.errors import ClientError
 import os
 from openai import OpenAI
 from google.genai import types
+import anthropic
 """ Parse command line arguments """
 parser = argparse.ArgumentParser(description='Generate code')
 parser.add_argument('--prompts', required=True, help='Path to the prompt JSON file')
@@ -42,7 +43,9 @@ parser.add_argument('--gpt_verbosity_level', type=str, default = "medium")
 args = parser.parse_args()
 
 client = OpenAI(timeout=800.0)
-gemini_client = genai.Client()
+gemini_client = genai.Client() 
+anthropic_client = anthropic.Anthropic() 
+
 """ Load prompts """
 with open(args.prompts, 'r') as json_file:
     prompts = json.load(json_file)
@@ -100,6 +103,7 @@ def load_model(model_name):
                 model = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
                 task="text-generation",
                 torch_dtype=torch.bfloat16,
+                trust_remote_code=True,
                 device = 0
             )
             return generator, True 
@@ -125,10 +129,14 @@ def load_model(model_name):
             model, tokenizer = model_name, -1
         elif model_name == "gpt-5-codex":
             model, tokenizer = model_name, -1
+            
+        #client based
         elif model_name == "gemini-2.5_pro":
             gemini_client = genai.GenerativeModel("gemini-2.5-pro")
             model = {"name": "gemini-2.5-pro", "client": gemini_client}
             tokenizer = -1
+        elif model_name == "minimax": 
+            model, tokenizer = "MiniMax-M2.5", -1
         #----lower performance expected
         elif model_name == 'gpt-neo':
             model = GPTNeoForCausalLM.from_pretrained('EleutherAI/gpt-neo-2.7B')
@@ -225,6 +233,7 @@ def profile_generation(model, tokenizer, device, prompt):
                         time.sleep(60)
                         continue
                     raise
+                
             # response = gemini_client.models.generate_content(
             #     model="gemini-3-pro-preview"
             #     ,contents=f"{prompt['prompt']}"
@@ -261,6 +270,49 @@ def profile_generation(model, tokenizer, device, prompt):
         gen_time = cpu_monitor._time
         vram = cpu_monitor._memory  
         return generated_code, cpu_percent, gen_time, vram
+
+def generate_minimax(prompt_text):
+    """
+    MiniMax-specific generation that captures both the text output
+    and the thinking output from block.thinking.
+    
+    Returns: (generated_code, thinking_text, elapsed_time)
+    """
+    api_time_start = time.time()
+    message = anthropic_client.messages.create(
+        model="MiniMax-M2.5",
+        max_tokens=args.max_new_tokens,
+        top_p = args.top_p, 
+        temperature = args.temperature,
+        system = "You are an expert in high-performance computing and parallel programming. Generate efficient code for the requested function, without helper functions. Focus on performance optimization and correctness.",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt_text
+                    }
+                ]
+            }
+        ]
+    )
+    api_time_end = time.time()
+    generated_code_parts = []
+    thinking_parts = []
+    generated_code = ""
+    thinking_text = None
+    for block in message.content:
+        if block.type == "text":
+            generated_code_parts.append(block.text)
+            #generated_code = block.text
+        elif block.type == "thinking":
+            thinking_parts.append(block.thinking)
+            #thinking_text = block.thinking
+    elapsed = api_time_end - api_time_start
+    generated_code = "\n".join(generated_code_parts)       # all text blocks joined
+    thinking_text = "\n---\n".join(thinking_parts)         # all thinking blocks joined
+    return generated_code, thinking_text, elapsed 
 
         
 def generate_code_with_generator(generator, prompt):
@@ -345,18 +397,22 @@ for model_name in args.model_names:
     #for pipeline, model is actually the encased generator, and tokenizer is True
     model, tokenizer = load_model(model_name)
     print("Loaded model", model_name)
-    
+    #minimax has separate handler to store thinking
+    is_minimax = (model_name == "minimax")
     #get whether model device is cpu or gpu
     if torch.cuda.is_available():
         device = 'cuda'
     else:
         device = 'cpu'  
+    if is_minimax:
+        device = 'cpu'
     for idx, prompt in enumerate(prompts):
         prompt_name = prompt.get("name")
         if (not args.restart) and args.cache is not None and prompt_name in cached_names:
             print(f"Skipping prompt idx={idx} name={prompt_name} for model {model_name} — already in cache.")
             continue
         for i in range(args.num_samples_per_prompt):
+            #REGULAR ENTRY for open source
             #get return metrics by device type
             if device == 'cuda':
                 generated_code, max_gpu_memory_usage, max_gpu_utilization, average_gpu_memory_usage, average_gpu_utilization, gen_time, vram = profile_generation(model, tokenizer, device, prompt)
@@ -378,8 +434,14 @@ for model_name in args.model_names:
                 cur_prompt["max_gpu_utilization"].append(max_gpu_utilization)
                 cur_prompt["average_gpu_memory_usage"].append(average_gpu_memory_usage)
                 cur_prompt["average_gpu_utilization"].append(average_gpu_utilization)
+            #closed source should be routed here
             elif device == 'cpu':
-                generated_code, cpu_percent, gen_time, vram = profile_generation(model, tokenizer, device, prompt)
+                if is_minimax:
+                    #want to capture thinking text for minimax
+                    generated_code, thinking_text, gen_time = generate_minimax(prompt['prompt'])
+                    cpu_percent, vram = 'N/A', 'N/A'
+                else:
+                    generated_code, cpu_percent, gen_time, vram = profile_generation(model, tokenizer, device, prompt)
                 if i % args.num_samples_per_prompt == 0:
                     cur_prompt = prompt.copy()
                     cur_prompt.update({"temperature": args.temperature, "top_p": args.top_p, "do_sample": args.do_sample, "max_new_tokens": args.max_new_tokens, "prompted": args.prompted})
@@ -389,10 +451,15 @@ for model_name in args.model_names:
                     cur_prompt["cpu_percent"] = []
                     cur_prompt["cpu_cores"] = args.num_cores_used
                     cur_prompt["model_name"] = model_name
+                    if  is_minimax:
+                        cur_prompt["thinking_outputs"] = []
                 cur_prompt["outputs"].append(generated_code)
                 cur_prompt["generation_times"].append(gen_time) 
                 cur_prompt["virtual_memory_used"].append(vram)
                 cur_prompt["cpu_percent"].append(cpu_percent)
+                if is_minimax:
+                    cur_prompt["thinking_outputs"].append(thinking_text)
+                
             if i % args.num_samples_per_prompt == args.num_samples_per_prompt - 1:
                 results.append(cur_prompt)
         #write to cache once reaching num_samples results 
