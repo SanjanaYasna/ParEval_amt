@@ -15,6 +15,7 @@ from google.genai.errors import ClientError
 import os
 from openai import OpenAI
 from google.genai import types
+import concurrent.futures
 import anthropic
 """ Parse command line arguments """
 parser = argparse.ArgumentParser(description='Generate code')
@@ -233,18 +234,6 @@ def profile_generation(model, tokenizer, device, prompt):
                         time.sleep(60)
                         continue
                     raise
-                
-            # response = gemini_client.models.generate_content(
-            #     model="gemini-3-pro-preview"
-            #     ,contents=f"{prompt['prompt']}"
-            #     ,config=types.GenerateContentConfig(
-            #         thinking_config=types.ThinkingConfig(thinking_level="low")
-            #         , max_output_tokens=args.max_new_tokens
-            #         , temperature = args.temperature
-            #         , topP = args.top_p
-            #     ),
-            # )
-            # generated_code = response.text 
 
     #end profilers  and collect metrics
     if  device == 'cuda':
@@ -270,8 +259,9 @@ def profile_generation(model, tokenizer, device, prompt):
         gen_time = cpu_monitor._time
         vram = cpu_monitor._memory  
         return generated_code, cpu_percent, gen_time, vram
-
-def generate_minimax(prompt_text):
+#the final "text"/code output has the best reasoning of code throughout thinking iterations (it is cumulative among the text output blocks)
+#therefore, while thinking is concatenated, TAKE LAST TEXT OUTPUT as the generated_code (although usually with 2k tokens it'll only use one block anyway)
+def generate_minimax(prompt_text, sample_idx):
     """
     MiniMax-specific generation that captures both the text output
     and the thinking output from block.thinking.
@@ -298,21 +288,50 @@ def generate_minimax(prompt_text):
         ]
     )
     api_time_end = time.time()
-    generated_code_parts = []
+    #generated_code_parts = []
     thinking_parts = []
     generated_code = ""
     thinking_text = None
     for block in message.content:
         if block.type == "text":
-            generated_code_parts.append(block.text)
-            #generated_code = block.text
+            generated_code = block.text
+            #generated_code_parts.append(block.text)
         elif block.type == "thinking":
             thinking_parts.append(block.thinking)
             #thinking_text = block.thinking
     elapsed = api_time_end - api_time_start
-    generated_code = "\n".join(generated_code_parts)       # all text blocks joined
+    #generated_code = "\n".join(generated_code_parts)      
     thinking_text = "\n---\n".join(thinking_parts)         # all thinking blocks joined
-    return generated_code, thinking_text, elapsed 
+    return sample_idx, generated_code, thinking_text, elapsed 
+
+def generate_minimax_batch(prompt_text, batch_size):
+    """
+    Fire batch_size concurrent MiniMax requests via ThreadPoolExecutor.
+    """
+    codes = [None] * batch_size
+    thinking = [None] * batch_size
+    times = [None] * batch_size
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=batch_size) as executor:
+        futures = {
+            executor.submit(generate_minimax, prompt_text, i): i
+            for i in range(batch_size)
+        }
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                idx, code, think, elapsed = future.result()
+                codes[idx] = code
+                thinking[idx] = think
+                times[idx] = elapsed
+            except Exception as e:
+                failed_idx = futures[future]
+                print(f"  MiniMax sample {failed_idx} failed: {e}")
+                codes[failed_idx] = f"ERROR: {e}"
+                thinking[failed_idx] = None
+                times[failed_idx] = -1.0
+
+    return codes, thinking, times
+
 
         
 def generate_code_with_generator(generator, prompt):
@@ -406,12 +425,15 @@ for model_name in args.model_names:
         device = 'cpu'  
     if is_minimax:
         device = 'cpu'
+    # MiniMax steps through samples 20 at a time; all others step 1 at a time
+    sample_step = 20 if is_minimax else 1
+    print("Minimax batch size", sample_step)
     for idx, prompt in enumerate(prompts):
         prompt_name = prompt.get("name")
         if (not args.restart) and args.cache is not None and prompt_name in cached_names:
             print(f"Skipping prompt idx={idx} name={prompt_name} for model {model_name} — already in cache.")
             continue
-        for i in range(args.num_samples_per_prompt):
+        for i in range(0, args.num_samples_per_prompt, sample_step):
             #REGULAR ENTRY for open source
             #get return metrics by device type
             if device == 'cuda':
@@ -437,9 +459,12 @@ for model_name in args.model_names:
             #closed source should be routed here
             elif device == 'cpu':
                 if is_minimax:
-                    #want to capture thinking text for minimax
-                    generated_code, thinking_text, gen_time = generate_minimax(prompt['prompt'])
-                    cpu_percent, vram = 'N/A', 'N/A'
+                    batch_size = min(sample_step, args.num_samples_per_prompt - i)
+                    
+                    #get 20 results at a time
+                    batch_codes, batch_thinking, batch_times = generate_minimax_batch(
+                        prompt['prompt'], batch_size
+                    )
                 else:
                     generated_code, cpu_percent, gen_time, vram = profile_generation(model, tokenizer, device, prompt)
                 if i % args.num_samples_per_prompt == 0:
@@ -453,13 +478,18 @@ for model_name in args.model_names:
                     cur_prompt["model_name"] = model_name
                     if  is_minimax:
                         cur_prompt["thinking_outputs"] = []
-                cur_prompt["outputs"].append(generated_code)
-                cur_prompt["generation_times"].append(gen_time) 
-                cur_prompt["virtual_memory_used"].append(vram)
-                cur_prompt["cpu_percent"].append(cpu_percent)
                 if is_minimax:
-                    cur_prompt["thinking_outputs"].append(thinking_text)
-                
+                    cur_prompt["outputs"].extend(batch_codes)
+                    cur_prompt["thinking_outputs"].extend(batch_thinking)
+                    cur_prompt["generation_times"].extend(batch_times)
+                    cur_prompt["virtual_memory_used"].extend(['N/A'] * batch_size)
+                    cur_prompt["cpu_percent"].extend(['N/A'] * batch_size)
+                else:
+                    cur_prompt["outputs"].append(generated_code)
+                    cur_prompt["generation_times"].append(gen_time) 
+                    cur_prompt["virtual_memory_used"].append(vram)
+                    cur_prompt["cpu_percent"].append(cpu_percent)
+
             if i % args.num_samples_per_prompt == args.num_samples_per_prompt - 1:
                 results.append(cur_prompt)
         #write to cache once reaching num_samples results 

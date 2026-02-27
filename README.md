@@ -80,6 +80,8 @@ the set of dependencies. Use UV for the easiest time installing these.
 ```sh
 #get uv in whatever environment you have
 pip install uv
+#ensure you have uv
+which uv 
 #if you're on unity cluster, there is a uv environment you can activate
 source /work/pi_mrobson_smith_edu/pareval/.venv/bin/activate
 

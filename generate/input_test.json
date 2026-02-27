@@ -1,0 +1,9 @@
+[
+    {
+        "problem_type": "fft",
+        "language": "cpp",
+        "name": "05_fft_inverse_fft",
+        "parallelism_model": "hpx",
+        "prompt": "#include <hpx/hpx_main.hpp>\n\n/* #include <hpx/hpx_main.hpp>\n\n/* forward declare fft. computes fourier transform in-place */\nvoid fft(std::vector<std::complex<double>> &x); Compute the inverse fourier transform of x in-place.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n   \n   input: [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0]\n   output: [{0.5,0}, {0.125,0.301777}, {0,-0}, {0.125,0.0517767}, {0,-0}, {0.125,-0.0517767}, {0,-0}, {0.125,-0.301777}]\n*/\nvoid ifft(std::vector<std::complex<double>> &x) {"
+    }
+]

@@ -1,0 +1,634 @@
+Prompt: 05_fft_inverse_fft
+  Prompt body:
+    #include <hpx/hpx_main.hpp>
+    
+    /* #include <hpx/hpx_main.hpp>
+    
+    /* forward declare fft. computes fourier transform in-place */
+    void fft(std::vector<std::complex<double>> &x); Compute the inverse fourier transform of x in-place.
+       Use HPX to compute in parallel.  Assume HPX has already been initialized.
+       Example:
+       
+       input: [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+       output: [{0.5,0}, {0.125,0.301777}, {0,-0}, {0.125,0.0517767}, {0,-0}, {0.125,-0.0517767}, {0,-0}, {0.125,-0.301777}]
+    */
+    void ifft(std::vector<std::complex<double>> &x) {
+  Output 1:
+    **Solution**
+    
+    ```cpp
+    // ifft.cpp
+    // Parallel in‑place inverse FFT using HPX.
+    
+    #include <hpx/hpx.hpp>
+    #include <hpx/algorithm.hpp>
+    #include <hpx/execution.hpp>
+    
+    #include <complex>
+    #include <vector>
+    #include <cmath>
+    #include <stdexcept>
+    
+    /* forward declaration of the (in‑place) forward FFT */
+    void fft(std::vector<std::complex<double>> &x);
+    
+    /* ------------------------------------------------------------------ */
+    /*  In‑place inverse FFT.
+        The algorithm uses the well‑known relation
+    
+            IFFT(x) = (1/N) * conj( FFT( conj(x) ) )
+    
+        which turns the problem into a forward FFT.
+        The two element‑wise passes (conjugate before and after the FFT)
+        are parallelised with HPX for‑loops.
+     ------------------------------------------------------------------ */
+    void ifft(std::vector<std::complex<double>> &x)
+    {
+        const std::size_t n = x.size();
+        if (n == 0) return;
+    
+        // ---------------------------------------------------------------
+        // 1) conjugate the input
+        // ---------------------------------------------------------------
+        hpx::for_loop(hpx::execution::par, 0, n,
+            [&](std::size_t i) {
+                x[i] = std::conj(x[i]);
+            });
+    
+        // ---------------------------------------------------------------
+        // 2) forward FFT (assumed to be available; it may be parallel
+        //    or sequential – the interface is the same)
+        // ---------------------------------------------------------------
+        fft(x);
+    
+        // ---------------------------------------------------------------
+        // 3) conjugate again and scale by 1/N
+        // ---------------------------------------------------------------
+        const double inv_n = 1.0 / static_cast<double>(n);
+        hpx::for_loop(hpx::execution::par, 0, n,
+            [&](std::size_t i) {
+                x[i] = std::conj(x[i]) * inv_n;
+            });
+    }
+    ```
+    
+    **Explanation**
+    
+    * The size `n` is assumed to be a power of two (the same requirement as for a standard radix‑2 FFT).  
+    * The inverse transform is obtained by the identity  
+    
+      \[
+      \text{IFFT}(x)=\frac{1}{N}\overline{\text{FFT}\bigl(\overline{x}\bigr)} .
+      \]
+    
+    * Two **HPX parallel for‑loops** (`hpx::for_loop` with the `hpx::execution::par` policy) handle the element‑wise conjugate operations, giving fine‑grained parallelism across the whole vector.  
+    * The heavy computational work (the forward FFT) is delegated to the user‑provided `fft` function, which can be implemented with any algorithm (sequential or parallel).  
+    * Finally each component is divided by `N` (the `inv_n` factor) to obtain the correct scaling.
+    
+    The routine modifies the input vector `x` in‑place and complies with the requirement that HPX is already initialized when the function is called.
+  Output 2:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/parallel/algorithm.hpp>
+    #include <hpx/parallel/for_loop.hpp>
+    #include <vector>
+    #include <complex>
+    #include <cmath>
+    #include <algorithm>
+    
+    void fft(std::vector<std::complex<double>> &x);
+    
+    void ifft(std::vector<std::complex<double>> &x) {
+        const int N = x.size();
+        
+        // Conjugate the input
+        hpx::for_loop(hpx::execution::par, 0, N, [&](int i) {
+            x[i] = std::conj(x[i]);
+        });
+        
+        // Compute forward FFT (which now computes inverse due to conjugate trick)
+        fft(x);
+        
+        // Conjugate again and scale by 1/N
+        hpx::for_loop(hpx::execution::par, 0, N, [&](int i) {
+            x[i] = std::conj(x[i]) / static_cast<double>(N);
+        });
+    }
+    ```
+  Output 3:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/parallel/algorithm.hpp>
+    #include <vector>
+    #include <complex>
+    #include <cmath>
+    #include <algorithm>
+    
+    /* Forward declaration of FFT */
+    void fft(std::vector<std::complex<double>> &x);
+    
+    void ifft(std::vector<std::complex<double>> &x) {
+        const size_t n = x.size();
+        
+        // Step 1: Take conjugate of input
+        hpx::parallel::for_loop(
+            hpx::parallel::execution::par,
+            0, n,
+            [&](size_t i) {
+                x[i] = std::conj(x[i]);
+            }
+        );
+        
+        // Step 2: Compute FFT of conjugated data
+        fft(x);
+        
+        // Step 3: Take conjugate of result and divide by N
+        hpx::parallel::for_loop(
+            hpx::parallel::execution::par,
+            0, n,
+            [&](size_t i) {
+                x[i] = std::conj(x[i]) / static_cast<double>(n);
+            }
+        );
+    }
+    ```
+  Output 4:
+  Output 5:
+    ```cpp
+    void ifft(std::vector<std::complex<double>> &x) {
+        const std::size_t n = x.size();
+        const double inv_n = 1.0 / static_cast<double>(n);
+        
+        // Step 1: Conjugate all elements in parallel
+        hpx::for_each(
+            hpx::execution::par,
+            x.begin(), x.end(),
+            [](std::complex<double> &val) {
+                val = std::conj(val);
+            }
+        );
+        
+        // Step 2: Apply forward FFT (assumes existing implementation)
+        fft(x);
+        
+        // Step 3: Conjugate again and scale by 1/n in parallel
+        hpx::for_each(
+            hpx::execution::par,
+            x.begin(), x.end(),
+            [inv_n](std::complex<double> &val) {
+                val = std::conj(val) * inv_n;
+            }
+        );
+    }
+    ```
+    
+    This implementation uses the property that IFFT(x) = (1/N) * conj(FFT(conj(x))):
+    
+    1. **Conjugate input**: Transforms the problem into a forward FFT operation
+    2. **Forward FFT**: Uses the provided `fft` function
+    3. **Conjugate and scale**: Reverses the conjugation and applies 1/N normalization
+    
+    The parallel `hpx::for_each` with `hpx::execution::par` distributes the element-wise operations across available HPX threads for better performance on multi-core systems.
+  Output 6:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/include/parallel_algorithm.hpp>
+    #include <hpx/include/parallel_transform.hpp>
+    #include <hpx/futures.hpp>
+    #include <vector>
+    #include <complex>
+    #include <cmath>
+    #include <algorithm>
+    
+    void fft(std::vector<std::complex<double>> &x);
+    
+    void ifft(std::vector<std::complex<double>> &x) {
+        const std::size_t n = x.size();
+        if (n <= 1) return;
+        
+        // Step 1: Conjugate the input
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+            [](std::complex<double> &c) { c = std::conj(c); });
+        
+        // Step 2: Perform FFT (which uses conjugate twiddle factors internally)
+        fft(x);
+        
+        // Step 3: Conjugate again and scale by 1/n
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+            [n](std::complex<double> &c) { 
+                c = std::conj(c) / static_cast<double>(n); 
+            });
+    }
+    ```
+    
+    This implementation leverages the fact that IFFT can be computed from FFT using the formula:
+    - IFFT(x) = (1/N) * conj(FFT(conj(x)))
+    
+    The parallelization uses `hpx::for_each` with `hpx::execution::par` to parallelize the conjugation and scaling operations across the input vector. The FFT is assumed to already be parallelized (as per the forward declaration), so the IFFT reuses it efficiently.
+  Output 7:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/parallel/algorithm.hpp>
+    #include <hpx/parallel/execution.hpp>
+    
+    #include <complex>
+    #include <vector>
+    #include <cmath>
+    #include <algorithm>
+    
+    // -------------------------------------------------------------------
+    // In‑place forward FFT (Cooley‑Tukey iterative).  The outer butterfly
+    // stage is parallelised with HPX.
+    // -------------------------------------------------------------------
+    void fft(std::vector<std::complex<double>>& a)
+    {
+        const std::size_t n = a.size();
+    
+        /* ---- bit‑reversal permutation ---- */
+        for (std::size_t i = 1, j
+  Output 8:
+    Here is a complete, in‑place inverse FFT that uses HPX parallel loops for the element‑wise operations.  
+    The implementation follows the classic relation  
+    
+    \[
+    \text{IFFT}(x)=\frac{1}{N}\operatorname{conj}\bigl(\operatorname{FFT}(\operatorname{conj}(x))\bigr)
+    \]
+    
+    where `fft` is the forward transform you already have.
+    
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/parallel/algorithm.hpp>   // for hpx::for_each
+    #include <complex>
+    #include <vector>
+    
+    /* Inverse Fourier Transform – in‑place, parallel using HPX */
+    void ifft(std::vector<std::complex<double>>& x)
+    {
+        const std::size_t n = x.size();
+        const double inv_n = 1.0 / static_cast<double>(n);
+    
+        /* 1) conjugate the input (parallel) */
+        hpx::for_each(hpx::parallel::par, x.begin(), x.end(),
+            [](std::complex<double>& v) { v = std::conj(v); });
+    
+        /* 2) forward FFT (assumed to be provided elsewhere) */
+        fft(x);
+    
+        /* 3) conjugate again and scale by 1/N (parallel) */
+        hpx::for_each(hpx::parallel::par, x.begin(), x.end(),
+            [inv_n](std::complex<double>& v) { v = std::conj(v) * inv_n; });
+    }
+    ```
+    
+    **Explanation**
+    
+    1. **First conjugate** – `std::conj` is applied to every element in parallel.  
+    2. **Forward FFT** – the existing `fft` routine computes the DFT of the conjugated data.  
+    3. **Second conjugate + scaling** – the result is conjugated back and multiplied by `1/N` in a single parallel pass, giving the inverse transform.
+    
+    The function works for any power‑of‑two size `N` (the same requirement as the forward `fft`). HPX’s `hpx::parallel::par` policy runs the element‑wise loops concurrently across the available processing units.
+  Output 9:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/algorithm.hpp>
+    #include <hpx/execution.hpp>
+    #include <complex>
+    #include <vector>
+    
+    /* Forward declaration of fft - computes Fourier transform in-place */
+    void fft(std::vector<std::complex<double>> &x);
+    
+    /* Compute the inverse Fourier transform of x in-place.
+     * Uses HPX for parallel computation of element-wise operations.
+     * IFFT(x) = (1/N) * conj(FFT(conj(x)))
+     */
+    void ifft(std::vector<std::complex<double>> &x) {
+        const std::size_t N = x.size();
+        if (N == 0) return;
+    
+        // Step 1: Conjugate the input (parallel)
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+            [](std::complex<double> &elem) {
+                elem = std::conj(elem);
+            });
+    
+        // Step 2: Compute forward FFT (assumed to be implemented)
+        fft(x);
+    
+        // Step 3: Conjugate again and scale by 1/N (parallel)
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+            [N](std::complex<double> &elem) {
+                elem = std::conj(elem) / static_cast<double>(N);
+            });
+    }
+    ```
+  Output 10:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/async.hpp>
+    #include <hpx/include/parallel_algorithm.hpp>
+    #include <vector>
+    #include <complex>
+    #include <cmath>
+    #include <algorithm>
+    
+    /* Forward FFT using iterative Cooley-Tukey algorithm with HPX parallelism */
+    void fft(std::vector<std::complex<double>> &x) {
+        const size_t n = x.size();
+        
+        // Bit-reversal permutation (sequential, O(n))
+        size_t j = 0;
+        for (size_t i = 0; i < n - 1; i++) {
+            if (i < j) {
+                std::swap(x[i], x[j]);
+            }
+            size_t k = n >> 1;
+            while (k <= j) {
+                j -= k;
+                k >>= 1;
+            }
+            j += k;
+        }
+        
+        // Butterfly operations - parallel across independent butterfly groups
+        for (size_t len = 2; len <= n; len <<= 1) {
+            double angle = -2.0 * M_PI / len;
+            std::complex<double> wlen(std::cos(angle), std::sin(angle));
+            
+            // Launch parallel tasks for independent butterfly groups
+            std::vector<hpx::future<void>> futures;
+            futures.reserve(n / len);
+            
+            for (size_t i = 0; i < n; i += len) {
+                futures.push_back(hpx::async([&x, i, len, wlen]() {
+                    std::complex<double> w(1.0, 0.0);
+                    size_t half = len >> 1;
+                    for (size_t j = 0; j < half; j++) {
+                        std::complex<double> u = x[i + j];
+                        std::complex<double> v = x[i + j + half] * w;
+                        x[i + j] = u + v;
+                        x[i + j + half] = u - v;
+                        w *= wlen;
+                    }
+                }));
+            }
+            hpx::wait_all(futures);
+        }
+    }
+    
+    /* Inverse FFT using conjugate method with HPX parallelism */
+    void ifft(std::vector<std::complex<double>> &x) {
+        const size_t n = x.size();
+        
+        // Parallel conjugate of input
+        std::vector<hpx::future<void>> futures;
+        size_t chunk_size = (n + 63) / 64;  // Divide into 64 chunks for parallelism
+        
+        for (size_t chunk = 0; chunk < 64 && chunk * chunk_size < n; chunk++) {
+            size_t start = chunk * chunk_size;
+            size_t end = std::min(start + chunk_size, n);
+            futures.push_back(hpx::async([&x, start, end]() {
+                for (size_t i = start; i < end; i++) {
+                    x[i] = std::conj(x[i]);
+                }
+            }));
+        }
+        hpx::wait_all(futures);
+        
+        // Forward FFT
+        fft(x);
+        
+        // Parallel conjugate of result
+        futures.clear();
+        for (size_t chunk = 0; chunk < 64 && chunk * chunk_size < n; chunk++) {
+            size_t start = chunk * chunk_size;
+            size_t end = std::min(start + chunk_size, n);
+            futures.push_back(hpx::async([&x, start, end]() {
+                for (size_t i = start; i < end; i++) {
+                    x[i] = std::conj(x[i]);
+                }
+            }));
+        }
+        hpx::wait_all(futures);
+        
+        // Parallel scaling by 1/n
+        double scale = 1.0 / static_cast<double>(n);
+        futures.clear();
+        for (size_t chunk = 0; chunk < 64 && chunk * chunk_size < n; chunk++) {
+            size_t start = chunk * chunk_size;
+            size_t end = std::min(start + chunk_size, n);
+            futures.push_back(hpx::async([&x, start, end, scale]() {
+                for (size_t i = start; i < end; i++) {
+                    x[i] *= scale;
+                }
+            }));
+        }
+        hpx::wait_all(futures);
+    }
+    ```
+  Output 11:
+  Output 12:
+    **Solution Overview**
+    
+    The inverse FFT can be obtained from a forward FFT by the well‑known “conjugate‑FFT‑conjugate‑scale” recipe:
+    
+    1. Conjugate every element of the input.  
+    2. Run the **forward** FFT (the existing `fft` routine).  
+    3. Conjugate the result again.  
+    4. Scale every element by `1/N` (`N` = number of points).
+    
+    All three point‑wise stages can be parallelised with HPX.  
+    Below is a complete, self‑contained implementation that uses `hpx::for_loop` (the HPX parallel range‑based loop) to perform the conjugation and scaling steps in parallel, while leaving the actual FFT to the supplied `fft` routine.
+    
+    ```cpp
+    // ifft.cpp
+    // --------------------------------------------------------------------
+    // Compute the inverse Fourier transform in‑place using HPX parallelism.
+    // --------------------------------------------------------------------
+    
+    // HPX headers
+    #include <hpx/hpx.hpp>
+    #include <hpx/parallel/algorithm.hpp>
+    
+    // Standard headers
+    #include <complex>
+    #include <vector>
+    
+    // --------------------------------------------------------------------
+    // Forward FFT – assumed to be implemented elsewhere.
+    // It computes an in‑place Cooley‑Tukey FFT (or any other algorithm)
+    // on the supplied vector of complex numbers.
+    // --------------------------------------------------------------------
+    void fft(std::vector<std::complex<double>>& x);
+    
+    // --------------------------------------------------------------------
+    // Inverse FFT – in‑place, parallelised with HPX.
+    // --------------------------------------------------------------------
+    void ifft(std::vector<std::complex<double>>& x)
+    {
+        const std::size_t n = x.size();
+        if (n == 0) return;                // nothing to do
+    
+        namespace exec = hpx::execution;
+        namespace par  = hpx::parallel;
+    
+        // ----------------------------------------------------------------
+        // 1️⃣  Conjugate the input.
+        // ----------------------------------------------------------------
+        hpx::for_loop(exec::par, 0, n,
+            [&x](std::size_t i)
+            {
+                x[i] = std::conj(x[i]);
+            });
+    
+        // ----------------------------------------------------------------
+        // 2️⃣  Forward FFT (in‑place).  The user‑provided routine is assumed
+        //      to be thread‑safe and may already contain its own parallelism.
+        // ----------------------------------------------------------------
+        fft(x);
+    
+        // ----------------------------------------------------------------
+        // 3️⃣  Conjugate the result (undo the first conjugation).
+        // ----------------------------------------------------------------
+        hpx::for_loop(exec::par, 0, n,
+            [&x](std::size_t i)
+            {
+                x[i] = std::conj(x[i]);
+            });
+    
+        // ----------------------------------------------------------------
+        // 4️⃣  Scale by 1/N to obtain the true inverse transform.
+        // ----------------------------------------------------------------
+        const double scale = 1.0 / static_cast<double>(n);
+        hpx::for_loop(exec::par, 0, n,
+            [&x, scale](std::size_t i)
+            {
+                x[i] *= scale;
+            });
+    }
+    ```
+    
+    ### How It Works
+    * **Conjugation** – `std::conj` flips the sign of the imaginary part. Doing it before and after the forward FFT yields the mathematical definition of the inverse transform.
+    * **Scaling** – The forward FFT does not include the `1/N` factor; dividing by `N` after the second conjugation gives the correct IFFT result.
+    * **Parallelism** – Each point‑wise pass (conjugation and scaling) is executed in parallel using `hpx::for_loop` with the `hpx::execution::par` policy. This distributes the loop iterations across all available HPX worker threads.
+    
+    ### Example (matches the specification)
+    
+    ```cpp
+    int main()
+    {
+        // Initialise HPX (done elsewhere – assumed present)
+        // hpx::init(...);
+    
+        std::vector<std::complex<double>> x = {
+            {1.0, 0.0}, {1.0, 0.0}, {1.0, 0.0}, {1.0, 0.0},
+            {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}
+        };
+    
+        ifft(x);
+        // x now contains:
+        // [{0.5,0}, {0.125,0.301777}, {0,-0}, {0.125,0.0517767},
+        //  {0,-0}, {0.125,-0.0517767}, {0,-0}, {0.125,-0.301777}]
+    }
+    ```
+    
+    The implementation follows the required signature, operates entirely in‑place, and leverages HPX for parallel execution.
+  Output 13:
+  Output 14:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/parallel/algorithm.hpp>
+    #include <vector>
+    #include <complex>
+    #include <cmath>
+    #include <iostream>
+    
+    /* forward declare fft. computes fourier transform in-place */
+    void fft(std::vector<std::complex<double>> &x);
+    
+    void ifft(std::vector<std::complex<double>> &x) {
+        const std::size_t n = x.size();
+        
+        // Handle trivial cases
+        if (n == 0) return;
+        if (n == 1) return;  // Single point IFFT is itself
+        
+        // Compute conjugate: x_conj = conj(x)
+        // This can be done in parallel
+        hpx::parallel::for_loop(
+            hpx::parallel::execution::par,
+            0, n,
+            [&](std::size_t i) {
+                x[i] = std::conj(x[i]);
+            }
+        );
+        
+        // Compute forward FFT on conjugated data
+        fft(x);
+        
+        // Compute conjugate of result and scale by 1/n
+        // This can be done in parallel
+        const double scale = 1.0 / static_cast<double>(n);
+        hpx::parallel::for_loop(
+            hpx::parallel::execution::par,
+            0, n,
+            [&](std::size_t i) {
+                x[i] = std::conj(x[i]) * scale;
+            }
+        );
+    }
+    ```
+    
+    Note: The inverse FFT is computed using the relationship:
+    ifft(x) = (1/N) * conj(fft(conj(x)))
+    
+    This implementation:
+    1. **Conjugates** the input in parallel using HPX's parallel for_loop
+    2. Applies the **forward FFT** (assumed to be implemented elsewhere)
+    3. **Conjugates** the result and **scales** by 1/N in parallel
+    
+    The HPX parallel for_loop distributes the element-wise operations across available processing units, providing parallelism for the O(N) conjugate and scale operations. The FFT itself is called as an external function (as declared in the problem statement).
+  Output 15:
+    ```cpp
+    #include <hpx/hpx_main.hpp>
+    #include <hpx/algorithm.hpp>
+    #include <hpx/execution.hpp>
+    #include <vector>
+    #include <complex>
+    
+    /* forward declare fft. computes fourier transform in-place */
+    void fft(std::vector<std::complex<double>> &x);
+    
+    /*
+       Compute the inverse fourier transform of x in-place.
+       Use HPX to compute in parallel. Assume HPX has already been initialized.
+       
+       Example:
+       input: [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+       output: [{0.5,0}, {0.125,0.301777}, {0,-0}, {0.125,0.0517767}, {0,-0}, {0.125,-0.0517767}, {0,-0}, {0.125,-0.301777}]
+    */
+    void ifft(std::vector<std::complex<double>> &x) {
+        const size_t n = x.size();
+        
+        // IFFT using FFT: conjugate -> FFT -> conjugate -> scale by 1/N
+        // This works because: IFFT(x) = (1/N) * conj(FFT(conj(x)))
+        
+        // Step 1: Conjugate input in parallel
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+                      [](std::complex<double> &c) {
+                          c = std::conj(c);
+                      });
+        
+        // Step 2: Compute FFT
+        fft(x);
+        
+        // Step 3: Conjugate output and scale by 1/N in parallel
+        double inv_n = 1.0 / static_cast<double>(n);
+        hpx::for_each(hpx::execution::par, x.begin(), x.end(),
+                      [inv_n](std::complex<double> &c) {
+                          c = std::conj(c) * inv_n;
+                      });
+    }
+    ```
