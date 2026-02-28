@@ -44,7 +44,7 @@ for i in "${!models_in[@]}"; do
         --yes-to-all \
         --include-models "hpx" \
         --build-timeout 30 \
-        --run-timeout 45 \
+        --run-timeout 60 \
         --log-build-errors \
         --log-runs 
     echo "Completed ${model_in}"

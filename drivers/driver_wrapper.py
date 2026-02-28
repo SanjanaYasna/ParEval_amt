@@ -251,6 +251,8 @@ class DriverWrapper(ABC):
                         "did_run": r.exit_code == 0,
                         "is_valid": r.is_valid,
                         "runtime": r.runtime,
+                        "stderr": r.stderr if r.stderr else "",
+                        "stdout": r.stdout if r.stdout else "", 
                         **r.config
                     } for r in results.run_outputs
                 ] if results.run_outputs is not None else None

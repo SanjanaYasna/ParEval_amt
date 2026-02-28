@@ -29,3 +29,6 @@ Loading ncurses version 6.5
 Loading hwloc version 2.9.1
 Loading yaksa version 0.3
 Loading mpich version 4.2.1
+Loaded model minimax
+Minimax batch size 20
+Task reduce completed.
