@@ -3,6 +3,7 @@ import argparse
 import json
 import time
 from tqdm import tqdm
+from pathlib import Path
 # tpl imports
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPTNeoForCausalLM, AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM, pipeline, BitsAndBytesConfig
@@ -494,6 +495,9 @@ for model_name in args.model_names:
                 results.append(cur_prompt)
         #write to cache once reaching num_samples results 
         if not args.restart and args.cache is not None:
+            # todo: move this to catching an error and only run if we need
+            parentPathAbs = Path(args.cache).parent.absolute()
+            Path(parentPathAbs).mkdir(parents=True, exist_ok=True)
             with open(args.cache, 'a+') as jsonl_file:
                 jsonl_file.write(json.dumps(cur_prompt) + "\n")
 
