@@ -1,8 +1,11 @@
 name: hpc_llm
 channels:
   - conda-forge
+  - defaults
+  - pytorch
 dependencies:
   - accelerate
+  - anthropic
   - cuda-nvcc
   - cudatoolkit-dev
   - datasets
