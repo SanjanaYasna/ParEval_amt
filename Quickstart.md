@@ -13,3 +13,10 @@ conda activate hpc_llm
 pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.5cxx11abiFALSE-cp312-cp312-linux_x86_64.whl
 ```
 
+---
+
+to generate: `srun_generate/`
+
+to clean: `work/scratch/generation_hpx/usage.txt`
+
+to run: `run_driver/`
