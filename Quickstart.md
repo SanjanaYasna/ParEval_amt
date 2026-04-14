@@ -17,6 +17,6 @@ pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.
 
 to generate: `srun_generate/`
 
-to clean: `work/scratch/generation_hpx/usage.txt`
+to clean: `clean_prompts/Usage.md`
 
 to run: `run_driver/`
