@@ -1,0 +1,155 @@
+curl https://api.anthropic.com/v1/messages/batches \
+  --header "x-api-key: $ANTHROPIC_API_KEY" \
+  --header "anthropic-version: 2023-06-01" \
+  --header "content-type: application/json" \
+  --data @- <<'JSON'
+{
+  "requests": [
+    {
+      "custom_id": "65_future_promise_heat_dist",
+      "params": {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 2048,
+        "top_p": 0.95,
+        "system": [
+          {
+            "type": "text",
+            "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+          }
+        ],
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 1400
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "#include <hpx/hpx_main.hpp>\ninline std::size_t idx(std::size_t i, int dir, std::size_t size)\n{\n    if (i == 0 && dir == -1)\n        return size - 1;\n    if (i == size - 1 && dir == +1)\n        return 0;\n\n    HPX_ASSERT((i + dir) < size);\n    return i + dir;\n}\nstruct partition\n{\n    using tile_type   = std::vector<double>;\n    using future_type = hpx::shared_future<tile_type>;\n\n    partition() = default;\n    explicit partition(future_type f)\n      : data_(std::move(f))\n    {}\n\n    partition& operator=(future_type f)\n    {\n        data_ = std::move(f);\n        return *this;\n    }\n\n    future_type const& get_future() const\n    {\n        return data_;\n    }\nprivate:\n    future_type data_;\n};\ninline auto make_default_step_factory(double k, double dt, double dx)\n{\n    using future_type = partition::future_type;\n\n    return [coeff = k * dt / (dx * dx)](future_type const& left,\n                                        future_type const& middle,\n                                        future_type const& right) -> future_type\n    {\n        using hpx::dataflow;\n        using hpx::launch;\n        using hpx::util::unwrapping;\n\n        auto kernel = unwrapping([coeff](partition::tile_type const& l,\n                                         partition::tile_type const& m,\n                                         partition::tile_type const& r)\n                                        -> partition::tile_type\n        {\n            std::size_t const N = m.size();\n            HPX_ASSERT(N >= 2);\n\n            partition::tile_type next(N);\n\n            for (std::size_t j = 1; j < N - 1; ++j)\n                next[j] = m[j] + coeff * (m[j - 1] - 2.0 * m[j] + m[j + 1]);\n\n            next[0] = m[0] + coeff * (l.back() - 2.0 * m[0] + m[1]);\n            next[N - 1] = m[N - 1] +\n                coeff * (m[N - 2] - 2.0 * m[N - 1] + r.front());\n\n            return next;\n        });\n\n        return dataflow(launch::async, kernel, left, middle, right).share();\n    };\n}\nThe following inputs are defined as:\n- np: number of partitions (tiles), arranged in a ring (periodic neighbors)\n- nx: number of grid points per partition (nx >= 2)\n- nt: number of time steps to advance\n- k: thermal diffusivity coefficient\n- dt: time step size\n- dx: spatial grid spacing\n\nCompute the 1D heat distribution equation, using the provided make_default_step_factory(k, dt, dx) to find the per-partition results after nt steps.\nThe make_default_step_factory splits the computations into three sets of tiles and returns a per-tile update function for the 1D heat distribution equation.\nUse HPX to compute in parallel.  Assume HPX has already been initialized.\n\nExample\n\n  input:\n    initial = [0, 1, 2,   3, 4, 5]\n    np = 2, nx = 3, nt = 1\n    k = 0.5, dt = 1.0, dx = 1.0\n\n  Explanation: layer 0 has tiles\n      tile0 = [0,1,2], tile1 = [3,4,5]\n    After one step (periodic boundaries):\n      tile0'[0] = 0 + coeff*(2 - 0 + 1) = 3.0\n      tile0'[1] = 1 + coeff*(0 - 2 + 2) = 1.0\n      tile0'[2] = 2 + coeff*(1 - 4 + 3) = 2.0\n      tile1'[0] = 3 + coeff*(1 - 6 + 4) = 3.0\n      tile1'[1] = 4 + coeff*(3 - 8 + 5) = 4.0\n      tile1'[2] = 5 + coeff*(4 -10 + 2) = 2.0\n\n  output:\n    parallel_heat(...) should return [3.0, 1.0, 2.0, 3.0, 4.0, 2.0]\n\nauto make_step = make_default_step_factory();\ntemplate <typename DataflowFactory>\nstd::vector<double> parallel_heat(\n    std::vector<double> const& initial,\n    std::size_t np, std::size_t nx, std::size_t nt,\n    double k_in, double dt_in, double dx_in,\n    DataflowFactory make_step)\n{"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "custom_id": "66_future_promise_jacobi",
+      "params": {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 2048,
+        "top_p": 0.95,
+        "system": [
+          {
+            "type": "text",
+            "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+          }
+        ],
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 1400
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "#include <hpx/hpx_main.hpp>\nstruct jacobi_tile\n{\n    using buffer   = std::vector<double>;\n    using boundary = std::array<double, 2>;   // (ghost_left, ghost_right)\n\n    jacobi_tile* left_neighbor  = nullptr;\n    jacobi_tile* right_neighbor = nullptr;\n\n    buffer u;\n    buffer rhs;\n\n    double left_bc_  = 0.0;\n    double right_bc_ = 0.0;\n\n    hpx::shared_future<boundary> left_in_;\n    hpx::shared_future<boundary> right_in_;\n\n    hpx::lcos::local::promise<boundary> left_out_;\n    hpx::lcos::local::promise<boundary> right_out_;\n\n    hpx::shared_future<boundary> left_future_;\n    hpx::shared_future<boundary> right_future_;\n\n    jacobi_tile() = default;\n\n    explicit jacobi_tile(std::size_t n, double init = 0.0)\n      : u(n, init)\n      , rhs(n, 0.0)\n    {\n        reset_promises();\n    }\n\n    void reset_promises()\n    {\n        left_out_  = hpx::lcos::local::promise<boundary>();\n        right_out_ = hpx::lcos::local::promise<boundary>();\n\n        left_future_  = left_out_.get_future().share();\n        right_future_ = right_out_.get_future().share();\n    }\n};\nImplement a 1\u2011D Jacobi relaxation using HPX where the domain is partitioned\ninto tiles and the start of each iteration has the update rule:\nu_new[i] = 0.5 * (u_old[i-1] + u_old[i+1] - rhs[i])\nUse HPX to compute in parallel.  Assume HPX has already been initialized.\n\nExample:\n    input:\n    tiles = 2\n    points_per_tile = 4    # interior points per tile\n    iterations = 3\n    left_boundary = 1.0\n    right_boundary = 0.0\n    rhs = all zeros\n    initial interior = all zeros\n    Output:\n    iteration 1: [0.5000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000]\n    iteration 2: [0.5000, 0.2500, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000]\n    iteration 3: [0.6250, 0.2500, 0.1250, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000]\n\nstd::vector<double> jacobi_parallel(\n    std::size_t tiles,\n    std::size_t points_per_tile,\n    std::size_t iterations,\n    double left_boundary,\n    double right_boundary,\n    std::vector<double> const& initial,\n    std::vector<double> const& rhs)\n{\n*/"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "custom_id": "67_future_promise_pi_approx",
+      "params": {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 2048,
+        "top_p": 0.95,
+        "system": [
+          {
+            "type": "text",
+            "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+          }
+        ],
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 1400
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "#include <hpx/hpx_main.hpp>\nstruct monte_carlo_result\n{\n    std::uint64_t hits    = 0;\n    std::uint64_t samples = 0;\n\n    double pi_estimate() const\n    {\n        return (samples == 0)\n            ? 0.0\n            : 4.0 * static_cast<double>(hits) / static_cast<double>(samples);\n    }\n};\n\nstateless SplitMix64 hash to make RNG reproducible across runs\nstd::uint64_t splitmix64(std::uint64_t x)\n{\n    x += 0x9E3779B97F4A7C15ull;\n    x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ull;\n    x = (x ^ (x >> 27)) * 0x94D049BB133111EBull;\n    x ^= (x >> 31);\n    return x;\n}\n\ndouble sample_unit_interval(std::uint64_t index, std::uint64_t seed)\n{\n    std::uint64_t value = splitmix64(index + seed);\n    return static_cast<double>(value >> 11) * (1.0 / static_cast<double>(1ull << 53));\n}\n\nApproximate the value of pi by counting how many randomly generated points on the unit square lie in the unit circle. Split the total number of points (num_samples) into chunk_size blocks.\nUse HPX to compute in parallel.  Assume HPX has already been initialized.\n\nmonte_carlo_result monte_carlo_parallel(\n    std::uint64_t total_samples,\n    std::uint64_t chunk_size,\n    std::uint64_t seed)\n{"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "custom_id": "68_future_promise_integral",
+      "params": {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 2048,
+        "top_p": 0.95,
+        "system": [
+          {
+            "type": "text",
+            "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+          }
+        ],
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 1400
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "#include <hpx/hpx_main.hpp>\nstruct integral_result\n{\n    double        accumulator = 0.0;\n    std::uint64_t samples     = 0;\n\n    double estimate(double a, double b) const\n    {\n        return (samples == 0)\n            ? 0.0\n            : (b - a) * (accumulator / static_cast<double>(samples));\n    }\n};\n\nstd::uint64_t splitmix64(std::uint64_t x)\n{\n    x += 0x9E3779B97F4A7C15ull;\n    x = (x ^ (x >> 30)) * 0xBF58476D1CE4E5B9ull;\n    x = (x ^ (x >> 27)) * 0x94D049BB133111EBull;\n    x ^= (x >> 31);\n    return x;\n}\n\ndouble sample_unit_interval(std::uint64_t index, std::uint64_t seed)\n{\n    std::uint64_t value = splitmix64(index + seed);\n    return static_cast<double>(value >> 11) *\n        (1.0 / static_cast<double>(1ull << 53));\n}\n\nApproximate the definite integral of a user-supplied function f over the interval [a, b] using Monte Carlo sampling: draw total_samples uniformly distributed points in [a, b], evaluate f = e^{-x^2} at each point,\nand accumulate the results to estimate the integral. Split the total number of samples into chunk_size blocks.\nReturn an integral_result that holds the sample count and accumulated function values for the entire run.\nUse HPX to compute in parallel.  Assume HPX has already been initialized.\n\nExample:\n    input: total_samples: 5,000,000, chunk_size: 100,000, a: 0.0, b: 1.0, seed: 2024\n    output: Integral estimate returned: 0.74673\n\ntemplate <typename F>\nintegral_result monte_carlo_integral_parallel(\n    std::uint64_t total_samples,\n    std::uint64_t chunk_size,\n    double a,\n    double b,\n    std::uint64_t seed,\n    F&& f)\n{"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "custom_id": "69_future_promise_wave_eq",
+      "params": {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 2048,
+        "top_p": 0.95,
+        "system": [
+          {
+            "type": "text",
+            "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+          }
+        ],
+        "thinking": {
+          "type": "enabled",
+          "budget_tokens": 1400
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "#include <hpx/hpx_main.hpp>\nstruct wave_tile\n{\n    using buffer = std::vector<double>;\n\n    wave_tile* left_neighbor  = nullptr;\n    wave_tile* right_neighbor = nullptr;\n\n    buffer prev;\n    buffer curr;\n    buffer next;   // reusable scratch buffer\n\n    hpx::shared_future<double> left_in_;\n    hpx::shared_future<double> right_in_;\n\n    hpx::lcos::local::promise<double> left_out_;\n    hpx::lcos::local::promise<double> right_out_;\n\n    hpx::shared_future<double> left_future_;\n    hpx::shared_future<double> right_future_;\n\n    wave_tile() = default;\n\n    explicit wave_tile(std::size_t n)\n      : prev(n, 0.0)\n      , curr(n, 0.0)\n      , next(n, 0.0)\n    {}\n\n    void set_initial_halos(double left_value, double right_value)\n    {\n        left_in_  = hpx::make_ready_future(left_value).share();\n        right_in_ = hpx::make_ready_future(right_value).share();\n    }\n\n    void reset_promises()\n    {\n        left_out_  = hpx::lcos::local::promise<double>();\n        right_out_ = hpx::lcos::local::promise<double>();\n\n        left_future_  = left_out_.get_future().share();\n        right_future_ = right_out_.get_future().share();\n    }\n};\n\nStimulaate a 1-D wave equation given the domain is partitioned into tiles arranged on a periodic ring.\nThe update u_i^{n+1} = 2u_i^n -u_i^{n-1}+ lambda(u_{i-1}^n -2u_i^n+ u_{i+1}^n), where lambda = (c * t / dx)\nUse HPX to compute in parallel.  Assume HPX has already been initialized.\n\nExample:\n    input: np=3, nx=4, nt=3, c=1.0, dt =0.1, dx = 0.25,\n    intital condition is\n    for (std::size_t i = 0; i < total; ++i)\n    {\n        double x = static_cast<double>(i) * dx;\n        initial[i] = std::sin(2.0 * M_PI * x);\n    }\n    That means lambda = (c * t / dx) = 0.4^2 =0.16\n    Output: [0.000000, -0.440768, -0.000000, 0.440768, 0.000000, -0.440768, -0.000000, 0.440768, 0.000000, -0.440768, -0.000000, 0.440768]\n\n\nstd::vector<double> wave_parallel(\n    std::vector<double> const& initial,\n    std::size_t np, std::size_t nx, std::size_t nt,\n    double c, double dt, double dx)\n{"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+JSON

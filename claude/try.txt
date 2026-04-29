@@ -1,0 +1,66 @@
+curl https://api.anthropic.com/v1/messages/batches \
+  --header "x-api-key: $ANTHROPIC_API_KEY" \
+  --header "anthropic-version: 2023-06-01" \
+  --header "content-type: application/json" \
+  --data '{
+    "requests": [
+      {
+        "custom_id": "sonnet_05_fft_inverse_fft",
+        "params": {
+          "model": "claude-sonnet-4-5",
+          "max_tokens": 2048,
+          "top_p": 0.95,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+            }
+          ],
+          "thinking": {
+            "type": "enabled",
+            "budget_tokens": 1400
+          },
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "#include <hpx/hpx_main.hpp>\n\n/* forward declare fft. computes fourier transform in-place */\nvoid fft(std::vector<std::complex<double>> &x);\n\n/* Compute the inverse fourier transform of x in-place.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n   \n   input: [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0]\n   output: [{0.5,0}, {0.125,0.301777}, {0,-0}, {0.125,0.0517767}, {0,-0}, {0.125,-0.0517767}, {0,-0}, {0.125,-0.301777}]\n*/\nvoid ifft(std::vector<std::complex<double>> &x) {"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "custom_id": "sonnet_06_fft_dft",
+        "params": {
+          "model": "claude-sonnet-4-5",
+          "max_tokens": 2048,
+          "top_p": 0.95,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are an expert modern C++ developer specializing in high-performance HPX code. Provide concise, correct implementations."
+            }
+          ],
+          "thinking": {
+            "type": "enabled",
+            "budget_tokens": 1400
+          },
+          "messages": [
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "#include <hpx/hpx_main.hpp>\n\n/* Compute the discrete fourier transform of x. Store the result in output.\n   Use HPX to compute in parallel.  Assume HPX has already been initialized.\n   Example:\n\n   input: [1, 4, 9, 16]\n   output: [30+0i, -8-12i, -10-0i, -8+12i]\n*/\nvoid dft(std::vector<double> const& x, std::vector<std::complex<double>> &output) {"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }'
