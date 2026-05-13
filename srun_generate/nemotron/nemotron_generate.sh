@@ -16,13 +16,14 @@ export HF_DATASETS_CACHE="${HF_HOME}/datasets"
 
 module load conda/latest
 conda activate hpc_llm
-source ../../.hpc_src
+cd ../../generate
+source ~/work/.hpc_src
 module load CUDA/12.8.0
 
 
 declare -a tasks=("la" "fft" "futures_promises" "geometry" "graph" "histogram" "locking_contention" "reduce" "scan" "search" "sort" "stencil" "transform")
 TASK="${tasks[$SLURM_ARRAY_TASK_ID]}"
-PROMPT_DIR="/work/pi_mrobson_smith_edu/ParEval_amt/prompts"
+PROMPT_DIR="../prompts"
 
 OUT_DIR="/work/pi_mrobson_smith_edu/scratch/generation_hpx/"
 
@@ -31,7 +32,7 @@ MODEL_NAME="nemotron"
 # Construct paths
 PROMPT_FILE="${PROMPT_DIR}/${TASK}.json"
 TASK_OUT_DIR="${OUT_DIR}/${TASK}/cache"
-CACHE_FILE="${TASK_OUT_DIR}/glm.json"
+CACHE_FILE="${TASK_OUT_DIR}/nemotron.json"
 OUT_FILE="${OUT_DIR}/${TASK}/cumulative_out.json"
 
 python generate_with_metrics.py \
