@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=minimax
-#SBATCH --output=minimax_%A_%a.txt
+#SBATCH -o %x_%A_%a-%j.txt
 #SBATCH -p cpu
 #SBATCH -c 8
 #SBATCH --mem=10GB

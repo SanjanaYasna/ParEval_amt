@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=transform
-#SBATCH --output=transform.txt
+#SBATCH -o %x-%j.txt
 #SBATCH -p gpu-preempt
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1

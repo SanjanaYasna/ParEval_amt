@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=nemotron
-#SBATCH --output=nemotron_%A_%a.txt
+#SBATCH -o %x_%A_%a-%j.txt
 #SBATCH -p gpu
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1

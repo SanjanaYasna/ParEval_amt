@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=stencil
-#SBATCH --output=stencil.txt
+#SBATCH -o %x-%j.txt
 #SBATCH -p gpu
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
