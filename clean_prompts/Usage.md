@@ -49,3 +49,18 @@ python specific_runtimes.py transform/driver/tcmalloc/
 
 
 `python ../replace_entry.py magicoder_combined.json /work/pi_mrobson_smith_edu/scratch/generation_hpx/to_merge/pass1_combined/09_magicoder_combined.json magicoder_2.json`
+
+---
+
+# Example
+
+```sh
+
+# NOTE: does not work on cumulative!
+python clean_output_bulk_python.py -i ~/work/scratch/generation_charm4py_cleaned/sort-python/cache/hpc-coder.json
+
+# OR magicoder/Markdown block specific
+python clean_output_bulk_python_markdown.py -i ~/work/scratch/generation_charm4py_cleaned/sort-python/cache/magicoder.json
+
+python parse_to_txt.py ~/work/scratch/generation_charm4py_cleaned/sort-python/cache/cleaned_python/hpc-coder.json
+```
