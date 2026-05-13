@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J gpt_transform
-#SBATCH --output=gpt_transform
+#SBATCH --job-name=gpt_transform
+#SBATCH -o %x-%j.txt
 #SBATCH -N 1
 #SBATCH -c 16
 #SBATCH --mem=12G
@@ -13,14 +13,14 @@ export HF_HOME="/work/pi_mrobson_smith_edu/scratch/hf"
 export HF_TRANSFORMERS_CACHE="${HF_HOME}"
 export HF_DATASETS_CACHE="${HF_HOME}/datasets"
 
-cd /work/pi_mrobson_smith_edu/ParEval_amt/generate
-source ../../.hpc_src
+cd ../generate
+source ~/work/.hpc_src
 
 BASE_OUT="/work/pi_mrobson_smith_edu/scratch/generation_hpx/transform"
 CACHE_FILE="${BASE_OUT}/cache/gpt-5.json"
 OUT_FILE="${BASE_OUT}/cumulative_out.json"
 
-python generate_with_metrics.py --prompts "/work/pi_mrobson_smith_edu/ParEval_amt/prompts/transform.json" \
+python generate_with_metrics.py --prompts "../prompts/transform.json" \
     --model_names "gpt-5" \
     --output "${OUT_FILE}" \
     --num_samples_per_prompt 100 \
