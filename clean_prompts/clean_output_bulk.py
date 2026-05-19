@@ -37,6 +37,8 @@ def clean(out: str, func_name: str):
     Remove lines starting with @@ (like @@ Response) and extract the function
     definition for func_name (including body). If func_name not found, just
     return the cleaned text.
+
+    For Chapel output, also extracts code from triple backtick blocks.
     """
     if out is None:
         return out
@@ -44,6 +46,11 @@ def clean(out: str, func_name: str):
         out = str(out)
 
     out_cleaned = re.sub(r"(?m)^\s*@@.*\n?", "", out)
+
+    # Extract code from triple backtick blocks (```chapel or ```)
+    code_block_match = re.search(r"```(?:chapel)?\s*([\s\S]*?)```", out_cleaned)
+    if code_block_match:
+        out_cleaned = code_block_match.group(1).strip()
 
     if not func_name:
         return out_cleaned.strip()
