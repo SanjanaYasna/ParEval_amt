@@ -77,7 +77,7 @@ def load_model(model_name):
         #best in pareval expected:
         if model_name == 'phind-v2': #large
             model = LlamaForCausalLM.from_pretrained("Phind/Phind-CodeLlama-34B-v2"
-                                                    , torch_dtype = torch.bfloat16
+                                                    , dtype = torch.bfloat16
                                                     , device_map="auto") 
             model.forward = torch.compile(model.forward, mode="reduce-overhead", fullgraph=True)
             tokenizer = AutoTokenizer.from_pretrained("Phind/Phind-CodeLlama-34B-v2")
@@ -88,11 +88,11 @@ def load_model(model_name):
                 quantization_config = BitsAndBytesConfig(load_in_8bit=True)
                 model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", quantization_config=quantization_config)
             else:
-                model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", torch_dtype=torch.bfloat16)
+                model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", dtype=torch.bfloat16)
             tokenizer = AutoTokenizer.from_pretrained('bigcode/starcoder2-15b')
         #slightly higher than phind-v2 in parallel pass@1
         elif model_name == 'hpc-coder':
-            model = AutoModelForCausalLM.from_pretrained('hpcgroup/hpc-coder-v2-6.7b', device_map="auto")
+            model = AutoModelForCausalLM.from_pretrained('hpcgroup/hpc-coder-v2-6.7b', device_map="auto", dtype=torch.bfloat16)
             tokenizer = AutoTokenizer.from_pretrained('hpcgroup/hpc-coder-v2-6.7b')
             
         elif model_name == 'glm-4.7-flash':
@@ -104,7 +104,7 @@ def load_model(model_name):
             generator = pipeline(
                 model = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
                 task="text-generation",
-                torch_dtype=torch.bfloat16,
+                dtype=torch.bfloat16,
                 trust_remote_code=True,
                 device = 0
             )
@@ -115,7 +115,7 @@ def load_model(model_name):
             generator = pipeline(
                 model ="ise-uiuc/Magicoder-S-DS-6.7B",
                 task="text-generation",
-                torch_dtype=torch.bfloat16,
+                dtype=torch.bfloat16,
                 device = 0
             )
             return generator, True
