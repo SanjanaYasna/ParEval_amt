@@ -77,7 +77,7 @@ def load_model(model_name):
         #best in pareval expected:
         if model_name == 'phind-v2': #large
             model = LlamaForCausalLM.from_pretrained("Phind/Phind-CodeLlama-34B-v2"
-                                                    , torch_dtype = torch.bloat16
+                                                    , torch_dtype = torch.bfloat16
                                                     , device_map="auto") 
             model.forward = torch.compile(model.forward, mode="reduce-overhead", fullgraph=True)
             tokenizer = AutoTokenizer.from_pretrained("Phind/Phind-CodeLlama-34B-v2")
