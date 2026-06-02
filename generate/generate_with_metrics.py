@@ -14,7 +14,7 @@ from google import genai
 from collections import defaultdict
 from google.genai.errors import ClientError
 import os
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 from google.genai import types
 import concurrent.futures
 import anthropic
@@ -167,6 +167,9 @@ def load_model(model_name):
 #FREE TIER (doable with gemini 2.5 pro)
 API_RATE_LIMITS = {
     "gemini-2.5-pro": {"requests": 2, "sleep": 60},  # wait 60s after every 2 calls
+    "gpt-5": {"requests": 10, "sleep": 60},        # wait 60s after every 10 calls
+    "gpt-5.1-codex": {"requests": 10, "sleep": 60},
+    "gpt-5-codex": {"requests": 10, "sleep": 60},
 }
 api_request_counts = defaultdict(int)
 
@@ -197,24 +200,41 @@ def profile_generation(model, tokenizer, device, prompt):
     else: #api-based, indicated by -1 value of tokenizer 
         api_time_start = time.time()
         if model.startswith("gpt"): #no temperature nor sampling support 
-            if model == "gpt-5":
-                response = client.responses.create( 
-                model =model  
-                , input = f"{prompt['prompt']}"
-                , max_output_tokens= args.max_new_tokens 
-                ,reasoning={ "effort": args.gpt_reasoning_level }
-                ,text={ "verbosity": args.gpt_verbosity_level }
-                , service_tier="flex"
-            ) 
-            else: #codex doesn't support high/low verb., nor flex
-                response = client.responses.create( 
-                model =model   
-                , input = f"{prompt['prompt']}"
-                , max_output_tokens= args.max_new_tokens
-                ,reasoning={ "effort": args.gpt_reasoning_level }
-                ,text={ "verbosity": "medium" }
-            ) 
-            generated_code = response.output_text
+            # Enforce rate limiting before making API call
+            enforce_rate_limit(model)
+            
+            while True:
+                try:
+                    if model == "gpt-5":
+                        response = client.responses.create( 
+                        model =model  
+                        , input = f"{prompt['prompt']}"
+                        , max_output_tokens= args.max_new_tokens 
+                        ,reasoning={ "effort": args.gpt_reasoning_level }
+                        ,text={ "verbosity": args.gpt_verbosity_level }
+                        , service_tier="flex"
+                        ) 
+                    else: #codex doesn't support high/low verb., nor flex
+                        response = client.responses.create( 
+                        model =model   
+                        , input = f"{prompt['prompt']}"
+                        , max_output_tokens= args.max_new_tokens
+                        ,reasoning={ "effort": args.gpt_reasoning_level }
+                        ,text={ "verbosity": "medium" }
+                        ) 
+                    generated_code = response.output_text
+                    break
+                except RateLimitError as e:
+                    # Retry on rate limit errors
+                    time.sleep(60)
+                    continue
+                except Exception as e:
+                    # Retry on rate limit errors (429)
+                    if hasattr(e, 'status_code') and e.status_code == 429:
+                        time.sleep(60)
+                        continue
+                    else:
+                        raise
         elif model.startswith("gemini"):
             while True:
                 try:
