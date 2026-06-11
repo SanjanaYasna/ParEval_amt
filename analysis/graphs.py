@@ -77,44 +77,16 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 # --------------------------------------------------------------------------- #
 # Metric configurations
 # --------------------------------------------------------------------------- #
-# METRICS = [
-#     {
-#         "column": "speedup@1",
-#         "ylabel": "speedup@1",
-#         "title": "speedup@1 by Prompt Category and Model",
-#         "filename": "speedup1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     },
-#     {
-#         "column": "efficiency@1",
-#         "ylabel": "efficiency@1",
-#         "title": "efficiency@1 by Prompt Category and Model",
-#         "filename": "efficiency1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": True,
-#     }
-# ]
 
-# METRICS = [
-#     {
-#         "column": "strict_pass@1",
-#         "ylabel": "strict_pass@1",
-#         "title": "strict_pass@1 by Prompt Category and Model",
-#         "filename": "strict_pass1.png",
-#         "formatter": lambda v: f"{v:.2f}",
-#         "broken_axis": False,
-#     }
-# ]
 METRICS = [
-    {
-        "column": "strict_pass@1",
-        "ylabel": "strict_pass@1",
-        "title": "strict_pass@1 by Prompt Category and Model",
-        "filename": "strict_pass1.png",
-        "formatter": lambda v: f"{v:.2f}",
-        "broken_axis": False,
-    },
+    # {
+    #     "column": "strict_pass@1",
+    #     "ylabel": "strict_pass@1",
+    #     "title": "strict_pass@1 by Prompt Category and Model",
+    #     "filename": "strict_pass1.png",
+    #     "formatter": lambda v: f"{v:.2f}",
+    #     "broken_axis": False,
+    # },
     {
         "column": "speedup@1",
         "ylabel": "speedup@1",
@@ -123,14 +95,14 @@ METRICS = [
         "formatter": lambda v: f"{v:.2f}",
         "broken_axis": True,
     },
-    {
-        "column": "efficiency@1",
-        "ylabel": "efficiency@1",
-        "title": "efficiency@1 by Prompt Category and Model",
-        "filename": "efficiency1.png",
-        "formatter": lambda v: f"{v:.2f}",
-        "broken_axis": True,
-    },
+    # {
+    #     "column": "efficiency@1",
+    #     "ylabel": "efficiency@1",
+    #     "title": "efficiency@1 by Prompt Category and Model",
+    #     "filename": "efficiency1.png",
+    #     "formatter": lambda v: f"{v:.2f}",
+    #     "broken_axis": True,
+    # },
 ]
 
 # --------------------------------------------------------------------------- #
@@ -259,8 +231,8 @@ def _add_bottom_legend(fig, handles, title="Model"):
     legend = fig.legend(
         handles=handles,
         title=title,
-        loc="upper left",#"lower center",
-        bbox_to_anchor=(0.05,0.98),  # inside the figure
+        loc="lower center",           # anchor point on the legend box
+        bbox_to_anchor=(0.5, 1.0),    
         ncol=len(handles),
         handlelength=1.6,
         handleheight=1.2,
@@ -611,38 +583,6 @@ def main() -> None:
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/stencil/driver/tcmalloc/data.csv",
      "/work/pi_mrobson_smith_edu/scratch/generation_hpx/transform/driver/tcmalloc/data.csv"
     ]
-    #OVERALL JUST FOR STRICT PASS K
-#     csv_files = [
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/fft/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/futures_promises/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/geometry/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/graph/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/histogram/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/la/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/locking_contention/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/reduce/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/scan/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/search/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/sort/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/stencil/data.csv",
-#      "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/transform/data.csv"
-# ]
-    #SPEEDUP AND EFRFICIENCY TO EXCLUDE THE RUNS OF THE 4 PROBLEMATIC PROBLEMS
-#     csv_files = [
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/fft/09_fft_fft_out_of_place_excluded/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/futures_promises/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/geometry/14_geometry_closest_pair_1d_excluded/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/graph/17_graph_highest_degree_excluded/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/histogram/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/la/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/locking_contention/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/reduce/28_reduce_smallest_odd_number_excluded/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/scan/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/search/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/sort/data.csv",
-#     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/stencil/data.csv",
-#      "/work/pi_mrobson_smith_edu/scratch/generation_hpx/for_strict_pass/transform/data.csv"
-# ]
 
     metric_columns = [config["column"] for config in METRICS]
     frames: List[pd.DataFrame] = []

@@ -1,0 +1,9 @@
+model,null_rate_percent
+gpt5_combined,8.968390100465571
+hpc-coder_combined,89.08056524132869
+starcoder_combined,91.06125970664365
+magicoder_combined,50.446638457921956
+sonnet_combined,12.382176520994001
+glm_combined,32.56317689530686
+oss_combined,11.373748609566185
+minimax_combined,7.621082621082621
