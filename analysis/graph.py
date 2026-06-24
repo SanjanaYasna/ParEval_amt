@@ -39,13 +39,16 @@ PASTEL_COLORS = [
 ]
 
 MODEL_STYLES = {
-    "gpt5_combined": {"label": "GPT-5", "color": PASTEL_COLORS[0]},
+    "gpt5_combined": {"label": "GPT5", "color": PASTEL_COLORS[0]},
     "hpc-coder_combined": {"label": "HPC-Coder", "color": PASTEL_COLORS[1]},
     "starcoder_combined": {"label": "Starcoder", "color": PASTEL_COLORS[4]},
     "magicoder_combined": {"label": "Magicoder", "color": PASTEL_COLORS[2]},
     "sonnet_combined": {"label": "Sonnet", "color": PASTEL_COLORS[3]},
+    "glm_combined": {"label": "GLM", "color": PASTEL_COLORS[5]},
+    "oss_combined": {"label": "OSS", "color": PASTEL_COLORS[6]},
+    "minimax_combined": {"label": "MiniMax", "color": PASTEL_COLORS[7]},
 }
-MODEL_ORDER = ["GPT-5", "HPC-Coder", "Starcoder", "Magicoder", "Sonnet"]
+MODEL_ORDER = ["GPT5", "HPC-Coder", "Starcoder", "Magicoder", "Sonnet", "GLM", "OSS", "MiniMax"]
 
 plt.rcParams.update(
     {

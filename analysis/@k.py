@@ -8,7 +8,7 @@ if new benchmarks are added.
 
 Outputs
 -------
-summaries/
+@k/
     overall_summary.csv
     per_prompt_summary.csv
 """

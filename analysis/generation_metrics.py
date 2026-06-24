@@ -5,11 +5,11 @@ Aggregate model-level telemetry metrics from multiple generation HPX CSV exports
 Produces two CSV reports:
 
 1. model_metrics_by_category.csv
-      Columns: category, model, avg_generation_time, avg_gpu_utilization, avg_memory_utilization
+      Columns: category, model, avg_generation_time, avg_gpu_utilization, avg_gpu_memory_utilization
       Each row is the mean of all rows for (category, model).
 
 2. model_metrics_overall.csv
-      Columns: model, avg_generation_time, avg_gpu_utilization, avg_memory_utilization
+      Columns: model, avg_generation_time, avg_gpu_utilization, avg_gpu_memory_utilization
       Each row is the mean across every category for that model.
 
 Both files are written to OUTPUT_ROOT.
@@ -22,6 +22,7 @@ CSV_PATHS = [
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/fft/driver/tcmalloc/json_runtime_summary.csv",
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/graph/driver/tcmalloc/json_runtime_summary.csv",
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/transform/driver/tcmalloc/json_runtime_summary.csv",
+    "/work/pi_mrobson_smith_edu/scratch/generation_hpx/futures_promises/driver/tcmalloc/json_runtime_summary.csv",
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/scan/driver/tcmalloc/json_runtime_summary.csv",
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/search/driver/tcmalloc/json_runtime_summary.csv",
     "/work/pi_mrobson_smith_edu/scratch/generation_hpx/sort/driver/tcmalloc/json_runtime_summary.csv",
@@ -34,7 +35,7 @@ CSV_PATHS = [
 ]
 
 OUTPUT_ROOT = "/work/pi_mrobson_smith_edu/ParEval_amt/analysis/visuals_specific"
-METRIC_COLS = ["avg_generation_time", "avg_gpu_utilization", "avg_memory_utilization"]
+METRIC_COLS = ["avg_generation_time", "avg_gpu_utilization", "avg_gpu_memory_utilization"]
 
 
 def get_category_from_path(path: str) -> str:

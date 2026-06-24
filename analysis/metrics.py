@@ -99,11 +99,11 @@ def speedupk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
     df = df[(df["parallelism_model"] == "serial") |
             (df["parallelism_model"] == "cuda") |
             (df["parallelism_model"] == "hip") |
-            (df["parallelism_model"] == "hpx") &  (df["num_threads"] == 64) | 
             ((df["parallelism_model"] == "kokkos") & (df["num_threads"] == 32)) |
-            ((df["parallelism_model"] == "omp") & (df["num_threads"] == 32)) ]
+            ((df["parallelism_model"] == "omp") & (df["num_threads"] == 32)) |
             # ((df["parallelism_model"] == "mpi") & (df["num_procs"] == 512)) |
-            # ((df["parallelism_model"] == "mpi+omp") & (df["num_procs"] == 4) & (df["num_threads"] == 64))]
+            # ((df["parallelism_model"] == "mpi+omp") & (df["num_procs"] == 4) & (df["num_threads"] == 64))
+             ((df["parallelism_model"] == "hpx") & (df["num_threads"] == 64))]
     df = df.copy()
 
     # use min best_sequential_runtime
@@ -191,16 +191,15 @@ def efficiencyk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
             (df["parallelism_model"] == "hip") |
             ((df["parallelism_model"] == "kokkos") & (df["num_threads"] == 32)) |
             ((df["parallelism_model"] == "omp") & (df["num_threads"] == 32)) |
-             ((df["parallelism_model"] == "hpx") & (df["num_threads"] == 64)) ]
             # ((df["parallelism_model"] == "mpi") & (df["num_procs"] == 512)) |
-            # ((df["parallelism_model"] == "mpi+omp") & (df["num_procs"] == 4) & (df["num_threads"] == 64))]
+            # ((df["parallelism_model"] == "mpi+omp") & (df["num_procs"] == 4) & (df["num_threads"] == 64))
+            ((df["parallelism_model"] == "hpx") & (df["num_threads"] == 64))]
 
     # set n_resources column to 1 for serial; 32 for kokkos; 32 for omp; 512 for mpi; 4*64 for mpi+omp;
     # set it to problem_size for cuda and hip
     df["n_resources"] = 1
     df.loc[df["parallelism_model"] == "cuda", "n_resources"] = df["problem_size"]
     df.loc[df["parallelism_model"] == "hip", "n_resources"] = df["problem_size"]
-    df.loc[df["parallelism_model"] == "hpx", "n_resources"] = 64
     df.loc[df["parallelism_model"] == "kokkos", "n_resources"] = 32
     df.loc[df["parallelism_model"] == "omp", "n_resources"] = 8
     df.loc[df["parallelism_model"] == "mpi", "n_resources"] = 512
@@ -211,14 +210,11 @@ def efficiencyk(df: pd.DataFrame, k: int, n: int) -> pd.DataFrame:
     # use min best_sequential_runtime
     df["best_sequential_runtime"] = df.groupby(["name", "parallelism_model", "output_idx"])["best_sequential_runtime"].transform("min")
 
-
-    # # group by name, parallelism_model, and output_idx and call _efficiencyk
+    # group by name, parallelism_model, and output_idx and call _efficiencyk
     df = df.groupby(["name", "parallelism_model", "problem_type"]).apply(
             lambda row: _efficiencyk(row["runtime"], np.min(row["best_sequential_runtime"]), k, row["n_resources"])
         ).reset_index()
     
-    # to avoid duplicate problem_type
-    #df = df.groupby(["name", "parallelism_model", "problem_type"]).apply(lambda g: _efficiencyk(g["runtime"], g["best_sequential_runtime"].min(), k, g["n_resources"])).rename(f"efficiency@{k}").reset_index()
     # compute the mean efficiency@k
     df = df.groupby(["parallelism_model", "problem_type"]).agg({f"efficiency@{k}": "mean"})
 
