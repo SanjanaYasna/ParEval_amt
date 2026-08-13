@@ -28,8 +28,7 @@ from pathlib import Path
 from typing import Iterable, Mapping, Any
 
 DEFAULT_SYSTEM = (
-    "You are an expert modern C++ developer specializing in high-performance HPX code. "
-    "Provide concise, correct implementations."
+    "You are an expert in high-performance computing and parallel programming. Generate efficient code for the requested function, without helper functions. Focus on performance optimization and correctness."
 )
 
 CURL_HEADER = """curl https://api.anthropic.com/v1/messages/batches \\
