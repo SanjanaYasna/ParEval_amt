@@ -1,0 +1,21 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63250255
+SLURM array task: 6
+CPUs per task:    2
+
+Prompt type:      fft
+Model:            magicoder.json
+HPX version:      1.10.0
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_1_10_0
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/fft/cache/cleaned/magicoder.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/fft/1.10.0/magicoder_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s]Testing prompts:  20%|██        | 1/5 [20:32<1:22:11, 1232.87s/it]

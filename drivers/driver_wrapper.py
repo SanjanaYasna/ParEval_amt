@@ -1,6 +1,6 @@
 """ Wrap driver functionality.
-    author: Daniel Nichols
-    date: October 2023
+    author: Daniel Nichols & Sanjana Yasna
+    date: Fall 2026
 """
 # std imports
 from abc import ABC, abstractmethod
@@ -239,6 +239,17 @@ class DriverWrapper(ABC):
                 "generated_output": generated_output,
                 "source_write_success": results.source_write_success,
                 "did_build": results.did_build(),
+                "build_exit_code": results.build_output.exit_code,
+                "build_stdout": (
+                    results.build_output.stdout
+                    if results.build_output.stdout
+                    else ""
+                ),
+                "build_stderr": (
+                    results.build_output.stderr
+                    if results.build_output.stderr
+                    else ""
+                ),
                 "is_source_valid": self.validator.validate(generated_output),
                 "did_any_run": results.did_any_run(),
                 "did_all_run": results.did_all_run(),

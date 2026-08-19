@@ -1,0 +1,12 @@
+# OVERALL JIST
+
+Take from adjjsted launch_configs.json that only has 1 and 2 threads for HPX, and whatever other language
+
+Rerun everything, for those 1 or 2 threads
+
+I adjusted driver_wrapper to actually capture build errors, in addition to runtime errors. 
+
+Get results, in a separate directory called /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors, which has same dir structure minus tcmalloc dir (we only really ran hpx with tcmalloc...)
+
+
+And postproces as usual!

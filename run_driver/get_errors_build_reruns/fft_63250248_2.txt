@@ -1,0 +1,21 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63250251
+SLURM array task: 2
+CPUs per task:    2
+
+Prompt type:      fft
+Model:            gpt-5.json
+HPX version:      1.5.1
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_tcmalloc_1.5.1
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/fft/cache/cleaned/gpt-5.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/fft/1.5.1/gpt5_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s]Testing prompts:  20%|██        | 1/5 [23:33<1:34:13, 1413.34s/it]
