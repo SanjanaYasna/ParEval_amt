@@ -1,0 +1,21 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63365869
+SLURM array task: 4
+CPUs per task:    2
+
+Prompt type:      locking_contention.sh
+Model:            oss_cleaned.json
+HPX version:      1.5.1
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_tcmalloc_1.5.1
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/locking_contention/cache/lenient_clean/oss_cleaned.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/locking_contention.sh/1.5.1/oss_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s][2026-08-20T18:31:56.445] error: *** JOB 63365869 ON cpu022 CANCELLED AT 2026-08-20T18:31:56 DUE to SIGNAL Terminated ***

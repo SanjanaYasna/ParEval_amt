@@ -83,7 +83,7 @@
 // Example
 //
 //   input:
-//     initial = [0, 1, 2,   3, 4, 5]
+//     initial = [0, 1, 2, 3, 4, 5]
 //     np = 2, nx = 3, nt = 1
 //     k = 0.5, dt = 1.0, dx = 1.0
 //

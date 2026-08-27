@@ -13,6 +13,10 @@ struct Point {
     double x, y;
 };
 
+double distance(Point const& p1, Point const& p2) {
+    return std::sqrt(std::pow(p2.x-p1.x, 2) + std::pow(p2.y-p1.y, 2));
+}
+
 double NO_INLINE correctClosestPair(std::vector<Point> const& points) {
     // The polygon needs to have at least two points
     if (points.size() < 2)   {

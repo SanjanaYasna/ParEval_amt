@@ -1,0 +1,21 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63251550
+SLURM array task: 1
+CPUs per task:    2
+
+Prompt type:      geometry
+Model:            magicoder.json
+HPX version:      1.5.1
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_tcmalloc_1.5.1
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/geometry/cache/cleaned/magicoder.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/geometry/1.5.1/magicoder_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/5 [00:00<?, ?it/s][2026-08-19T15:51:47.959] error: *** JOB 63251550 ON cpu011 CANCELLED AT 2026-08-19T15:51:47 DUE to SIGNAL Terminated ***

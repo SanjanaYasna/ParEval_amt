@@ -12,6 +12,11 @@
 struct Point {
     double x, y;
 };
+
+double triangleArea(Point const& A, Point const& B, Point const& C) {
+  return 0.5 * std::abs( A.x*(B.y-C.y) + B.x*(C.y-A.y) + C.x*(A.y-B.y) );
+}
+
 double NO_INLINE correctSmallestArea(std::vector<Point> const& points) {
     // The polygon needs to have at least three points
     if (points.size() < 3)   {

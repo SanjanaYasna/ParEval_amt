@@ -1,0 +1,21 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63251625
+SLURM array task: 8
+CPUs per task:    2
+
+Prompt type:      la
+Model:            sonnet.json
+HPX version:      1.10.0
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_1_10_0
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/la/cache/cleaned/sonnet.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/la/1.10.0/sonnet_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+PROMPT KEYS set()
+Testing prompts:   0%|          | 0/10 [00:00<?, ?it/s][2026-08-19T15:35:52.328] error: *** JOB 63251625 ON cpu039 CANCELLED AT 2026-08-19T15:35:52 DUE to SIGNAL Terminated ***

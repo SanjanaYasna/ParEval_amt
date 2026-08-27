@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J minimax_dr
-#SBATCH --output=minimax.txt
+#SBATCH --output=minimax-%A_%a.out
 
 #SBATCH -N 1      # num. nodes
 #SBATCH -c 64 # Number of Cores per Task
@@ -36,7 +36,7 @@ fi
 input_file="/work/pi_mrobson_smith_edu/scratch/generation_hpx/${TASK}/cache/cleaned/${model_name}.json"
 output_file="/work/pi_mrobson_smith_edu/scratch/generation_hpx/${TASK}/driver/tcmalloc/${HPX_VERSION}/${model_name}_run.json"
 
-python run-all.py 
+python run-all.py \
     "${input_file}" \
     -o "${output_file}" \
     --yes-to-all \

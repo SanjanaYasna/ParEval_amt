@@ -12,7 +12,7 @@
 
 export HF_HOME="/work/pi_mrobson_smith_edu/scratch/hf"
 export HF_TRANSFORMERS_CACHE="${HF_HOME}"
-export HF_DATASETS_CACHE="${HF_HOME}/datasets"
+export HF_DATASETS_CACHE="${HF_HOME}/datasets
 
 module load conda/latest
 conda activate hpc_llm

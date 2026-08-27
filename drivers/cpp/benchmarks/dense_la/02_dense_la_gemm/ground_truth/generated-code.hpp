@@ -11,4 +11,6 @@ void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vecto
         }
     });
 } 
+
+
 //void gemm(std::vector<double> const& A, std::vector<double> const& B, std::vector<double> &C, size_t M, size_t K, size_t N) { }

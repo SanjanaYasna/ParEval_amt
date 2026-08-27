@@ -110,7 +110,7 @@ python run-all.py \
     --yes-to-all \
     --include-models "hpx" \
     --build-timeout 30 \
-    --run-timeout 45 \
+    --run-timeout 60 \
     --launch-configs "${launch_configs}" \
     --log-build-errors \
     --log-runs

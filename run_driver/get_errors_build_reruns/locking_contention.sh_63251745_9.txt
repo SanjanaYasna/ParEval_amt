@@ -1,0 +1,37 @@
+============================================================
+HPX BUILD/RUNTIME ERROR RERUN
+============================================================
+SLURM job ID:     63251745
+SLURM array task: 9
+CPUs per task:    2
+
+Prompt type:      locking_contention.sh
+Model:            oss.json
+HPX version:      1.10.0
+HPX environment:  /work/pi_mrobson_smith_edu/.hpx_1_10_0
+
+Input:            /work/pi_mrobson_smith_edu/scratch/generation_hpx/locking_contention/cache/lenient_clean/oss.json
+Output:           /work/pi_mrobson_smith_edu/scratch/generation_hpx/build_errors/locking_contention.sh/1.10.0/oss_run.json
+============================================================
+No conda package cache directories found outside your home directory. To
+prevent conda from filling up your home directory, you can create a new
+directory at `/work/pi_<your_pi_name>/$USER/.conda/pkgs` and reload the module. 
+Loading conda version miniforge3-24.7.1
+Traceback (most recent call last):
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 236, in <module>
+    main()
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/run-all.py", line 123, in main
+    data = load_json(args.input_json)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_mrobson_smith_edu/ParEval_amt/drivers/util.py", line 23, in load_json
+    with open(fpath, "r") as fp:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/work/pi_mrobson_smith_edu/scratch/generation_hpx/locking_contention/cache/lenient_clean/oss.json'
+
+============================================================
+FAILED
+============================================================
+Model:       oss.json
+HPX version: 1.10.0
+Exit code:   1
+============================================================
