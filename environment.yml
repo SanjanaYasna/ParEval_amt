@@ -1,0 +1,41 @@
+name: hpc_llm
+channels:
+  - conda-forge
+  - defaults
+  - pytorch
+dependencies:
+  - accelerate
+  - anthropic
+  - cuda-nvcc
+  - cudatoolkit-dev
+  - datasets
+  - deepspeed
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pandas
+  - pip
+  - python=3.12
+  - pytorch
+  - pytorch-cuda=12.1
+  - scipy
+  - torchaudio
+  - torchtext
+  - torchvision
+  - transformers
+  - pip:
+      - beautifulsoup4
+      - bitsandbytes
+      # flash-attn==2.7.4.post1 removed - install separately after
+      - google-genai
+      - GPUtil
+      - langchain-core
+      - openai
+      - opencv-python
+      - peft
+      - pytorch-optimizer
+      - selenium
+      - sentencepiece
+      - spacy
+      - tiktoken
+      - ultralytics

@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=GLM
-#SBATCH --output=GLM_%A_%a.txt
+#SBATCH -o %x_%A_%a-%j.txt
 #SBATCH -p gpu
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
@@ -17,13 +17,13 @@ export HF_DATASETS_CACHE="${HF_HOME}/datasets"
 # module load conda/latest
 # conda activate hpc_llm
 source /work/pi_mrobson_smith_edu/pareval/.venv/bin/activate
-cd /work/pi_mrobson_smith_edu/ParEval_amt/generate
-source ../../.hpc_src
+cd ../../generate
+source ~/work/.hpc_src
 
 
 declare -a tasks=("la" "fft" "futures_promises" "geometry" "graph" "histogram" "locking_contention" "reduce" "scan" "search" "sort" "stencil" "transform")
 TASK="${tasks[$SLURM_ARRAY_TASK_ID]}"
-PROMPT_DIR="/work/pi_mrobson_smith_edu/ParEval_amt/prompts"
+PROMPT_DIR="../prompts"
 
 OUT_DIR="/work/pi_mrobson_smith_edu/scratch/generation_hpx/"
 

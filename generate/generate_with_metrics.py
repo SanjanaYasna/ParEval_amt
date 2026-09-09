@@ -3,6 +3,7 @@ import argparse
 import json
 import time
 from tqdm import tqdm
+from pathlib import Path
 # tpl imports
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPTNeoForCausalLM, AutoTokenizer, AutoModelForCausalLM, LlamaForCausalLM, pipeline, BitsAndBytesConfig
@@ -13,7 +14,7 @@ from google import genai
 from collections import defaultdict
 from google.genai.errors import ClientError
 import os
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 from google.genai import types
 import concurrent.futures
 import anthropic
@@ -76,7 +77,7 @@ def load_model(model_name):
         #best in pareval expected:
         if model_name == 'phind-v2': #large
             model = LlamaForCausalLM.from_pretrained("Phind/Phind-CodeLlama-34B-v2"
-                                                    , torch_dtype = torch.bloat16
+                                                    , dtype = torch.bfloat16
                                                     , device_map="auto") 
             model.forward = torch.compile(model.forward, mode="reduce-overhead", fullgraph=True)
             tokenizer = AutoTokenizer.from_pretrained("Phind/Phind-CodeLlama-34B-v2")
@@ -87,11 +88,11 @@ def load_model(model_name):
                 quantization_config = BitsAndBytesConfig(load_in_8bit=True)
                 model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", quantization_config=quantization_config)
             else:
-                model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", torch_dtype=torch.bfloat16)
+                model = AutoModelForCausalLM.from_pretrained('bigcode/starcoder2-15b', device_map="auto", dtype=torch.bfloat16)
             tokenizer = AutoTokenizer.from_pretrained('bigcode/starcoder2-15b')
         #slightly higher than phind-v2 in parallel pass@1
         elif model_name == 'hpc-coder':
-            model = AutoModelForCausalLM.from_pretrained('hpcgroup/hpc-coder-v2-6.7b', device_map="auto")
+            model = AutoModelForCausalLM.from_pretrained('hpcgroup/hpc-coder-v2-6.7b', device_map="auto", dtype=torch.bfloat16)
             tokenizer = AutoTokenizer.from_pretrained('hpcgroup/hpc-coder-v2-6.7b')
             
         elif model_name == 'glm-4.7-flash':
@@ -103,7 +104,7 @@ def load_model(model_name):
             generator = pipeline(
                 model = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
                 task="text-generation",
-                torch_dtype=torch.bfloat16,
+                dtype=torch.bfloat16,
                 trust_remote_code=True,
                 device = 0
             )
@@ -114,7 +115,7 @@ def load_model(model_name):
             generator = pipeline(
                 model ="ise-uiuc/Magicoder-S-DS-6.7B",
                 task="text-generation",
-                torch_dtype=torch.bfloat16,
+                dtype=torch.bfloat16,
                 device = 0
             )
             return generator, True
@@ -166,6 +167,9 @@ def load_model(model_name):
 #FREE TIER (doable with gemini 2.5 pro)
 API_RATE_LIMITS = {
     "gemini-2.5-pro": {"requests": 2, "sleep": 60},  # wait 60s after every 2 calls
+    "gpt-5": {"requests": 10, "sleep": 60},        # wait 60s after every 10 calls
+    "gpt-5.1-codex": {"requests": 10, "sleep": 60},
+    "gpt-5-codex": {"requests": 10, "sleep": 60},
 }
 api_request_counts = defaultdict(int)
 
@@ -196,24 +200,41 @@ def profile_generation(model, tokenizer, device, prompt):
     else: #api-based, indicated by -1 value of tokenizer 
         api_time_start = time.time()
         if model.startswith("gpt"): #no temperature nor sampling support 
-            if model == "gpt-5":
-                response = client.responses.create( 
-                model =model  
-                , input = f"{prompt['prompt']}"
-                , max_output_tokens= args.max_new_tokens 
-                ,reasoning={ "effort": args.gpt_reasoning_level }
-                ,text={ "verbosity": args.gpt_verbosity_level }
-                , service_tier="flex"
-            ) 
-            else: #codex doesn't support high/low verb., nor flex
-                response = client.responses.create( 
-                model =model   
-                , input = f"{prompt['prompt']}"
-                , max_output_tokens= args.max_new_tokens
-                ,reasoning={ "effort": args.gpt_reasoning_level }
-                ,text={ "verbosity": "medium" }
-            ) 
-            generated_code = response.output_text
+            # Enforce rate limiting before making API call
+            enforce_rate_limit(model)
+            
+            while True:
+                try:
+                    if model == "gpt-5":
+                        response = client.responses.create( 
+                        model =model  
+                        , input = f"{prompt['prompt']}"
+                        , max_output_tokens= args.max_new_tokens 
+                        ,reasoning={ "effort": args.gpt_reasoning_level }
+                        ,text={ "verbosity": args.gpt_verbosity_level }
+                        , service_tier="flex"
+                        ) 
+                    else: #codex doesn't support high/low verb., nor flex
+                        response = client.responses.create( 
+                        model =model   
+                        , input = f"{prompt['prompt']}"
+                        , max_output_tokens= args.max_new_tokens
+                        ,reasoning={ "effort": args.gpt_reasoning_level }
+                        ,text={ "verbosity": "medium" }
+                        ) 
+                    generated_code = response.output_text
+                    break
+                except RateLimitError as e:
+                    # Retry on rate limit errors
+                    time.sleep(60)
+                    continue
+                except Exception as e:
+                    # Retry on rate limit errors (429)
+                    if hasattr(e, 'status_code') and e.status_code == 429:
+                        time.sleep(60)
+                        continue
+                    else:
+                        raise
         elif model.startswith("gemini"):
             while True:
                 try:
@@ -494,6 +515,9 @@ for model_name in args.model_names:
                 results.append(cur_prompt)
         #write to cache once reaching num_samples results 
         if not args.restart and args.cache is not None:
+            # todo: move this to catching an error and only run if we need
+            parentPathAbs = Path(args.cache).parent.absolute()
+            Path(parentPathAbs).mkdir(parents=True, exist_ok=True)
             with open(args.cache, 'a+') as jsonl_file:
                 jsonl_file.write(json.dumps(cur_prompt) + "\n")
 
